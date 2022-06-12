@@ -9,7 +9,15 @@
     "48": "icon48.ico",
     "128": "icon128.ico"
   },
-  "chrome_url_overrides": {
-    "newtab": "index.html"
-  }
+  "browser_action": {
+    "default_icon": "icon128.ico",
+    "default_title": "Vocab",
+    "default_popup": "index.html"
+},
+  "sidebar_action": {
+    "default_icon": "icon128.ico",
+    "default_title": "Vocab",
+    "default_panel": "index.html"
+  },
+  "permissions": ["storage", "tabs"]
 }
