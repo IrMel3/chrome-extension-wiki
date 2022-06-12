@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Vocab",
+  "author": "Iris",
+  "version": "1.0.0",
+  "description": "Replace new tab screen with English words",
+  "icons": {
+    "16": "icon16.ico",
+    "48": "icon48.ico",
+    "128": "icon128.ico"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  }
+}
