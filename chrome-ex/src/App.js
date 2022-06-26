@@ -1,7 +1,11 @@
+/* global chrome */
+
 import './App.css';
 import {Vocab} from './vocabList'
 import {useState, useEffect} from 'react';
 import Search from "./components/Search"
+import Crawl from "./components/Crawl"
+
 
 
 

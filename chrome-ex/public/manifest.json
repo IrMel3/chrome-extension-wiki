@@ -12,6 +12,10 @@
   "background": {
     "service_worker": "background.js"
 },
+"content_scripts": [{
+  "js": [ "content.js"],
+  "matches": [ "<all_urls>"]
+ }],
   "action": {
     "default_icon": "icon128.ico",
     "default_title": "Vocab",
@@ -22,7 +26,8 @@
     "storage",
     "activeTab",
     "scripting",
-    "tabs"
+    "tabs",
+    "contextMenus"
 ],
 "host_permissions": [
     "https://www.google.com/*"
