@@ -9,11 +9,22 @@
     "48": "icon48.ico",
     "128": "icon128.ico"
   },
+  "background": {
+    "service_worker": "background.js"
+},
   "action": {
     "default_icon": "icon128.ico",
     "default_title": "Vocab",
     "default_popup": "index.html"
-},
-  
-  "permissions": ["storage", "tabs"]
+}, 
+"options_page": "options.html",
+"permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+],
+"host_permissions": [
+    "https://www.google.com/*"
+]
 }
