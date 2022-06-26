@@ -43,7 +43,9 @@ const Search = () => {
             <div className="item" key={result.pageid}>
                 <div className="content">
                     <h3 className="header">{result.title}</h3>
+                    <span className='link'><a href={`https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=info&pageids=${result.pageid}&inprop=url&format=json`}>{`https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=info&pageids=${result.pageid}&inprop=url&format=json`}</a></span>
                     <span dangerouslySetInnerHTML={{__html:result.snippet}}></span>
+
                 </div>
             </div>
         )
