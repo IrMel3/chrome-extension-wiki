@@ -1,49 +1,48 @@
-chrome.contextMenus.create({
+/**
+ * initialize Get Headlines in the Context Menu
+ */
+/*chrome.contextMenus.create({
     id: "HeadlineFetcher",
     title: "Get Headlines",
     contexts: ["all"]
-})
+}) */
 
+/**
+ * 
+ 
+chrome.runtime.onMessage.addListener((msg, sender) => {
+    if ((msg.from === 'app') && (msg.subject === 'getText')) {
+      chrome.pageAction.show(sender.tabs[0].id);
+    }
+});
+*/
+
+  
+
+/**send Message get Headlines if Context Menu is clicked 
 chrome.contextMenus.onClicked.addListener(() =>{
     chrome.tabs.query({active: true, currentWindow: true}, tabs =>{
         chrome.tabs.sendMessage(tabs[0].id, {type: "getHeadlines"});
     });
-});
+});*/
 
+/**
+ * trying to send toggle message to open sidebar
+ 
+chrome.browserAction.onClicked.addListener(tab =>{
+    chrome.tabs.sendMessage(tab[0].id, "toggle");
+})
+*/
 
-
-/*chrome.runtime.onInstalled.addListener(() => {
-    // default state goes here
-    // this runs ONE TIME ONLY (unless the user reinstalls your extension)
-});
-
-// setting state
-chrome.storage.local.set({
-    name: "Jack"
-}, );
-
-// getting state
-chrome.storage.local.get("name", );
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
-        chrome.scripting.insertCSS({
-            target: { tabId: tabId },
-            files: ["./foreground_styles.css"]
-        })
-            .then(() => {
-                console.log("INJECTED THE FOREGROUND STYLES.");
-
-                chrome.scripting.executeScript({
-                    target: { tabId: tabId },
-                    files: ["./foreground.js"]
-                })
-                    .then(() => {
-                        console.log("INJECTED THE FOREGROUND SCRIPT.");
-                    });
-            })
-            .catch(err => console.log(err));
+//trying another onMessage
+chrome.runtime.onMessage.addListener((msg, sender, response) => {
+    switch (msg.type) {
+        case 'popupInit':
+            response(tabStorage[msg.tabId]);
+            break;
+        default:
+            response('unknown request');
+            break;
     }
 });
 
-*/

@@ -8,7 +8,6 @@ import Crawl from "./components/Crawl"
 
 
 
-
 function App() {
   const randomNum = Math.floor(Math.random() * Math.floor(Vocab.length))  
  

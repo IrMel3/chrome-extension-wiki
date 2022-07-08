@@ -1,11 +1,74 @@
+/* global chrome */
+
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {getCurrentTab} from "../Utils";
+import TrafficContainer from "./TrafficContainer"
+
 
 const Search = () => { 
   
     const [term, setTerm] = useState("React")
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
+    const [pageContent, setPageContent] = useState('N/A');
+
+    useEffect(() =>{
+        chrome.storage.onChanged.addListener(function (changes,areaName) {
+            if((pageContent !== changes.visitedPages.newValue) && (changes.visitedPages.newValue !== null)) {
+                setPageContent(changes.visitedPages.newValue)
+                setTerm(changes.visitedPages.newValue.pageText)
+                console.log("New Term:",changes.visitedPages.newValue);
+        }})
+
+    },[])
+    
+
+    useEffect(() => {
+        const setTextInfo = info =>{
+            document.getElementById('crawled').textContent = info.data;
+        }
+
+        window.addEventListener('DOMContentLoaded', () =>{
+            chrome.tabs.query({
+                active: true, 
+                currentWindow:true
+            },tabs => {
+                chrome.tabs.sendMessage(
+                    tabs[0].id,
+                    {from: 'app', subject: 'getText'},
+                    (resp) =>{
+                        console.log(resp.data);
+                        setTextInfo(resp.data)
+                    });
+        });
+    });
+
+       /* chrome.scripting.executeScript({
+            target: {tabId: tabId},
+            func: getText,
+            
+        }, function(results) {
+            // results.length must be 1
+            var result = results[0];
+            setPageContent(result);
+            console.log(result);
+        });
+        */
+      /*  chrome.tabs.query({
+            active: true, 
+            lastFocusedWindow:true
+        },function(tabs) { 
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                {from: 'app', subject: 'getText'}, function(response) {
+                if(response.method=="getText"){
+                    setPageContent(response.data);
+                    console.log(pageContent);
+                }
+            });
+        });*/
+    });
 
     //search links
     useEffect(() => {
