@@ -17,7 +17,6 @@ const Search = () => {
     const [language, setLanguage] = React.useState('en');
     const [sectionNum, setSectionNum] = useState(0);
 
-    var section = 0; //variable for the see also section
 
     useEffect(() =>{
         chrome.storage.onChanged.addListener(function (changes,areaName) {
@@ -55,6 +54,7 @@ const Search = () => {
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
     useEffect(() => {
         //search Wikipedia API
+        var section = 0; //variable for the see also section
         
         const searchSA = async () => {
             const { data } = await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
@@ -66,19 +66,21 @@ const Search = () => {
                     page: term,
                 },
             })
-            console.log(data);
+           // console.log(data);
             const sections = data.parse.sections;
-            console.log(data.parse.sections)
-            
+            //console.log(data.parse.sections)
+
+            //Check if there is a See Also section
             for(var i=0; i < sections.length; i++){
                 if(sections[i].line == 'See also'){
-                    console.log(sections[i]);
-                    console.log(i);
+                   // console.log(sections[i]);
+                   // console.log(i);
                     section = i;
+                    setSectionNum(i);
                 }
             }}
-            console.log(section);
-            const searchSA2 = async () => {
+            //console.log(section);
+            const searchSA2 = async (sectionNum) => {
             const { data } = await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
                 params: {
                     action: "parse",
@@ -86,22 +88,25 @@ const Search = () => {
                     format: "json",
                     origin: "*",
                     page: term,
-                    section: 8,
+                    section: sectionNum,
                 },
             })
             console.log(data);
             console.log(data.parse.text["*"]);
             setSeeAlso(parse(`<div>${data.parse.text["*"]}</div>`));            
         }
+
+        const fetchAllData = async () => {
+            const data = await searchSA();
+            await searchSA2();
+          };
         
         if (term && !seeAlso.length){
-            searchSA();
-            searchSA2();
+            fetchAllData();
         }else{
         let timeoutID = setTimeout(() =>{
         if(term){
-        searchSA()
-        searchSA2();
+        fetchAllData();
         }
     },1000);
     return () =>{
