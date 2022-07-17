@@ -9,7 +9,7 @@ var parse = require('html-react-parser');
 
 const Search = () => { 
   
-    const [term, setTerm] = useState("React")
+    const [term, setTerm] = useState("React_(JavaScript_library)")
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
@@ -54,66 +54,86 @@ const Search = () => {
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
     useEffect(() => {
         //search Wikipedia API
-        var section = 0; //variable for the see also section
-        
-        const searchSA = async () => {
-            const { data } = await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
-                params: {
-                    action: "parse",
-                    prop: "sections",
-                    format: "json",
-                    origin: "*",
-                    page: term,
-                },
-            })
-           // console.log(data);
-            const sections = data.parse.sections;
-            //console.log(data.parse.sections)
-
-            //Check if there is a See Also section
-            for(var i=0; i < sections.length; i++){
-                if(sections[i].line == 'See also'){
-                   // console.log(sections[i]);
-                   // console.log(i);
-                    section = i;
-                    setSectionNum(i);
-                }
-            }}
-            //console.log(section);
-            const searchSA2 = async (sectionNum) => {
-            const { data } = await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
-                params: {
-                    action: "parse",
-                    prop: "text",
-                    format: "json",
-                    origin: "*",
-                    page: term,
-                    section: sectionNum,
-                },
-            })
-            console.log(data);
-            console.log(data.parse.text["*"]);
-            setSeeAlso(parse(`<div>${data.parse.text["*"]}</div>`));            
-        }
-
-        const fetchAllData = async () => {
-            const data = await searchSA();
-            await searchSA2();
-          };
-        
         if (term && !seeAlso.length){
-            fetchAllData();
-        }else{
-        let timeoutID = setTimeout(() =>{
-        if(term){
-        fetchAllData();
-        }
-    },1000);
-    return () =>{
-        clearTimeout(timeoutID);
+            searchSA()
+                .then(data=>{
+                console.log(data.data);
+                const sections = data.data.parse.sections;
+                console.log(data.data.parse.sections)
+                //Check if there is a See Also section
+                for(var i=0; i < sections.length; i++){
+                if(sections[i].line == 'See also'){
+                    console.log(sections[i].index);
+                    console.log(i);
+                    //section = i;
+                    var secNum = sections[i].index;
+                    console.log("This is var secNum:" + secNum);
+                    setSectionNum(secNum);
+                }}})
+            searchSA2()
+                .then(data=>{
+                    console.log(data.data);
+                    console.log(data.data.parse.text["*"]);
+                    setSeeAlso(parse(`<div>${data.data.parse.text["*"]}</div>`));
+                
+            }).catch(error => console.log(error))
+    }else{
+        let timeoutId = setTimeout(() =>{
+            if(term){
+                searchSA()
+                .then(data=>{
+                console.log(data.data);
+                const sections = data.data.parse.sections;
+                console.log(data.data.parse.sections)
+                //Check if there is a See Also section
+                for(var i=0; i < sections.length; i++){
+                if(sections[i].line == 'See also'){
+                    console.log(sections[i].index);
+                    console.log(i);
+                    //section = i;
+                    var secNum = sections[i].index;
+                    console.log("This is var secNum:" + secNum);
+                    setSectionNum(secNum);
+                }}})
+            searchSA2()
+                .then(data=>{
+                    console.log(data.data);
+                    console.log(data.data.parse.text["*"]);
+                    setSeeAlso(parse(`<div>${data.data.parse.text["*"]}</div>`));
+                
+            }).catch(error => console.log(error));
+            }
+        },1000);
+        return clearTimeout(timeoutId);
     }
-}
-    }, [term])
+
+}, [seeAlso])  
+                
+            
+            
+    const searchSA = async () => {
+    return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+        params: {
+            action: "parse",
+            prop: "sections",
+            format: "json",
+            origin: "*",
+            page: term,
+        },
+    })}
+
+    const searchSA2 = async () => {
+        return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+            params: {
+                action: "parse",
+                prop: "text",
+                format: "json",
+                origin: "*",
+                page: term,
+                section: sectionNum,
+               // disabletoc: 1,
+            },
+        })}
    
 
     //search links
@@ -135,7 +155,7 @@ const Search = () => {
             setLinks(data.query.pages[keys[0]].links)
             
         }
-        if (term && !seeAlso.length){
+        if (term && !links.length){
             searchLinks();
         }else{
         let timeoutID = setTimeout(() =>{
