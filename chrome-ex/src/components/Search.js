@@ -18,13 +18,24 @@ const Search = () => {
     const [sectionNum, setSectionNum] = useState(0);
 
 
-    useEffect(() =>{
+  /*  useEffect(() =>{
         chrome.storage.onChanged.addListener(function (changes,areaName) {
             if((pageContent !== changes.visitedPages.newValue) && (changes.visitedPages.newValue !== null)) {
                 setPageContent(changes.visitedPages.newValue)
                 setTerm(changes.visitedPages.newValue.pageText)
                 console.log("New Term:",changes.visitedPages.newValue);
         }})
+
+    },[])*/
+
+    useEffect(() =>{
+        chrome.storage.sync.get("visitedPages",function (changes) {
+            if((pageContent !== changes.visitedPages) && (changes.visitedPages !== null)) {
+                setPageContent(changes.visitedPages.pageText)
+                setTerm(changes.visitedPages.pageText)
+                console.log("New Term:",changes.visitedPages.pageText);
+        }}
+        )
 
     },[])
     
@@ -200,8 +211,11 @@ const Search = () => {
     }, [term])
 
 
-    const searchResultsMapped = results.map(result =>{
+    const searchResultsMapped = 
+    
+    results.slice(0,3).map(result =>{
         return(
+            
             <div className="item" key={result.pageid}>
                 <div className="content">
                     <h3 className="header">{result.title}</h3>
@@ -210,8 +224,10 @@ const Search = () => {
 
                 </div>
             </div>
+            
         )
-    })
+    }
+)
 
     const linksInArticle = links.map(link =>{
         return (
@@ -247,11 +263,13 @@ const Search = () => {
                   />
               </div>
           </div>
-          <p>First 10 Links:</p>
-          <div>{linksInArticle}</div>
+          <div className="ui celled list">{searchResultsMapped}</div>
           <p>See also:</p>
           <div>{seeAlso}</div>
-          <div className="ui celled list">{searchResultsMapped}</div>
+          <p>First 10 Links:</p>
+          <div>{linksInArticle}</div>
+          
+          
       </div>
       )
 

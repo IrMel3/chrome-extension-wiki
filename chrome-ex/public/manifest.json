@@ -4,24 +4,23 @@
   "author": "Iris",
   "version": "1.0.0",
   "description": "Replace new tab screen with English words",
+  "action": {}, 
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "/static/js/content.js"
+      ]
+    }
+  ],
   "icons": {
     "16": "icon16.ico",
     "48": "icon48.ico",
     "128": "icon128.ico"
-  },
-  "background": {
-    "service_worker": "background.js"
-},
-"content_scripts": [{
-  "matches": [ "<all_urls>"],
-  "js": [ "content.js"] 
- }],
-  "action": {
-    "default_icon": "icon128.ico",
-    "default_title": "Vocab",
-    "default_popup": "index.html"
-}, 
-"options_page": "options.html",
+  }, 
 "permissions": [
     "storage",
     "activeTab",
@@ -32,11 +31,9 @@
     "identity",
     "notifications"
 ],
-"host_permissions": [
-    "https://www.google.com/*"
-],
 "web_accessible_resources": [{
   "resources": ["index.html"],
-  "matches": ["<all_urls>"]
+  "matches": ["<all_urls>"],
+  "extension_ids": ["kbjambaljfpmbadpgmclckcfolhpliea"]
 }]
 }
