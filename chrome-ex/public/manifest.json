@@ -32,7 +32,7 @@
     "notifications"
 ],
 "web_accessible_resources": [{
-  "resources": ["index.html"],
+  "resources": ["index.html", "/static/js/content.js" ],
   "matches": ["<all_urls>"],
   "extension_ids": ["kbjambaljfpmbadpgmclckcfolhpliea"]
 }]

@@ -1,6 +1,8 @@
 .App {
   text-align: center;
   background-color: aliceblue;
+  margin-top: 80px;
+  padding: 30px;
 }
 
 .App-logo {
@@ -49,5 +51,5 @@ h3 {
 }
 
 h3 {
-  font-size: 24px;
+  font-size: 18px;
 }

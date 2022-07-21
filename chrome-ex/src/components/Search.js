@@ -1,6 +1,7 @@
 /* global chrome */
 
 import React, {useState, useEffect} from 'react';
+import './Search.css';
 import axios from 'axios';
 import {getCurrentTab} from "../Utils";
 import TrafficContainer from "./TrafficContainer"
@@ -9,24 +10,25 @@ var parse = require('html-react-parser');
 
 const Search = () => { 
   
-    const [term, setTerm] = useState("React_(JavaScript_library)")
+    const [term, setTerm] = useState(localStorage.getItem("Term") || "React_(JavaScript_library)")
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
     const [pageContent, setPageContent] = useState('N/A');
     const [language, setLanguage] = React.useState('en');
     const [sectionNum, setSectionNum] = useState(0);
+    const seeAlsoText = ["See also", "Siehe auch", "Voir aussi", "Voci correlate"]
+
+    /**
+     * looks if the language was already set and fetches it from local storage
+     */
+    useEffect(() =>{
+        if(localStorage.getItem("Language") != 'en'){
+            setLanguage(localStorage.getItem("Language"))
+        }
+    })
 
 
-  /*  useEffect(() =>{
-        chrome.storage.onChanged.addListener(function (changes,areaName) {
-            if((pageContent !== changes.visitedPages.newValue) && (changes.visitedPages.newValue !== null)) {
-                setPageContent(changes.visitedPages.newValue)
-                setTerm(changes.visitedPages.newValue.pageText)
-                console.log("New Term:",changes.visitedPages.newValue);
-        }})
-
-    },[])*/
 
     useEffect(() =>{
         chrome.storage.sync.get("visitedPages",function (changes) {
@@ -36,7 +38,6 @@ const Search = () => {
                 console.log("New Term:",changes.visitedPages.pageText);
         }}
         )
-
     },[])
     
 
@@ -61,6 +62,37 @@ const Search = () => {
     });
     });
 
+/**
+ * 
+ * @returns fetches sections of the wikipedia article
+ */
+    const searchSA = async () => {
+        return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+            params: {
+                action: "parse",
+                prop: "sections",
+                format: "json",
+                origin: "*",
+                page: term,
+            },
+        })}
+        
+/**
+ * 
+ * @returns fetches see Also section of the wikipedia article
+ */
+    const searchSA2 = async () => {
+        return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+            params: {
+                action: "parse",
+                prop: "text",
+                format: "json",
+                origin: "*",
+                page: term,
+                section: sectionNum
+            },
+        })}
+
     //search "see also" e.g. https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&prop=sections
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
     useEffect(() => {
@@ -73,19 +105,29 @@ const Search = () => {
                 console.log(data.data.parse.sections)
                 //Check if there is a See Also section
                 for(var i=0; i < sections.length; i++){
-                if(sections[i].line == 'See also'){
+                if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
                     console.log(sections[i].index);
                     console.log(i);
                     //section = i;
                     var secNum = sections[i].index;
                     console.log("This is var secNum:" + secNum);
                     setSectionNum(secNum);
-                }}})
+                }
+                /*else{
+                    setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
+                }*/
+                }
+            })
             searchSA2()
                 .then(data=>{
+                    if(data.data.parse.text["*"]){
                     console.log(data.data);
                     console.log(data.data.parse.text["*"]);
-                    setSeeAlso(parse(`<div>${data.data.parse.text["*"]}</div>`));
+                    setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
+                    }
+                    /*else{
+                        setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
+                    }*/
                 
             }).catch(error => console.log(error))
     }else{
@@ -98,8 +140,9 @@ const Search = () => {
                 console.log(data.data.parse.sections)
                 //Check if there is a See Also section
                 for(var i=0; i < sections.length; i++){
-                if(sections[i].line == 'See also'){
                     console.log(sections[i].index);
+                if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
+                    //console.log(sections[i].index);
                     console.log(i);
                     //section = i;
                     var secNum = sections[i].index;
@@ -108,9 +151,14 @@ const Search = () => {
                 }}})
             searchSA2()
                 .then(data=>{
+                    if(data.data.parse.text["*"]){
                     console.log(data.data);
                     console.log(data.data.parse.text["*"]);
                     setSeeAlso(parse(`<div>${data.data.parse.text["*"]}</div>`));
+                }
+                /*else{
+                    setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
+                }*/
                 
             }).catch(error => console.log(error));
             }
@@ -121,30 +169,6 @@ const Search = () => {
 }, [seeAlso])  
                 
             
-            
-    const searchSA = async () => {
-    return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
-        params: {
-            action: "parse",
-            prop: "sections",
-            format: "json",
-            origin: "*",
-            page: term,
-        },
-    })}
-
-    const searchSA2 = async () => {
-        return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
-            params: {
-                action: "parse",
-                prop: "text",
-                format: "json",
-                origin: "*",
-                page: term,
-                section: sectionNum,
-               // disabletoc: 1,
-            },
-        })}
    
 
     //search links
@@ -163,7 +187,10 @@ const Search = () => {
             //console.log(data);
             const keys = Object.keys(data.query.pages)
             //console.log(data.query.pages[keys[0]].links)
+            if(data != null){
             setLinks(data.query.pages[keys[0]].links)
+            localStorage.setItem("Term", term);
+        }
             
         }
         if (term && !links.length){
@@ -193,7 +220,9 @@ const Search = () => {
                     srsearch: term,
                 },
             })
+            if(data != null){
             setResults(data.query.search)
+            }
            // console.log(results);
         }
         if (term && !results.length){
@@ -203,7 +232,7 @@ const Search = () => {
         if(term){
         search()
         }
-    },1000);
+    },700);
     return () =>{
         clearTimeout(timeoutID);
     }
@@ -213,13 +242,13 @@ const Search = () => {
 
     const searchResultsMapped = 
     
-    results.slice(0,3).map(result =>{
+    results && results.slice(0,3).map(result =>{
         return(
             
             <div className="item" key={result.pageid}>
                 <div className="content">
                     <h3 className="header">{result.title}</h3>
-                    <span className='link'><a href={`https://${language}.wikipedia.org/wiki/${result.title}`}>{`https://${language}.wikipedia.org/wiki/${result.title}`}</a></span><br/>
+                    <span className='link'><a target="_blank" href={`https://${language}.wikipedia.org/wiki/${result.title}`}>{`https://${language}.wikipedia.org/wiki/${result.title}`}</a></span><br/>
                     <span dangerouslySetInnerHTML={{__html:result.snippet}}></span>
 
                 </div>
@@ -229,16 +258,19 @@ const Search = () => {
     }
 )
 
-    const linksInArticle = links.map(link =>{
+    const linksInArticle = 
+    
+    links && links.map(link =>{
         return (
             <div>
-            <span className='link'><a href={`https://${language}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
+            <span className='link'><a target="_blank" href={`https://${language}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
             </div>
         )
     })
 
     const handleLanguage = (event) => {
     setLanguage(event.target.value);
+    localStorage.setItem("Language", event.target.value)
     };
     
 
@@ -246,7 +278,7 @@ const Search = () => {
       <div>
           <div className="ui-form">
               <div className="field">
-                  <div><label>
+                  <div id="langselect"><label>
                         Select language
                         <select value={language} onChange={handleLanguage}>
                         <option value="en">English</option>
@@ -255,16 +287,18 @@ const Search = () => {
                         <option value="it">Italian</option>
                         </select>
                   </label></div>
-                  <label>Search Term</label>
+                  <div id="search">
+                  <label>Search Term:</label>  
                   
                   <input className="input"
+                  id="searchfield"
                   value={term}
                   onChange={e => setTerm(e.target.value)}
                   />
+                  </div>
               </div>
           </div>
           <div className="ui celled list">{searchResultsMapped}</div>
-          <p>See also:</p>
           <div>{seeAlso}</div>
           <p>First 10 Links:</p>
           <div>{linksInArticle}</div>

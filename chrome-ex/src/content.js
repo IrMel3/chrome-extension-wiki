@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import Frame, {FrameContextConsumer} from 'react-frame-component'
+import $ from 'jquery';
 
 const Main = () => { 
 
@@ -91,8 +92,11 @@ app.style.top = "0px";
 app.style.right = "0px";
 app.style.position = "fixed";
 app.src = chrome.runtime.getURL("index.html");
+document.body.style.paddingRight = "300px";
 document.body.appendChild(app);
 ReactDOM.render(<Main />, app);
+
+
 
 /**
  * toggle sidebar
