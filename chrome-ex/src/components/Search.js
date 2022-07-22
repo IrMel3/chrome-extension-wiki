@@ -1,6 +1,6 @@
 /* global chrome */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import './Search.css';
 import axios from 'axios';
 import {getCurrentTab} from "../Utils";
@@ -11,11 +11,13 @@ var parse = require('html-react-parser');
 const Search = () => { 
   
     const [term, setTerm] = useState(localStorage.getItem("Term") || "React_(JavaScript_library)")
+    const [translatedTerm, setTranslatedTerm] = useState()
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
     const [pageContent, setPageContent] = useState('N/A');
-    const [language, setLanguage] = React.useState('en');
+    const [motherTounge, setMotherTounge] = useState('de')
+    const [targetLanguage, setTargetLanguage] = useState('en');
     const [sectionNum, setSectionNum] = useState(0);
     const seeAlsoText = ["See also", "Siehe auch", "Voir aussi", "Voci correlate"]
 
@@ -24,10 +26,27 @@ const Search = () => {
      */
     useEffect(() =>{
         if(localStorage.getItem("Language") != 'en'){
-            setLanguage(localStorage.getItem("Language"))
+            setTargetLanguage(localStorage.getItem("Language"))
         }
+        if(localStorage.getItem("Mothertounge") != 'de'){
+            setMotherTounge(localStorage.getItem("Mothertounge"))
+        } 
     })
 
+
+    useEffect(() =>{
+            let data = {
+                q : term,
+                source: motherTounge,
+                target: targetLanguage
+            }
+            axios.post(`https://libretranslate.de/translate`, data)
+            .then((response) => {
+                console.log("libretranslate: " + response.data.translatedText)
+                setTranslatedTerm(response.data.translatedText);
+            }) 
+    
+    },[term])
 
 
     useEffect(() =>{
@@ -67,7 +86,7 @@ const Search = () => {
  * @returns fetches sections of the wikipedia article
  */
     const searchSA = async () => {
-        return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+        return await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
             params: {
                 action: "parse",
                 prop: "sections",
@@ -82,7 +101,7 @@ const Search = () => {
  * @returns fetches see Also section of the wikipedia article
  */
     const searchSA2 = async () => {
-        return await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+        return await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
             params: {
                 action: "parse",
                 prop: "text",
@@ -101,36 +120,35 @@ const Search = () => {
             searchSA()
                 .then(data=>{
                 console.log(data.data);
+                console.log('See also:' + seeAlso);
                 const sections = data.data.parse.sections;
                 console.log(data.data.parse.sections)
                 //Check if there is a See Also section
                 for(var i=0; i < sections.length; i++){
-                if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
-                    console.log(sections[i].index);
-                    console.log(i);
-                    //section = i;
-                    var secNum = sections[i].index;
-                    console.log("This is var secNum:" + secNum);
-                    setSectionNum(secNum);
+                    if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
+                        console.log(sections[i].index);
+                        console.log(i);
+                        //section = i;
+                        var secNum = sections[i].index;
+                        console.log("This is var secNum:" + secNum);
+                        setSectionNum(secNum);
+                    }
                 }
-                /*else{
-                    setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
-                }*/
-                }
-            })
+                })
             searchSA2()
                 .then(data=>{
                     if(data.data.parse.text["*"]){
                     console.log(data.data);
-                    console.log(data.data.parse.text["*"]);
+                   // console.log(data.data.parse.text["*"]);
                     setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
                     }
-                    /*else{
+                    else{
                         setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
-                    }*/
+                    }
                 
             }).catch(error => console.log(error))
-    }else{
+    }
+    else{
         let timeoutId = setTimeout(() =>{
             if(term){
                 searchSA()
@@ -175,13 +193,13 @@ const Search = () => {
     useEffect(() => {
         //search Wikipedia API
         const searchLinks = async () => {
-            const { data } = await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+            const { data } = await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
                 params: {
                     action: "query",
                     prop: "links",
                     format: "json",
                     origin: "*",
-                    titles: term,
+                    titles: translatedTerm,
                 },
             })
             //console.log(data);
@@ -193,11 +211,11 @@ const Search = () => {
         }
             
         }
-        if (term && !links.length){
+        if (translatedTerm && !links.length){
             searchLinks();
         }else{
         let timeoutID = setTimeout(() =>{
-        if(term){
+        if(translatedTerm){
         searchLinks()
         }
     },1000);
@@ -205,19 +223,19 @@ const Search = () => {
         clearTimeout(timeoutID);
     }
 }
-    }, [term])
+    }, [translatedTerm])
 
     //search terms and descriptions
     useEffect(() => {
         //search Wikipedia API
         const search = async () => {
-            const { data } = await axios.get(`https://${language}.wikipedia.org/w/api.php`, {
+            const { data } = await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
                 params: {
                     action: "query",
                     list: "search",
                     origin: "*",
                     format: "json",
-                    srsearch: term,
+                    srsearch: translatedTerm,
                 },
             })
             if(data != null){
@@ -225,19 +243,19 @@ const Search = () => {
             }
            // console.log(results);
         }
-        if (term && !results.length){
+        if (translatedTerm && !results.length){
             search();
         }else{
         let timeoutID = setTimeout(() =>{
-        if(term){
+        if(translatedTerm){
         search()
         }
-    },700);
+    },1000);
     return () =>{
         clearTimeout(timeoutID);
     }
 }
-    }, [term])
+    }, [translatedTerm])
 
 
     const searchResultsMapped = 
@@ -248,7 +266,7 @@ const Search = () => {
             <div className="item" key={result.pageid}>
                 <div className="content">
                     <h3 className="header">{result.title}</h3>
-                    <span className='link'><a target="_blank" href={`https://${language}.wikipedia.org/wiki/${result.title}`}>{`https://${language}.wikipedia.org/wiki/${result.title}`}</a></span><br/>
+                    <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${result.title}`}>{`https://${targetLanguage}.wikipedia.org/wiki/${result.title}`}</a></span><br/>
                     <span dangerouslySetInnerHTML={{__html:result.snippet}}></span>
 
                 </div>
@@ -263,14 +281,19 @@ const Search = () => {
     links && links.map(link =>{
         return (
             <div>
-            <span className='link'><a target="_blank" href={`https://${language}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
+            <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
             </div>
         )
     })
 
-    const handleLanguage = (event) => {
-    setLanguage(event.target.value);
-    localStorage.setItem("Language", event.target.value)
+    const handleTargetLanguage = (event) => {
+        setTargetLanguage(event.target.value);
+        localStorage.setItem("Language", event.target.value)
+    };
+
+    const handleMotherTounge = (event) => {
+        setMotherTounge(event.target.value);
+        localStorage.setItem("Mothertounge", event.target.value)
     };
     
 
@@ -278,9 +301,18 @@ const Search = () => {
       <div>
           <div className="ui-form">
               <div className="field">
+              <div id="langselect"><label>
+                        Select mother tounge:
+                        <select value={motherTounge} onChange={handleMotherTounge}>
+                        <option value="en">English</option>
+                        <option value="de">German</option>
+                        <option value="fr">French</option>
+                        <option value="it">Italian</option>
+                        </select>
+                  </label></div>
                   <div id="langselect"><label>
                         Select language
-                        <select value={language} onChange={handleLanguage}>
+                        <select value={targetLanguage} onChange={handleTargetLanguage}>
                         <option value="en">English</option>
                         <option value="de">German</option>
                         <option value="fr">French</option>
@@ -296,6 +328,7 @@ const Search = () => {
                   onChange={e => setTerm(e.target.value)}
                   />
                   </div>
+                 <div> Translation: {translatedTerm}</div>
               </div>
           </div>
           <div className="ui celled list">{searchResultsMapped}</div>
