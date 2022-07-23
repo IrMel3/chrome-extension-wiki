@@ -10,11 +10,12 @@ var parse = require('html-react-parser');
 
 const Search = () => { 
   
-    const [term, setTerm] = useState(localStorage.getItem("Term") || "React_(JavaScript_library)")
-    const [translatedTerm, setTranslatedTerm] = useState()
+    const [term, setTerm] = useState(localStorage.getItem("Term") || "Buch")
+    const [translatedTerm, setTranslatedTerm] = useState(localStorage.getItem("Translation") || "Book")
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
+    const [dictionary, setDictionary] = useState([])
     const [pageContent, setPageContent] = useState('N/A');
     const [motherTounge, setMotherTounge] = useState('de')
     const [targetLanguage, setTargetLanguage] = useState('en');
@@ -44,6 +45,7 @@ const Search = () => {
             .then((response) => {
                 console.log("libretranslate: " + response.data.translatedText)
                 setTranslatedTerm(response.data.translatedText);
+                localStorage.setItem("Translation", response.data.translatedText);
             }) 
     
     },[term])
@@ -81,6 +83,44 @@ const Search = () => {
     });
     });
 
+
+    //search terms and descriptions
+    useEffect(() => {
+        //search Wikipedia API
+        const search = async () => {
+            const { data } = await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
+                params: {
+                    action: "query",
+                    list: "search",
+                    origin: "*",
+                    format: "json",
+                    srsearch: translatedTerm,
+                },
+            })
+            if(data != null){
+            setResults(data.query.search)
+            console.log(data.query.search)
+            }
+            
+        }
+        if (translatedTerm && !results.length){
+            search();
+            
+        }else{
+        let timeoutID = setTimeout(() =>{
+        if(translatedTerm){
+        search()
+        
+        }
+    },1000);
+    return () =>{
+        clearTimeout(timeoutID);
+    }
+}
+    }, [translatedTerm])
+
+
+
 /**
  * 
  * @returns fetches sections of the wikipedia article
@@ -92,7 +132,7 @@ const Search = () => {
                 prop: "sections",
                 format: "json",
                 origin: "*",
-                page: term,
+                page: translatedTerm,
             },
         })}
         
@@ -107,7 +147,7 @@ const Search = () => {
                 prop: "text",
                 format: "json",
                 origin: "*",
-                page: term,
+                page: translatedTerm,
                 section: sectionNum
             },
         })}
@@ -116,9 +156,10 @@ const Search = () => {
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
     useEffect(() => {
         //search Wikipedia API
-        if (term && !seeAlso.length){
+        if (translatedTerm && !seeAlso.length){
             searchSA()
                 .then(data=>{
+                    try{
                 console.log(data.data);
                 console.log('See also:' + seeAlso);
                 const sections = data.data.parse.sections;
@@ -133,7 +174,8 @@ const Search = () => {
                         console.log("This is var secNum:" + secNum);
                         setSectionNum(secNum);
                     }
-                }
+                }}
+                catch(err){console.log(err)}
                 })
             searchSA2()
                 .then(data=>{
@@ -143,14 +185,14 @@ const Search = () => {
                     setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
                     }
                     else{
-                        setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
+                        setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${translatedTerm}</div>`))
                     }
                 
             }).catch(error => console.log(error))
     }
     else{
         let timeoutId = setTimeout(() =>{
-            if(term){
+            if(translatedTerm){
                 searchSA()
                 .then(data=>{
                 console.log(data.data);
@@ -211,7 +253,7 @@ const Search = () => {
         }
             
         }
-        if (translatedTerm && !links.length){
+        if (translatedTerm ){
             searchLinks();
         }else{
         let timeoutID = setTimeout(() =>{
@@ -225,37 +267,6 @@ const Search = () => {
 }
     }, [translatedTerm])
 
-    //search terms and descriptions
-    useEffect(() => {
-        //search Wikipedia API
-        const search = async () => {
-            const { data } = await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
-                params: {
-                    action: "query",
-                    list: "search",
-                    origin: "*",
-                    format: "json",
-                    srsearch: translatedTerm,
-                },
-            })
-            if(data != null){
-            setResults(data.query.search)
-            }
-           // console.log(results);
-        }
-        if (translatedTerm && !results.length){
-            search();
-        }else{
-        let timeoutID = setTimeout(() =>{
-        if(translatedTerm){
-        search()
-        }
-    },1000);
-    return () =>{
-        clearTimeout(timeoutID);
-    }
-}
-    }, [translatedTerm])
 
 
     const searchResultsMapped = 

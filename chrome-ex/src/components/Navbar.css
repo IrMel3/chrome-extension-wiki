@@ -13,7 +13,7 @@ header nav {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
+  height: 30%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@ header nav {
   gap: 1.5rem;
   background-color: rgb(169, 181, 238);
   transition: 1s;
-  transform: translateY(-120vh);
+  transform: translateY(-150vh);
 }
 
 header .responsive_nav {
