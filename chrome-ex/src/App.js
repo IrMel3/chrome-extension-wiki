@@ -16,7 +16,7 @@ const history = createMemoryHistory();
 const App =() => {
   const randomNum = Math.floor(Math.random() * Math.floor(Vocab.length))  
   
-  const [isActive, setIsActive] = useState(false)
+  const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
 
    /**

@@ -87,7 +87,7 @@ chrome.storage.sync.set({'visitedPages':
 const app = document.createElement('iframe');
 app.style.border = "none"
 app.style.width = "300px";
-app.style.height = "2000px"
+app.style.height = "700px"
 app.style.top = "0px";
 app.style.right = "0px";
 app.style.position = "fixed";
