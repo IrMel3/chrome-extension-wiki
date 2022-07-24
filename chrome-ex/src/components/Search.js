@@ -1,10 +1,11 @@
 /* global chrome */
 
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import './Search.css';
 import axios from 'axios';
 import {getCurrentTab} from "../Utils";
 import TrafficContainer from "./TrafficContainer"
+import { DictionaryContext } from './DictionaryContext';
 var parse = require('html-react-parser');
 
 
@@ -22,6 +23,8 @@ const Search = () => {
     const [motherTounge, setMotherTounge] = useState('de')
     const [targetLanguage, setTargetLanguage] = useState('en');
     const [sectionNum, setSectionNum] = useState(0);
+    const msg = useContext(DictionaryContext);
+    const {value, setValue} = useContext(DictionaryContext);
     const seeAlsoText = ["See also", "Siehe auch", "Voir aussi", "Voci correlate"]
 
     /**
@@ -313,6 +316,11 @@ const Search = () => {
         localStorage.setItem("putIntoDictionary", term);
         localStorage.setItem("putTranslationIntoDictionary", translatedTerm)
     }
+
+    const pushToDictionary = () =>{
+    const obj = {Term: term, Translation: translatedTerm}
+        setValue(oldArr => [...oldArr,obj])
+    }
     
 
     return(
@@ -340,6 +348,7 @@ const Search = () => {
                   <div id="search">
                   <label>Search Term:</label>  
                   <button onClick={addToDictionary}>Add to Dictionary</button>
+                  <button onClick={pushToDictionary}>Add</button>
                   <input className="input"
                   id="searchfield"
                   value={term}

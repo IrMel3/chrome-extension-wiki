@@ -2,13 +2,15 @@
 
 import './App.css';
 import {Vocab} from './vocabList'
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useMemo, useEffect, Fragment} from 'react';
 import Search from "./components/Search"
 import { BrowserRouter as Router, Routes, Switch, Route, Link } from "react-router-dom";
 import Dictionary from "./components/Dictionary"
 import Crawl from "./components/Crawl"
 import Navbar from "./components/Navbar"
 import { createMemoryHistory } from "history";
+import { DictionaryContext } from './components/DictionaryContext';
+
 
 const history = createMemoryHistory();
 
@@ -18,22 +20,13 @@ const App =() => {
   
   const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
+  const [value, setValue] = useState([]) //localStorage.getItem("Vocabulary") || [] - change this to prevent comma overload
 
-   /**
-    * <Routes> 
-        <Route exact path="/">
-          <Navbar/>
-          <Search/>   
-        </Route>
-        <Route path="/dictionary">
-          <Navbar/>
-          <Dictionary/>
-        </Route>
-    </Routes>  
-    */
+  //const providerValue = useMemo(() => ({value, setValue}, [value, setValue]));
 
   return (
     <div className="App">
+      <DictionaryContext.Provider value={{value, setValue}}>
       <React.Fragment>
       <div className="accordion">
         <div className="accordion-item">
@@ -52,7 +45,7 @@ const App =() => {
         </div>
       </div>
     </React.Fragment>
-    
+    </DictionaryContext.Provider>    
     </div>
     
   );
