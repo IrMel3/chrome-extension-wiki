@@ -15,7 +15,9 @@ const Search = () => {
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
-    const [dictionary, setDictionary] = useState([])
+    const [isResultsActive, setIsResultsActive] = useState(false);
+    const [isSeeAlsoActive, setIsSeeAlsoActive] = useState(false);
+    const [isLinksActive, setIsLinksActive] = useState(false);
     const [pageContent, setPageContent] = useState('N/A');
     const [motherTounge, setMotherTounge] = useState('de')
     const [targetLanguage, setTargetLanguage] = useState('en');
@@ -306,6 +308,11 @@ const Search = () => {
         setMotherTounge(event.target.value);
         localStorage.setItem("Mothertounge", event.target.value)
     };
+
+    const addToDictionary = () =>{
+        localStorage.setItem("putIntoDictionary", term);
+        localStorage.setItem("putTranslationIntoDictionary", translatedTerm)
+    }
     
 
     return(
@@ -332,7 +339,7 @@ const Search = () => {
                   </label></div>
                   <div id="search">
                   <label>Search Term:</label>  
-                  
+                  <button onClick={addToDictionary}>Add to Dictionary</button>
                   <input className="input"
                   id="searchfield"
                   value={term}
@@ -342,10 +349,32 @@ const Search = () => {
                  <div> Translation: {translatedTerm}</div>
               </div>
           </div>
-          <div className="ui celled list">{searchResultsMapped}</div>
-          <div>{seeAlso}</div>
-          <p>First 10 Links:</p>
-          <div>{linksInArticle}</div>
+
+    <React.Fragment>
+      <div className="accordion">
+        <div className="accordion-item">
+          <div className="accordion-title" onClick={()=> setIsResultsActive(!isResultsActive)}>
+            <h3>Results</h3>
+            <div className="plusSign">{isResultsActive ? '-' : '+'}</div>
+          </div>
+          {isResultsActive && <div className="accordion-content ui celled list">{searchResultsMapped}</div>}
+        </div>
+        <div className="accordion-item">
+          <div className="accordion-title" onClick={()=> setIsSeeAlsoActive(!isSeeAlsoActive)}>
+            <h3>See Also:</h3>
+            <div className="plusSign">{isSeeAlsoActive ? '-' : '+'}</div>
+          </div>
+          {isSeeAlsoActive && <div className="accordion-content">{seeAlso}</div>}
+        </div>
+        <div className="accordion-item">
+          <div className="accordion-title" onClick={()=> setIsLinksActive(!isLinksActive)}>
+            <h3>Links</h3>
+            <div className="plusSign">{isLinksActive ? '-' : '+'}</div>
+          </div>
+          {isLinksActive && <div className="accordion-content">{linksInArticle}</div>}
+        </div>   
+    </div>
+    </React.Fragment>
           
           
       </div>
