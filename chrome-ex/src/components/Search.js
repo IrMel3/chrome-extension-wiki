@@ -318,7 +318,7 @@ const Search = () => {
     }
 
     const pushToDictionary = () =>{
-    const obj = {Term: term, Translation: translatedTerm}
+    const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
         setValue(oldArr => [...oldArr,obj])
     }
     
@@ -347,8 +347,7 @@ const Search = () => {
                   </label></div>
                   <div id="search">
                   <label>Search Term:</label>  
-                  <button onClick={addToDictionary}>Add to Dictionary</button>
-                  <button onClick={pushToDictionary}>Add</button>
+                  <button onClick={pushToDictionary}>Add to Dictionary</button>
                   <input className="input"
                   id="searchfield"
                   value={term}

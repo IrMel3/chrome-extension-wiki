@@ -66,8 +66,8 @@ function Dictionary (){
     const words = value.map(value =>{
         return(
             <div>
-            <li>{value.Term}</li>
-            <li>{value.Translation}</li>
+            <h3>{value.Term}</h3>
+            <a target="_blank" href={`https://${value.Targetlanguage}.wikipedia.org/wiki/${value.Link}`}>{value.Translation}</a>
             </div>
         )
     })
