@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "description": "Replace new tab screen with English words",
   "action": {}, 
+  "background": { "service_worker": "background.js" },
   "content_scripts": [
     {
       "matches": [

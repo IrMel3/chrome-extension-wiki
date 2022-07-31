@@ -21,15 +21,21 @@ function Dictionary (){
     },[])
 
     useEffect(() =>{
-        if(value !==  []){
-            localStorage.setItem("Vocabulary", JSON.parse(JSON.stringify(value)));
+      /*  if(localStorage.getItem("Vocabulary") ){
+            setValue(JSON.parse(localStorage.getItem("Vocabulary")));
+            console.log(JSON.parse(localStorage.getItem("Vocabulary")));
+        }*/
+
+      /*  if(value !==  []){
+            localStorage.setItem("Vocabulary", JSON.stringify(value));
             console.log(localStorage.getItem("Vocabulary"));
             //chrome.storage.sync.set({dictionary: {Term: value.Term, Translation: value.Translation}})
         }else if(value == []){
-            setValue(localStorage.getItem("Vocabulary"));
-            console.log(localStorage.getItem("Vocabulary"));
-        }
-    },[])
+            setValue(JSON.parse(localStorage.getItem("Vocabulary")));
+            console.log(JSON.parse(localStorage.getItem("Vocabulary")));
+        }*/
+        
+    },[value])
 
     /**
      * add new word to Chrome Storage and update dictionary
@@ -63,7 +69,9 @@ function Dictionary (){
     });
     }
 
-    const words = value.map(value =>{
+    const words = 
+    
+    value && value.map(value =>{
         return(
             <div>
             <h3>{value.Term}</h3>
@@ -76,9 +84,7 @@ function Dictionary (){
 
     return(
         <div>
-            {words}
-           <h3>{newWord[0]}</h3>
-           <h4>{newWord[1]}</h4>
+            {value != null ? words :  <div>No words in dictionary yet.</div>}
         </div>
     )
 }   

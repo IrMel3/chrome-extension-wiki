@@ -258,7 +258,7 @@ const Search = () => {
         }
             
         }
-        if (translatedTerm ){
+        if (translatedTerm){
             searchLinks();
         }else{
         let timeoutID = setTimeout(() =>{
@@ -317,9 +317,28 @@ const Search = () => {
         localStorage.setItem("putTranslationIntoDictionary", translatedTerm)
     }
 
+    const sendLogPushToDictionary = () =>{
+        let timestamp = new Date();
+            let dictionaryData = {
+                //id:
+               // user:
+                timestamp: timestamp,
+                action: 'pushToDictionary',
+                word: term,
+                translation: translatedTerm
+            }
+            axios
+                .post("http://localhost:3000/addDictionaryEntry", dictionaryData)
+                .then(data => console.log(data))
+                .catch(error => console.log(error))
+        
+    }
+
     const pushToDictionary = () =>{
     const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
         setValue(oldArr => [...oldArr,obj])
+        localStorage.setItem("Vocabulary", JSON.stringify(value));
+        sendLogPushToDictionary();
     }
     
 
@@ -347,7 +366,6 @@ const Search = () => {
                   </label></div>
                   <div id="search">
                   <label>Search Term:</label>  
-                  <button onClick={pushToDictionary}>Add to Dictionary</button>
                   <input className="input"
                   id="searchfield"
                   value={term}
@@ -355,6 +373,7 @@ const Search = () => {
                   />
                   </div>
                  <div> Translation: {translatedTerm}</div>
+                 <button onClick={pushToDictionary}>Add to Dictionary</button>
               </div>
           </div>
 

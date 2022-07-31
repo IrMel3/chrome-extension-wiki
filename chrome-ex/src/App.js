@@ -20,7 +20,7 @@ const App =() => {
   
   const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
-  const [value, setValue] = useState([]) //localStorage.getItem("Vocabulary") || [] - change this to prevent comma overload
+  const [value, setValue] = useState(JSON.parse(localStorage.getItem("Vocabulary" || []))) //localStorage.getItem("Vocabulary") || [] - change this to prevent comma overload
 
   //const providerValue = useMemo(() => ({value, setValue}, [value, setValue]));
 
