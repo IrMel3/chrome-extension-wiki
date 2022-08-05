@@ -84,6 +84,9 @@ chrome.storage.sync.set({'visitedPages':
     console.log("Just visited", getFirstH1())
 });
 
+chrome.storage.sync.set({'currentURL':
+{location: document.location.href}}, console.log("current URL",document.location.href))
+
 const app = document.createElement('iframe');
 app.style.border = "none"
 app.style.width = "300px";

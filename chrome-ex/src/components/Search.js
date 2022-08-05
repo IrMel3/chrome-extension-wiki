@@ -20,6 +20,7 @@ const Search = () => {
     const [isSeeAlsoActive, setIsSeeAlsoActive] = useState(false);
     const [isLinksActive, setIsLinksActive] = useState(false);
     const [pageContent, setPageContent] = useState('N/A');
+    const [currURL, setCurrURL] = useState('');
     const [motherTounge, setMotherTounge] = useState('de')
     const [targetLanguage, setTargetLanguage] = useState('en');
     const [sectionNum, setSectionNum] = useState(0);
@@ -58,10 +59,20 @@ const Search = () => {
 
     useEffect(() =>{
         chrome.storage.sync.get("visitedPages",function (changes) {
-            if((pageContent !== changes.visitedPages) && (changes.visitedPages !== null)) {
+            if((pageContent !== changes.visitedPages.pageText) && (changes.visitedPages !== null)) {
                 setPageContent(changes.visitedPages.pageText)
                 setTerm(changes.visitedPages.pageText)
                 console.log("New Term:",changes.visitedPages.pageText);
+                sendLog('Term fetched from H1');
+        }}
+        )
+    },[])
+
+    useEffect(() =>{
+        chrome.storage.sync.get("currentURL",function (changes) {
+            if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
+            setCurrURL(changes.currentURL.location)
+            sendLog('URL changed to ' + changes.currentURL.location);
         }}
         )
     },[])
@@ -304,11 +315,13 @@ const Search = () => {
 
     const handleTargetLanguage = (event) => {
         setTargetLanguage(event.target.value);
+        sendLog('changedTargetLanguage');
         localStorage.setItem("Language", event.target.value)
     };
 
     const handleMotherTounge = (event) => {
         setMotherTounge(event.target.value);
+        sendLog('changedMotherTounge');
         localStorage.setItem("Mothertounge", event.target.value)
     };
 
@@ -317,18 +330,20 @@ const Search = () => {
         localStorage.setItem("putTranslationIntoDictionary", translatedTerm)
     }
 
-    const sendLogPushToDictionary = () =>{
+    const sendLog = (action) =>{
         let timestamp = new Date();
             let dictionaryData = {
                 //id:
                // user:
                 timestamp: timestamp,
-                action: 'pushToDictionary',
+                action: action,
                 word: term,
-                translation: translatedTerm
+                translation: translatedTerm,
+                mothertounge: motherTounge,
+                targetlanguage: targetLanguage,
             }
             axios
-                .post("http://localhost:3000/addDictionaryEntry", dictionaryData)
+                .post("http://localhost:3000/addLog", dictionaryData)
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         
@@ -338,7 +353,7 @@ const Search = () => {
     const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
         setValue(oldArr => [...oldArr,obj])
         localStorage.setItem("Vocabulary", JSON.stringify(value));
-        sendLogPushToDictionary();
+        sendLog('pushToDictionary');
     }
     
 

@@ -17,6 +17,14 @@ let log = new schema({
     translation: {
         type: String,
         required: false
+    },
+    mothertounge: {
+        type: String,
+        required: false
+    },
+    targetlanguage: {
+        type: String,
+        required: false
     }
 })
 
