@@ -12,6 +12,7 @@ app.get('/', function(req, res){
 
 app.post('/addLog', (req, res) =>{
     let log = new Log({
+        user: req.body.user,
         timestamp: req.body.timestamp,
         action: req.body.action,
         word: req.body.word,

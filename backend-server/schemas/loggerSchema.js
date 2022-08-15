@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
 let log = new schema({
+    user: {
+        type: String,
+        required: true
+    },
     timestamp: {
         type: String,
         required: true

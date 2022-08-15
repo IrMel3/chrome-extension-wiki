@@ -6,13 +6,14 @@ import axios from 'axios';
 import {getCurrentTab} from "../Utils";
 import TrafficContainer from "./TrafficContainer"
 import { DictionaryContext } from './DictionaryContext';
+import { UserContext } from './UserContext';
 var parse = require('html-react-parser');
 
 
 const Search = () => { 
   
-    const [term, setTerm] = useState(localStorage.getItem("Term") || "Buch")
-    const [translatedTerm, setTranslatedTerm] = useState(localStorage.getItem("Translation") || "Book")
+    const [term, setTerm] = useState(localStorage.getItem("Term") || "")
+    const [translatedTerm, setTranslatedTerm] = useState(localStorage.getItem("Translation") || "")
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
@@ -26,6 +27,7 @@ const Search = () => {
     const [sectionNum, setSectionNum] = useState(0);
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
+    const {user, setUser} = useContext(UserContext);
     const seeAlsoText = ["See also", "Siehe auch", "Voir aussi", "Voci correlate"]
 
     /**
@@ -37,7 +39,7 @@ const Search = () => {
         }
         if(localStorage.getItem("Mothertounge") != 'de'){
             setMotherTounge(localStorage.getItem("Mothertounge"))
-        } 
+        }
     })
 
 
@@ -333,8 +335,7 @@ const Search = () => {
     const sendLog = (action) =>{
         let timestamp = new Date();
             let dictionaryData = {
-                //id:
-               // user:
+                user: user,
                 timestamp: timestamp,
                 action: action,
                 word: term,
@@ -351,9 +352,16 @@ const Search = () => {
 
     const pushToDictionary = () =>{
     const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
+        if(value != null){
         setValue(oldArr => [...oldArr,obj])
         localStorage.setItem("Vocabulary", JSON.stringify(value));
         sendLog('pushToDictionary');
+        }else{
+            setValue([obj])
+            localStorage.setItem("Vocabulary", JSON.stringify(value));
+            sendLog('pushToDictionary');
+            console.log("First item in dictionary.")
+        }
     }
     
 

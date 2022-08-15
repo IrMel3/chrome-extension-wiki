@@ -17,6 +17,7 @@ app.use(express.json({limit: '10MB'}));
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 require('./routes/loggerRoutes.js') (app)
+require('./routes/userRoutes.js') (app)
 
 connectToDB()
 
