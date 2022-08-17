@@ -4,15 +4,36 @@
 }
 
 #search {
-  padding-top: 10px;
+  padding: 10px;
 }
 
 #searchfield {
   padding: 10px;
+  max-width: 100px;
 }
 
 #input {
   padding: 10px;
+}
+
+.langDropdowns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.translationForm {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.translation {
+  margin-top: 1.4rem;
+  font-size: 10pt;
+}
+
+.addToDict {
+  margin-top: 1rem;
 }
 
 .ui celled list {

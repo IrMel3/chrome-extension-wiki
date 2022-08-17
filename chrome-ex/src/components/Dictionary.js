@@ -3,8 +3,8 @@ import React, {useState, useContext, useEffect, useRef} from 'react';
 import Card from "./Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChevronLeft,
-    faChevronRight,
+    faCaretLeft,
+    faCaretRight,
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
 import './Dictionary.css';
@@ -123,17 +123,23 @@ function Dictionary (){
     return(
         <div>
             {value != null ?  
+          <div className="dictionary">  
+              <FontAwesomeIcon
+            onClick={slideLeft}
+            className="leftBtn"
+            icon={faCaretLeft}
+            size="4x"
+            color="#B2BFC7"
+             />
             <div className="card-container">
-            <FontAwesomeIcon
-                onClick={slideLeft}
-                className="leftBtn"
-                icon={faChevronLeft}
-            />
             {words2}
+            </div>
             <FontAwesomeIcon
                 onClick={slideRight}
                 className="rightBtn"
-                icon={faChevronRight}
+                icon={faCaretRight}
+                size="4x"
+                color="#B2BFC7"
             />
             </div>
             :  <div>No words in dictionary yet.</div>}

@@ -6,6 +6,11 @@ import axios from 'axios';
 import {getCurrentTab} from "../Utils";
 import TrafficContainer from "./TrafficContainer"
 import { DictionaryContext } from './DictionaryContext';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChevronRight,
+    faCirclePlus,
+  } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from './UserContext';
 var parse = require('html-react-parser');
 
@@ -322,7 +327,9 @@ const Search = () => {
             
         )
     }
-)
+    )
+
+
 
     const linksInArticle = 
     
@@ -379,8 +386,8 @@ const Search = () => {
       <div>
           <div className="ui-form">
               <div className="field">
+              <div className="langDropdowns">
               <div id="langselect"><label>
-                        Select mother tounge:
                         <select value={motherTounge} onChange={handleMotherTounge}>
                         <option value="en">EN</option>
                         <option value="de">DE</option>
@@ -388,8 +395,13 @@ const Search = () => {
                         <option value="it">IT</option>
                         </select>
                   </label></div>
+                  <FontAwesomeIcon
+                    icon={faChevronRight}
+                    size="2x" 
+                    color="#B2BFC7" 
+                    className="langFromTo"
+                  />
                   <div id="langselect"><label>
-                        Select language
                         <select value={targetLanguage} onChange={handleTargetLanguage}>
                         <option value="en">EN</option>
                         <option value="de">DE</option>
@@ -397,16 +409,29 @@ const Search = () => {
                         <option value="it">IT</option>
                         </select>
                   </label></div>
-                  <div id="search">
-                  <label>Search Term:</label>  
+                  </div>
+                  <div className="translationForm">
+                  <div id="search"> 
                   <input className="input"
                   id="searchfield"
                   value={term}
                   onChange={e => setTerm(e.target.value)}
                   />
                   </div>
-                 <div> Translation: {translatedTerm}</div>
-                 <button onClick={pushToDictionary}>Add to Dictionary</button>
+                 <div className="translation">{translatedTerm}</div>
+                 <FontAwesomeIcon onClick={pushToDictionary} icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
+                 </div>
+                 {/*results ? 
+                <div className="item" key={results[0].pageid}>
+                <div className="content">
+                    <h3 className="header">{results[0].title}</h3>
+                    <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${results[0].title}`}>{`https://${targetLanguage}.wikipedia.org/wiki/${results[0].title}`}</a></span><br/>
+                    <span dangerouslySetInnerHTML={{__html:results[0].snippet}}></span>
+
+                </div>
+                </div>
+                :
+                 <div></div>*/}
               </div>
           </div>
 

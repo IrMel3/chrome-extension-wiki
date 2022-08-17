@@ -1,8 +1,8 @@
 .App {
   text-align: center;
-  background-color: aliceblue;
+  background-color: #eef8ff;
   margin-top: 80px;
-  padding: 30px;
+  padding: 10px;
 }
 
 .App-logo {
@@ -47,11 +47,7 @@ h1 {
 
 h1,
 h3 {
-  color: #26b67c;
-}
-
-h3 {
-  font-size: 18px;
+  color: #707070;
 }
 
 .accordion {
@@ -63,11 +59,11 @@ h3 {
   flex-direction: row;
   justify-content: space-between;
   cursor: pointer;
-  background-color: #a4c8e6;
+  background-color: #d4e6f1;
 }
 
 .accordion-title:hover {
-  background-color: aliceblue;
+  background-color: #eef8ff;
 }
 
 .accordion-title,
@@ -76,7 +72,7 @@ h3 {
 }
 
 .accordion-content {
-  background-color: #a4c8e6;
+  background-color: #eef8ff;
 }
 
 .plusSign {

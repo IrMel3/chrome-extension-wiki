@@ -1,23 +1,31 @@
-.container {
-  background-color: beige;
-}
-
 .prevCard {
   display: none;
 }
 
 .activeCard {
   padding: 10px;
+  height: 6rem;
+  min-width: 4rem;
 }
 
 .nextCard {
   display: none;
 }
 
-.rigthBtn {
-  right: 0;
+.rightBtn {
+  display: flex;
+  right: 1rem;
+  margin-top: 2rem;
 }
 
 .leftBtn {
-  left: 0;
+  display: flex;
+  left: -1rem;
+  margin-top: 2rem;
+}
+
+.dictionary {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }

@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar"
 import { createMemoryHistory } from "history";
 import { DictionaryContext } from './components/DictionaryContext';
 import { UserContext } from './components/UserContext';
+import { createGlobalStyle } from 'styled-components';
 
 
 const history = createMemoryHistory();
@@ -34,6 +35,21 @@ const App =() => {
       setIsAuth(true)
     }
   })
+
+  const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'Segoe UI';
+    local("Segoe UI Light"),
+        url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff2) format("woff2"),
+        url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff) format("woff"),
+        url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.ttf) format("truetype");
+    font-weight: 50;
+  }
+  h3 {
+    font-family: 'Segoe UI';
+    font-weight: 50px;
+  }
+`;
 
    
 
@@ -76,6 +92,7 @@ const App =() => {
 
   return (
     <div className="App">
+      <GlobalStyle/>
       <UserContext.Provider value={{user, setUser}}>
       <DictionaryContext.Provider value={{value, setValue}}>
       {!isAuth ? (<div><div><label>Please log in with your user name:</label>  
@@ -97,14 +114,14 @@ const App =() => {
       <div className="accordion">
         <div className="accordion-item">
           <div className="accordion-title" onClick={()=> setIsActive(!isActive)}>
-            <h3>Home</h3>
+            <h3>HOME</h3>
             <div className="plusSign">{isActive ? '-' : '+'}</div>
           </div>
           {isActive && <div className="accordion-content"><Search/></div>}
         </div>
         <div className="accordion-item">
           <div className="accordion-title" onClick={()=> setIsDictionaryActive(!isDictionaryActive)}>
-            <h3>Dictionary</h3>
+            <h3>DICTIONARY</h3>
             <div className="plusSign">{isDictionaryActive ? '-' : '+'}</div>
           </div>
           {isDictionaryActive && <div className="accordion-content"><Dictionary/></div>}
