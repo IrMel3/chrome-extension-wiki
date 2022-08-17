@@ -1,0 +1,23 @@
+.container {
+  background-color: beige;
+}
+
+.prevCard {
+  display: none;
+}
+
+.activeCard {
+  padding: 10px;
+}
+
+.nextCard {
+  display: none;
+}
+
+.rigthBtn {
+  right: 0;
+}
+
+.leftBtn {
+  left: 0;
+}

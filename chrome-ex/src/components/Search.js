@@ -17,6 +17,7 @@ const Search = () => {
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
+    const [dictCount, setDictCount] = useState(0);
     const [isResultsActive, setIsResultsActive] = useState(false);
     const [isSeeAlsoActive, setIsSeeAlsoActive] = useState(false);
     const [isLinksActive, setIsLinksActive] = useState(false);
@@ -42,6 +43,24 @@ const Search = () => {
         }
     })
 
+    useEffect(() =>{
+        if(dictCount > 0 && results !== null){
+        const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
+        if(value != null){
+        setValue(oldArr => [...oldArr,obj])
+            localStorage.setItem("Vocabulary", JSON.stringify(value));
+            sendLog('pushToDictionary');
+        
+        }else{
+            setValue([obj])
+                localStorage.setItem("Vocabulary", JSON.stringify(obj));
+                sendLog('pushToDictionary');
+                console.log("First item in dictionary: " + JSON.stringify(obj))
+            
+        }
+    }
+    }, [dictCount])
+
 
     useEffect(() =>{
             let data = {
@@ -51,7 +70,7 @@ const Search = () => {
             }
             axios.post(`https://libretranslate.de/translate`, data)
             .then((response) => {
-                console.log("libretranslate: " + response.data.translatedText)
+               // console.log("libretranslate: " + response.data.translatedText)
                 setTranslatedTerm(response.data.translatedText);
                 localStorage.setItem("Translation", response.data.translatedText);
             }) 
@@ -94,7 +113,7 @@ const Search = () => {
                     tabs[0].id,
                     {from: 'app', subject: 'getText'},
                     (resp) =>{
-                        console.log(resp.data);
+                        //console.log(resp.data);
                         setTextInfo(resp.data)
                     });
         });
@@ -117,7 +136,7 @@ const Search = () => {
             })
             if(data != null){
             setResults(data.query.search)
-            console.log(data.query.search)
+            //console.log(data.query.search)
             }
             
         }
@@ -178,18 +197,18 @@ const Search = () => {
             searchSA()
                 .then(data=>{
                     try{
-                console.log(data.data);
-                console.log('See also:' + seeAlso);
+                //console.log(data.data);
+                //console.log('See also:' + seeAlso);
                 const sections = data.data.parse.sections;
-                console.log(data.data.parse.sections)
+               // console.log(data.data.parse.sections)
                 //Check if there is a See Also section
                 for(var i=0; i < sections.length; i++){
                     if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
-                        console.log(sections[i].index);
-                        console.log(i);
+                        //console.log(sections[i].index);
+                        //console.log(i);
                         //section = i;
                         var secNum = sections[i].index;
-                        console.log("This is var secNum:" + secNum);
+                        //console.log("This is var secNum:" + secNum);
                         setSectionNum(secNum);
                     }
                 }}
@@ -198,7 +217,7 @@ const Search = () => {
             searchSA2()
                 .then(data=>{
                     if(data.data.parse.text["*"]){
-                    console.log(data.data);
+                   // console.log(data.data);
                    // console.log(data.data.parse.text["*"]);
                     setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
                     }
@@ -213,25 +232,25 @@ const Search = () => {
             if(translatedTerm){
                 searchSA()
                 .then(data=>{
-                console.log(data.data);
+                //console.log(data.data);
                 const sections = data.data.parse.sections;
-                console.log(data.data.parse.sections)
+                //console.log(data.data.parse.sections)
                 //Check if there is a See Also section
                 for(var i=0; i < sections.length; i++){
-                    console.log(sections[i].index);
+                   // console.log(sections[i].index);
                 if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
                     //console.log(sections[i].index);
-                    console.log(i);
+                    //console.log(i);
                     //section = i;
                     var secNum = sections[i].index;
-                    console.log("This is var secNum:" + secNum);
+                   // console.log("This is var secNum:" + secNum);
                     setSectionNum(secNum);
                 }}})
             searchSA2()
                 .then(data=>{
                     if(data.data.parse.text["*"]){
-                    console.log(data.data);
-                    console.log(data.data.parse.text["*"]);
+                    //console.log(data.data);
+                    //console.log(data.data.parse.text["*"]);
                     setSeeAlso(parse(`<div>${data.data.parse.text["*"]}</div>`));
                 }
                 /*else{
@@ -351,18 +370,9 @@ const Search = () => {
     }
 
     const pushToDictionary = () =>{
-    const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
-        if(value != null){
-        setValue(oldArr => [...oldArr,obj])
-        localStorage.setItem("Vocabulary", JSON.stringify(value));
-        sendLog('pushToDictionary');
-        }else{
-            setValue([obj])
-            localStorage.setItem("Vocabulary", JSON.stringify(value));
-            sendLog('pushToDictionary');
-            console.log("First item in dictionary.")
-        }
+        setDictCount(dictCount + 1);
     }
+
     
 
     return(
@@ -372,19 +382,19 @@ const Search = () => {
               <div id="langselect"><label>
                         Select mother tounge:
                         <select value={motherTounge} onChange={handleMotherTounge}>
-                        <option value="en">English</option>
-                        <option value="de">German</option>
-                        <option value="fr">French</option>
-                        <option value="it">Italian</option>
+                        <option value="en">EN</option>
+                        <option value="de">DE</option>
+                        <option value="fr">FR</option>
+                        <option value="it">IT</option>
                         </select>
                   </label></div>
                   <div id="langselect"><label>
                         Select language
                         <select value={targetLanguage} onChange={handleTargetLanguage}>
-                        <option value="en">English</option>
-                        <option value="de">German</option>
-                        <option value="fr">French</option>
-                        <option value="it">Italian</option>
+                        <option value="en">EN</option>
+                        <option value="de">DE</option>
+                        <option value="fr">FR</option>
+                        <option value="it">IT</option>
                         </select>
                   </label></div>
                   <div id="search">
@@ -404,25 +414,16 @@ const Search = () => {
       <div className="accordion">
         <div className="accordion-item">
           <div className="accordion-title" onClick={()=> setIsResultsActive(!isResultsActive)}>
-            <h3>Results</h3>
+            <h3>Get inspired to learn more:</h3>
             <div className="plusSign">{isResultsActive ? '-' : '+'}</div>
           </div>
-          {isResultsActive && <div className="accordion-content ui celled list">{searchResultsMapped}</div>}
-        </div>
-        <div className="accordion-item">
-          <div className="accordion-title" onClick={()=> setIsSeeAlsoActive(!isSeeAlsoActive)}>
-            <h3>See Also:</h3>
-            <div className="plusSign">{isSeeAlsoActive ? '-' : '+'}</div>
-          </div>
-          {isSeeAlsoActive && <div className="accordion-content">{seeAlso}</div>}
-        </div>
-        <div className="accordion-item">
-          <div className="accordion-title" onClick={()=> setIsLinksActive(!isLinksActive)}>
-            <h3>Links</h3>
-            <div className="plusSign">{isLinksActive ? '-' : '+'}</div>
-          </div>
-          {isLinksActive && <div className="accordion-content">{linksInArticle}</div>}
-        </div>   
+          
+          {isResultsActive && <div className="accordion-content ui celled list"><h2>More Articles</h2>{searchResultsMapped}</div>}
+          
+          {isResultsActive && <div className="accordion-content"><h2>See Also</h2>{seeAlso}</div>}
+          
+          {isResultsActive && <div className="accordion-content"><h2>Related Links</h2>{linksInArticle}</div>}
+        </div> 
     </div>
     </React.Fragment>
           
