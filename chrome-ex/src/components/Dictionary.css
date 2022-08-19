@@ -16,12 +16,14 @@
   display: flex;
   right: 1rem;
   margin-top: 2rem;
+  cursor: pointer;
 }
 
 .leftBtn {
   display: flex;
   left: -1rem;
   margin-top: 2rem;
+  cursor: pointer;
 }
 
 .dictionary {

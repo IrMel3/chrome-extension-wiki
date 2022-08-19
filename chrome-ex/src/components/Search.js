@@ -19,6 +19,7 @@ const Search = () => {
   
     const [term, setTerm] = useState(localStorage.getItem("Term") || "")
     const [translatedTerm, setTranslatedTerm] = useState(localStorage.getItem("Translation") || "")
+    const [firstResult, setFirstResult] = useState([])
     const [results, setResults] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
@@ -141,7 +142,8 @@ const Search = () => {
             })
             if(data != null){
             setResults(data.query.search)
-            //console.log(data.query.search)
+            let arr = data.query.search;
+            setFirstResult(arr[0]);
             }
             
         }
@@ -313,7 +315,7 @@ const Search = () => {
 
     const searchResultsMapped = 
     
-    results && results.slice(0,3).map(result =>{
+    results && results.slice(1,3).map(result =>{
         return(
             
             <div className="item" key={result.pageid}>
@@ -380,7 +382,6 @@ const Search = () => {
         setDictCount(dictCount + 1);
     }
 
-    
 
     return(
       <div>
@@ -421,17 +422,17 @@ const Search = () => {
                  <div className="translation">{translatedTerm}</div>
                  <FontAwesomeIcon onClick={pushToDictionary} icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
                  </div>
-                 {/*results ? 
-                <div className="item" key={results[0].pageid}>
+                 {results && firstResult ? 
+                <div className="firstResult" key={firstResult.pageid}>
                 <div className="content">
-                    <h3 className="header">{results[0].title}</h3>
-                    <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${results[0].title}`}>{`https://${targetLanguage}.wikipedia.org/wiki/${results[0].title}`}</a></span><br/>
-                    <span dangerouslySetInnerHTML={{__html:results[0].snippet}}></span>
+                    <h3 className="header">{firstResult.title}</h3>
+                    <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${firstResult.title}`}>{`https://${targetLanguage}.wikipedia.org/wiki/${firstResult.title}`}</a></span><br/>
+                    <span dangerouslySetInnerHTML={{__html:firstResult.snippet}}></span>
 
                 </div>
                 </div>
                 :
-                 <div></div>*/}
+                 <div></div>}
               </div>
           </div>
 

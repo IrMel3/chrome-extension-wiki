@@ -16,6 +16,7 @@ function Dictionary (){
     const [fullDictionary, setFullDictionary] = useState([])
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
+    const [dictionaryLength, setDictionaryLength] = useState(0);
     const [index, setIndex] = useState(0)
 
     /**
@@ -27,6 +28,11 @@ function Dictionary (){
             setNewWord(oldArr =>[...oldArr,localStorage.getItem("putTranslationIntoDictionary")]);
         }
     },[])
+
+
+    useEffect(() =>{
+        setDictionaryLength(value.length);
+    })
 
    /* useEffect(() =>{
         const sDict = localStorage.getItem("Vocabulary");
@@ -123,6 +129,7 @@ function Dictionary (){
     return(
         <div>
             {value != null ?  
+          <div>
           <div className="dictionary">  
               <FontAwesomeIcon
             onClick={slideLeft}
@@ -141,6 +148,8 @@ function Dictionary (){
                 size="4x"
                 color="#B2BFC7"
             />
+            </div>
+            <div>{index+1}/{dictionaryLength}</div>
             </div>
             :  <div>No words in dictionary yet.</div>}
         </div>
