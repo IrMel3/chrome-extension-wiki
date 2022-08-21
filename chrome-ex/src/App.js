@@ -17,6 +17,12 @@ import { createGlobalStyle } from 'styled-components';
 
 const history = createMemoryHistory();
 
+/**
+ * npm run build to build the chrome extension and load build folder into chrome
+ * node index to start the server on port 3000
+ * @returns 
+ */
+
 
 const App =() => {
   const randomNum = Math.floor(Math.random() * Math.floor(Vocab.length))  

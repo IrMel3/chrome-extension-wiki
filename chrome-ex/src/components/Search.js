@@ -49,9 +49,12 @@ const Search = () => {
         }
     })
 
+    /**
+     * fetches the current dictionary from localstorage
+     */
     useEffect(() =>{
-        if(dictCount > 0 && results !== null){
-        const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: results[0].title}
+        if(dictCount >= 0 && results !== null){
+        const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: firstResult.title}
         if(value != null){
         setValue(oldArr => [...oldArr,obj])
             localStorage.setItem("Vocabulary", JSON.stringify(value));
@@ -67,7 +70,9 @@ const Search = () => {
     }
     }, [dictCount])
 
-
+    /**
+     * translates the fetched term and saves it to state
+     */
     useEffect(() =>{
             let data = {
                 q : term,
@@ -81,9 +86,11 @@ const Search = () => {
                 localStorage.setItem("Translation", response.data.translatedText);
             }) 
     
-    },[term])
+    })
 
-
+    /**
+     * fetches h1 from chrome storage 
+     */
     useEffect(() =>{
         chrome.storage.sync.get("visitedPages",function (changes) {
             if((pageContent !== changes.visitedPages.pageText) && (changes.visitedPages !== null)) {
@@ -100,6 +107,26 @@ const Search = () => {
             if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
             setCurrURL(changes.currentURL.location)
             sendLog('URL changed to ' + changes.currentURL.location);
+        }}
+        )
+    },[])
+
+    /**
+     * fetches the search terms from youtube and google 
+     */
+    useEffect(() =>{
+        chrome.storage.sync.get("searchParams",function (changes) {
+            if(changes.searchParams.params !== null){
+            const queryParams = new URLSearchParams(changes.searchParams.params);
+            const searchTerm = queryParams.get('q');
+            const ytSearchTerm = queryParams.get('search_query');
+            if(searchTerm !== null){
+                setTerm(searchTerm);
+            }
+            if(ytSearchTerm !== null){
+                setTerm(ytSearchTerm);
+            }
+            console.log(ytSearchTerm);
         }}
         )
     },[])
@@ -200,22 +227,22 @@ const Search = () => {
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
     useEffect(() => {
         //search Wikipedia API
-        if (translatedTerm && !seeAlso.length){
+        if (translatedTerm && !seeAlso.length && firstResult){
             searchSA()
                 .then(data=>{
                     try{
-                //console.log(data.data);
-                //console.log('See also:' + seeAlso);
+                console.log(data.data);
+               // console.log('See also state:' + seeAlso);
                 const sections = data.data.parse.sections;
-               // console.log(data.data.parse.sections)
+               // console.log("sections of article "+ data.data.parse.sections)
                 //Check if there is a See Also section
                 for(var i=0; i < sections.length; i++){
                     if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
-                        //console.log(sections[i].index);
+                        console.log(sections[i].index);
                         //console.log(i);
                         //section = i;
                         var secNum = sections[i].index;
-                        //console.log("This is var secNum:" + secNum);
+                        console.log("This is var secNum:" + secNum);
                         setSectionNum(secNum);
                     }
                 }}
@@ -223,9 +250,11 @@ const Search = () => {
                 })
             searchSA2()
                 .then(data=>{
+                    console.log("Sec num now " + sectionNum)
+                    console.log(data.data)
                     if(data.data.parse.text["*"]){
-                   // console.log(data.data);
-                   // console.log(data.data.parse.text["*"]);
+                    console.log("See Also: " + data.data.parse);
+                    //console.log("See Also parsed " +data.data.parse.text["*"]);
                     setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
                     }
                     else{
@@ -234,43 +263,7 @@ const Search = () => {
                 
             }).catch(error => console.log(error))
     }
-    else{
-        let timeoutId = setTimeout(() =>{
-            if(translatedTerm){
-                searchSA()
-                .then(data=>{
-                //console.log(data.data);
-                const sections = data.data.parse.sections;
-                //console.log(data.data.parse.sections)
-                //Check if there is a See Also section
-                for(var i=0; i < sections.length; i++){
-                   // console.log(sections[i].index);
-                if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
-                    //console.log(sections[i].index);
-                    //console.log(i);
-                    //section = i;
-                    var secNum = sections[i].index;
-                   // console.log("This is var secNum:" + secNum);
-                    setSectionNum(secNum);
-                }}})
-            searchSA2()
-                .then(data=>{
-                    if(data.data.parse.text["*"]){
-                    //console.log(data.data);
-                    //console.log(data.data.parse.text["*"]);
-                    setSeeAlso(parse(`<div>${data.data.parse.text["*"]}</div>`));
-                }
-                /*else{
-                    setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${term}</div>`))
-                }*/
-                
-            }).catch(error => console.log(error));
-            }
-        },1000);
-        return clearTimeout(timeoutId);
-    }
-
-}, [seeAlso])  
+}, [translatedTerm])  
                 
             
    
@@ -444,11 +437,11 @@ const Search = () => {
             <div className="plusSign">{isResultsActive ? '-' : '+'}</div>
           </div>
           
-          {isResultsActive && <div className="accordion-content ui celled list"><h2>More Articles</h2>{searchResultsMapped}</div>}
+          {isResultsActive ? <div className="accordion-content ui celled list"><h2>More Articles</h2>{searchResultsMapped}</div> : <div></div>}
           
-          {isResultsActive && <div className="accordion-content"><h2>See Also</h2>{seeAlso}</div>}
+          {isResultsActive && seeAlso ? <div className="accordion-content"><h2>See Also</h2>{seeAlso}</div> : <div></div>}
           
-          {isResultsActive && <div className="accordion-content"><h2>Related Links</h2>{linksInArticle}</div>}
+          {isResultsActive && linksInArticle ? <div className="accordion-content"><h2>Related Links</h2>{linksInArticle}</div> : <div></div>}
         </div> 
     </div>
     </React.Fragment>

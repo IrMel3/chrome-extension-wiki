@@ -87,15 +87,28 @@ chrome.storage.sync.set({'visitedPages':
 chrome.storage.sync.set({'currentURL':
 {location: document.location.href}}, console.log("current URL",document.location.href))
 
+chrome.storage.sync.set({'searchParams':
+{params: document.location.search}}, console.log("search Parameters",document.location.search))
+
+
 const app = document.createElement('iframe');
+//const yt = document.getElementsByClassName('style-scope ytd-channel-name');
 app.style.border = "none"
 app.style.width = "300px";
 app.style.height = "700px"
 app.style.top = "0px";
 app.style.right = "0px";
 app.style.position = "fixed";
+app.style.zIndex = "950"
 app.src = chrome.runtime.getURL("index.html");
+if(document.getElementById("mw-head")){
+    document.getElementById("mw-head").style.paddingRight = "300px";
+}
+/*if(document.getElementsByClassName("vector-menu-content-list") !== null){
+    document.getElementsByClassName("vector-menu-content-list")[0].style.paddingRight = "300px";
+}*/
 document.body.style.paddingRight = "300px";
+document.body.style.zIndex = "900"
 document.body.appendChild(app);
 ReactDOM.render(<Main />, app);
 
