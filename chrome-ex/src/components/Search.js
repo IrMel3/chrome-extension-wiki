@@ -20,7 +20,9 @@ const Search = () => {
     const [term, setTerm] = useState(localStorage.getItem("Term") || "")
     const [translatedTerm, setTranslatedTerm] = useState(localStorage.getItem("Translation") || "")
     const [firstResult, setFirstResult] = useState([])
+    const [firstResultTitle, setFirstResultTitle] = useState("")
     const [results, setResults] = useState([])
+    const [sections, setSections] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
     const [dictCount, setDictCount] = useState(0);
@@ -153,6 +155,12 @@ const Search = () => {
     });
     });
 
+  /*  useEffect(() =>{
+        if(results !== null){
+            setFirstResult(results[0].title)
+        }
+    },[results])*/
+
 
     //search terms and descriptions
     useEffect(() => {
@@ -170,9 +178,11 @@ const Search = () => {
             if(data != null){
             setResults(data.query.search)
             let arr = data.query.search;
+            let title = data.query.search[0].title
             setFirstResult(arr[0]);
+            setFirstResultTitle(title)
+            console.log(title);
             }
-            
         }
         if (translatedTerm && !results.length){
             search();
@@ -203,7 +213,7 @@ const Search = () => {
                 prop: "sections",
                 format: "json",
                 origin: "*",
-                page: translatedTerm,
+                page: firstResultTitle,
             },
         })}
         
@@ -218,10 +228,11 @@ const Search = () => {
                 prop: "text",
                 format: "json",
                 origin: "*",
-                page: translatedTerm,
+                page: firstResultTitle,
                 section: sectionNum
             },
         })}
+
 
     //search "see also" e.g. https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&prop=sections
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
@@ -233,37 +244,49 @@ const Search = () => {
                     try{
                 console.log(data.data);
                // console.log('See also state:' + seeAlso);
-                const sections = data.data.parse.sections;
+                setSections(data.data.parse.sections);
                // console.log("sections of article "+ data.data.parse.sections)
                 //Check if there is a See Also section
-                for(var i=0; i < sections.length; i++){
-                    if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
-                        console.log(sections[i].index);
-                        //console.log(i);
-                        //section = i;
-                        var secNum = sections[i].index;
-                        console.log("This is var secNum:" + secNum);
-                        setSectionNum(secNum);
-                    }
-                }}
+                }
                 catch(err){console.log(err)}
                 })
-            searchSA2()
-                .then(data=>{
-                    console.log("Sec num now " + sectionNum)
-                    console.log(data.data)
-                    if(data.data.parse.text["*"]){
-                    console.log("See Also: " + data.data.parse);
-                    //console.log("See Also parsed " +data.data.parse.text["*"]);
-                    setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
-                    }
-                    else{
-                        setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${translatedTerm}</div>`))
-                    }
-                
-            }).catch(error => console.log(error))
     }
-}, [translatedTerm])  
+}, [firstResultTitle])  
+
+const searchSectionsForSeeAlso = () =>{
+    if(sections.length !== null){
+    for(var i=0; i < sections.length; i++){
+        if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
+            console.log(sections[i].index);
+            //console.log(i);
+            //section = i;
+            var secNum = sections[i].index;
+            console.log("This is var secNum:" + secNum);
+            setSectionNum(secNum);
+        }
+    }}
+}
+
+useEffect(() =>{
+    searchSectionsForSeeAlso()
+},[sections])
+
+    useEffect(() =>{
+        searchSA2()
+        .then(data=>{
+            console.log("Sec num now " + sectionNum)
+            console.log(data.data)
+            if(data.data.parse.text["*"]){
+            console.log("See Also: " + data.data.parse);
+            //console.log("See Also parsed " +data.data.parse.text["*"]);
+            setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
+            }
+            else{
+                setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${translatedTerm}</div>`))
+            }
+        
+    }).catch(error => console.log(error))
+    },[sectionNum])
                 
             
    
