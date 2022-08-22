@@ -198,7 +198,7 @@ const Search = () => {
         clearTimeout(timeoutID);
     }
 }
-    }, [translatedTerm])
+    }, [translatedTerm, targetLanguage, motherTounge])
 
 
 
@@ -301,7 +301,7 @@ useEffect(() =>{
                     prop: "links",
                     format: "json",
                     origin: "*",
-                    titles: translatedTerm,
+                    titles: firstResultTitle,
                 },
             })
             //console.log(data);
@@ -325,7 +325,7 @@ useEffect(() =>{
         clearTimeout(timeoutID);
     }
 }
-    }, [translatedTerm])
+    }, [firstResultTitle])
 
 
 
@@ -436,7 +436,7 @@ useEffect(() =>{
                   />
                   </div>
                  <div className="translation">{translatedTerm}</div>
-                 <FontAwesomeIcon onClick={pushToDictionary} icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
+                 <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
                  </div>
                  {results && firstResult ? 
                 <div className="firstResult" key={firstResult.pageid}>
