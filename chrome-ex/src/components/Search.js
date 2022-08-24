@@ -3,8 +3,10 @@
 import React, {useState, useEffect, useContext, useRef} from 'react';
 import './Search.css';
 import axios from 'axios';
+import {TagCloud} from 'react-tagcloud';
 import {getCurrentTab} from "../Utils";
 import TrafficContainer from "./TrafficContainer"
+import $ from 'jquery';
 import { DictionaryContext } from './DictionaryContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -52,25 +54,42 @@ const Search = () => {
     })
 
     /**
-     * fetches the current dictionary from localstorage
+     * set languages to local storage
      */
     useEffect(() =>{
-        if(dictCount >= 0 && results !== null){
-        const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: firstResult.title}
-        if(value != null){
-        setValue(oldArr => [...oldArr,obj])
+        if(localStorage.getItem("Language") == null){
+            localStorage.setItem("Language", 'en')
+        }
+        if(localStorage.getItem("Mothertounge") == null){
+            localStorage.setItem("Mothertounge", 'de')
+        }
+        if(localStorage.getItem("Vocabulary") == null){
+            localStorage.setItem("Vocabulary", [])
+        }
+    })
+
+
+    /**
+     * fetches the current dictionary from localstorage
+     */
+   // useEffect(() =>{
+    const pushToDictionary = () =>{
+        if(term !== null && results !== null){
+        const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: firstResultTitle}
+        if(value == []){
+            setValue([obj])
+            localStorage.setItem("Vocabulary", JSON.stringify(obj));
+            sendLog('pushToDictionary(first)');
+            console.log("First item in dictionary: " + JSON.stringify(obj))
+    
+        }else{
+            setValue(oldArr => [...oldArr,obj])
             localStorage.setItem("Vocabulary", JSON.stringify(value));
             sendLog('pushToDictionary');
-        
-        }else{
-            setValue([obj])
-                localStorage.setItem("Vocabulary", JSON.stringify(obj));
-                sendLog('pushToDictionary');
-                console.log("First item in dictionary: " + JSON.stringify(obj))
             
         }
-    }
-    }, [dictCount])
+    }}
+  //  }, [dictCount])
 
     /**
      * translates the fetched term and saves it to state
@@ -98,6 +117,7 @@ const Search = () => {
             if((pageContent !== changes.visitedPages.pageText) && (changes.visitedPages !== null)) {
                 setPageContent(changes.visitedPages.pageText)
                 setTerm(changes.visitedPages.pageText)
+                localStorage.setItem("Term", changes.visitedPages.pageText);
                 console.log("New Term:",changes.visitedPages.pageText);
                 sendLog('Term fetched from H1');
         }}
@@ -124,9 +144,13 @@ const Search = () => {
             const ytSearchTerm = queryParams.get('search_query');
             if(searchTerm !== null){
                 setTerm(searchTerm);
+                localStorage.setItem("Term", searchTerm);
+                
             }
             if(ytSearchTerm !== null){
                 setTerm(ytSearchTerm);
+                localStorage.setItem("Term", ytSearchTerm);
+                
             }
             console.log(ytSearchTerm);
         }}
@@ -227,11 +251,40 @@ const Search = () => {
                 action: "parse",
                 prop: "text",
                 format: "json",
-                origin: "*",
+                //origin: "*",
                 page: firstResultTitle,
                 section: sectionNum
             },
         })}
+
+  /*  var arr = [], l = document.links;
+    for(var i=0; i<l.length; i++) {
+        arr.push(l[i].href);
+        if(arr[i].startsWith('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea')){
+            arr[i].replace('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea', 'https://en.wikipedia.org')
+        }
+
+        console.log(arr);
+    }*/
+    
+    //oh mein Gott es funktioniert -put in useEffekt
+
+    useEffect(() =>{
+    var anchors = document.getElementsByTagName("a");
+
+    for (var i = 0; i < anchors.length; i++) {
+       if(anchors[i].href.startsWith('chrome')){
+            anchors[i].href= `https://${targetLanguage}.wikipedia.org` + anchors[i].href.replace('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea','')
+            console.log(anchors[i].href)
+        }
+        
+    }})
+
+  /*  $(document).on('click', 'a', function(e){ 
+        e.preventDefault(); 
+        var url = $(this).attr('href'); 
+        window.open(url, '_blank');
+    });*/
 
 
     //search "see also" e.g. https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&prop=sections
@@ -279,7 +332,7 @@ useEffect(() =>{
             if(data.data.parse.text["*"]){
             console.log("See Also: " + data.data.parse);
             //console.log("See Also parsed " +data.data.parse.text["*"]);
-            setSeeAlso(parse(`<div className="seeAlso">${data.data.parse.text["*"]}</div>`));
+            setSeeAlso(parse(`<div className="seeAlso nodeco">${data.data.parse.text["*"]}</div>`));
             }
             else{
                 setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${translatedTerm}</div>`))
@@ -353,9 +406,9 @@ useEffect(() =>{
     
     links && links.map(link =>{
         return (
-            <div>
-            <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
-            </div>
+            <li>
+            <span className='link'><a className="nodeco"target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
+            </li>
         )
     })
 
@@ -394,9 +447,9 @@ useEffect(() =>{
         
     }
 
-    const pushToDictionary = () =>{
+  /*  const pushToDictionary = () =>{
         setDictCount(dictCount + 1);
-    }
+    }*/
 
 
     return(
@@ -407,7 +460,7 @@ useEffect(() =>{
               <div id="langselect"><label>
                         <select value={motherTounge} onChange={handleMotherTounge}>
                         <option value="en">EN</option>
-                        <option value="de">DE</option>
+                        <option value="de" selected>DE</option>
                         <option value="fr">FR</option>
                         <option value="it">IT</option>
                         </select>
@@ -420,7 +473,7 @@ useEffect(() =>{
                   />
                   <div id="langselect"><label>
                         <select value={targetLanguage} onChange={handleTargetLanguage}>
-                        <option value="en">EN</option>
+                        <option value="en" selected>EN</option>
                         <option value="de">DE</option>
                         <option value="fr">FR</option>
                         <option value="it">IT</option>
@@ -460,11 +513,11 @@ useEffect(() =>{
             <div className="plusSign">{isResultsActive ? '-' : '+'}</div>
           </div>
           
-          {isResultsActive ? <div className="accordion-content ui celled list"><h2>More Articles</h2>{searchResultsMapped}</div> : <div></div>}
-          
-          {isResultsActive && seeAlso ? <div className="accordion-content"><h2>See Also</h2>{seeAlso}</div> : <div></div>}
-          
-          {isResultsActive && linksInArticle ? <div className="accordion-content"><h2>Related Links</h2>{linksInArticle}</div> : <div></div>}
+          {isResultsActive ? <div className="accordion-content ui celled list">{searchResultsMapped}</div> : <div></div>}
+          <div className="accordion-content">
+          {isResultsActive && seeAlso ? <div>{seeAlso}</div> : <div></div>}
+          {isResultsActive && linksInArticle ? <div className="linksWrap"><ul>{linksInArticle}</ul></div> : <div></div>}
+          </div>
         </div> 
     </div>
     </React.Fragment>

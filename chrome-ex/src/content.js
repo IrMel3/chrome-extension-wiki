@@ -91,6 +91,8 @@ chrome.storage.sync.set({'searchParams':
 {params: document.location.search}}, console.log("search Parameters",document.location.search))
 
 
+
+
 const app = document.createElement('iframe');
 //const yt = document.getElementsByClassName('style-scope ytd-channel-name');
 app.style.border = "none"

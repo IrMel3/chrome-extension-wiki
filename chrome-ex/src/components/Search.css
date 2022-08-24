@@ -38,9 +38,19 @@
   background-color: #d4e6f1;
 }
 
+.item {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #d4e6f1;
+}
+
 .addToDict {
   margin-top: 1rem;
   cursor: pointer;
+}
+
+.langFromTo {
+  margin-top: 0.5rem;
 }
 
 .ui celled list {
@@ -48,11 +58,44 @@
 }
 ul {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
+  padding: 5px;
+  /*background-color: #d4e6f1;*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  /*padding: 0;
+  margin: 0;*/
 }
-.seeAlso {
-  text-decoration: none;
+li {
+  padding: 10px;
+  background-color: #d4e6f1;
+  margin: 5px;
+}
+
+a {
+  text-decoration: none !important;
+  color: black;
+  font-style: italic;
+}
+
+a:hover {
+  color: #276b95;
+}
+
+.nodeco:hover {
+  color: #276b95;
+}
+
+.linksWrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.metadata {
+  display: none;
 }
 
 .mw-editsection {
@@ -60,5 +103,13 @@ ul {
 }
 
 .mw-parser-output .portalbox.tright {
+  display: none;
+}
+
+.navbox-container {
+  display: none;
+}
+
+.bandeau-portail {
   display: none;
 }

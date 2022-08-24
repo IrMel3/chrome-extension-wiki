@@ -59,16 +59,23 @@ h3 {
   flex-direction: row;
   justify-content: space-between;
   cursor: pointer;
-  background-color: #d4e6f1;
+  background-color: #c7e1f1; /*#d4e6f1*/
 }
 
 .accordion-title:hover {
-  background-color: #eef8ff;
+  background-color: #e7f4fd;
 }
 
-.accordion-title,
-.accordion-content {
+.accordion-title {
   padding: 1rem;
+}
+
+.accordion-content {
+  padding: 0.5rem;
+}
+
+.mw-headline {
+  display: none;
 }
 
 .accordion-content {
