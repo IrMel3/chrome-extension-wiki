@@ -42,7 +42,7 @@ const App =() => {
     }
   })
 
-  const GlobalStyle = createGlobalStyle`
+  /*const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'Segoe UI';
     local("Segoe UI Light"),
@@ -55,7 +55,7 @@ const App =() => {
     font-family: 'Segoe UI';
     font-weight: 50px;
   }
-`;
+`;*/
 
    
 
@@ -67,7 +67,7 @@ const App =() => {
                 user: user,
             }
             axios
-                .post("http://localhost:3000/loginUser", userData)
+                .post("https://pwp.um.ifi.lmu.de/g20/loginUser", userData)
                 .then(res => {
                   console.log(res.data)
                   if(res.data.message === "User exists!"){
@@ -85,7 +85,7 @@ const App =() => {
       user: newUser,
   }
   axios
-      .post("http://localhost:3000/registerUser", userData)
+      .post("https://pwp.um.ifi.lmu.de/g20/registerUser", userData) //http://localhost:3000/
       .then(res => {
         console.log(res.data)
         if(res.data.message === "Saved new user!"){
@@ -98,7 +98,7 @@ const App =() => {
 
   return (
     <div className="App">
-      <GlobalStyle/>
+      
       <UserContext.Provider value={{user, setUser}}>
       <DictionaryContext.Provider value={{value, setValue}}>
       {!isAuth ? (<div><div><label>Please log in with your user name:</label>  

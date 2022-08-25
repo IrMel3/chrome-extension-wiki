@@ -4,7 +4,8 @@ const Log = require("./schemas/loggerSchema");
 
 
 const app = express()
-const port = 3000
+//const port = 3000
+const port = 10020
 
 app.use((req, res, next) =>{
     res.setHeader('Access-Control-Allow-Origin', '*'); //website allowed to connect
