@@ -537,13 +537,13 @@ useEffect(() =>{
                   />
                   </div>
                  <div className="translation">{translatedTerm}</div>
-                 <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
                  </div>
+                 <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
             </div>
             <div className="carousel">
                 <FontAwesomeIcon
             onClick={slideLeft}
-            className="leftBtn"
+            className="leftWikiBtn"
             icon={faCaretLeft}
             size="2x"
             color="#B2BFC7"
@@ -553,7 +553,7 @@ useEffect(() =>{
             </div>
             <FontAwesomeIcon
                 onClick={slideRight}
-                className="rightBtn"
+                className="rightWikiBtn"
                 icon={faCaretRight}
                 size="2x"
                 color="#B2BFC7"
