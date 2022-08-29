@@ -1,8 +1,8 @@
-const Card = ({ Term, Translation, Targetlanguage, Link, cardStyle }) => {
+const Card = ({ term, translation, targetlanguage, link, cardStyle }) => {
     return (
       <div className={cardStyle}>
-            <h3>{Term}</h3>
-            <a target="_blank" href={`https://${Targetlanguage}.wikipedia.org/wiki/${Link}`}>{Translation}</a>
+            <h3>{term}</h3>
+            <a target="_blank" href={`https://${targetlanguage}.wikipedia.org/wiki/${link}`}>{translation}</a>
       </div>
     );
   };

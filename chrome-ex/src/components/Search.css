@@ -119,3 +119,37 @@ a:hover {
 .bandeau-portail {
   display: none;
 }
+
+.prevCard {
+  display: none;
+}
+
+.activeWikiCard {
+  padding: 10px;
+  background-color: #d4e6f1;
+  margin-bottom: 10px;
+  min-width: 4rem;
+}
+
+.nextCard {
+  display: none;
+}
+
+.rightBtn {
+  display: flex;
+  right: 1rem;
+  margin-top: 2rem;
+  cursor: pointer;
+}
+
+.leftBtn {
+  display: flex;
+  left: -1rem;
+  margin-top: 2rem;
+  cursor: pointer;
+}
+.carousel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}

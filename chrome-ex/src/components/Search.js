@@ -3,13 +3,13 @@
 import React, {useState, useEffect, useContext, useRef} from 'react';
 import './Search.css';
 import axios from 'axios';
-import {TagCloud} from 'react-tagcloud';
-import {getCurrentTab} from "../Utils";
-import TrafficContainer from "./TrafficContainer"
 import $ from 'jquery';
+import WikiCard from "./WikiCard";
 import { DictionaryContext } from './DictionaryContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    faCaretLeft,
+    faCaretRight,
     faChevronRight,
     faCirclePlus,
   } from "@fortawesome/free-solid-svg-icons";
@@ -27,6 +27,7 @@ const Search = () => {
     const [sections, setSections] = useState([])
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
+    const [index, setIndex] = useState(0)
     const [dictCount, setDictCount] = useState(0);
     const [isResultsActive, setIsResultsActive] = useState(false);
     const [isSeeAlsoActive, setIsSeeAlsoActive] = useState(false);
@@ -68,6 +69,23 @@ const Search = () => {
         }
     })
 
+    const addDictionaryEntryToDB =() =>{
+        let timestamp = new Date();
+        let newEntry = {
+            user: user,
+            timestamp: timestamp,
+            term: term,
+            translation: translatedTerm,
+            mothertounge: motherTounge,
+            targetlanguage: targetLanguage,
+            link: firstResultTitle
+        }
+        axios
+            .post("http://localhost:3000/addToDictionary", newEntry)
+            .then(data => console.log(data))
+            .catch(error => console.log(error))
+    }
+
 
     /**
      * fetches the current dictionary from localstorage
@@ -76,6 +94,7 @@ const Search = () => {
     const pushToDictionary = () =>{
         if(term !== null && results !== null){
         const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: firstResultTitle}
+        addDictionaryEntryToDB();
         if(value == []){
             setValue([obj])
             localStorage.setItem("Vocabulary", JSON.stringify(obj));
@@ -269,7 +288,7 @@ const Search = () => {
     
     //oh mein Gott es funktioniert -put in useEffekt
 
-    useEffect(() =>{
+ /*   useEffect(() =>{
     var anchors = document.getElementsByTagName("a");
 
     for (var i = 0; i < anchors.length; i++) {
@@ -278,7 +297,7 @@ const Search = () => {
             console.log(anchors[i].href)
         }
         
-    }})
+    }})*/
 
   /*  $(document).on('click', 'a', function(e){ 
         e.preventDefault(); 
@@ -380,6 +399,20 @@ useEffect(() =>{
 }
     }, [firstResultTitle])
 
+    //for Cards
+
+    const slideLeft = () => {
+        if (index - 1 >= 0) {
+          setIndex(index - 1);
+        }
+      };
+    
+      const slideRight = () => {
+        if (index < 2) {
+          setIndex(index + 1);
+        }
+      };
+
 
 
     const searchResultsMapped = 
@@ -394,6 +427,20 @@ useEffect(() =>{
                     <span dangerouslySetInnerHTML={{__html:result.snippet}}></span>
 
                 </div>
+            </div>
+            
+        )
+    }
+    )
+
+
+    const searchResultsMapped2 =    
+    results && results.slice(0,3).map((result,n) =>{
+        let position = n > index ? "nextCard" : n === index ? "activeWikiCard" : "prevCard";
+
+        return(
+            <div className="container">
+               <WikiCard {...result} targetLanguage={targetLanguage} cardStyle={position}></WikiCard> 
             </div>
             
         )
@@ -441,7 +488,7 @@ useEffect(() =>{
                 targetlanguage: targetLanguage,
             }
             axios
-                .post("https://pwp.um.ifi.lmu.de/g20/addLog", dictionaryData)
+                .post("http://localhost:3000/addLog", dictionaryData)
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         
@@ -491,38 +538,30 @@ useEffect(() =>{
                  <div className="translation">{translatedTerm}</div>
                  <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
                  </div>
-                 {results && firstResult ? 
-                <div className="firstResult" key={firstResult.pageid}>
-                <div className="content">
-                    <h3 className="header">{firstResult.title}</h3>
-                    <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${firstResult.title}`}>{`https://${targetLanguage}.wikipedia.org/wiki/${firstResult.title}`}</a></span><br/>
-                    <span dangerouslySetInnerHTML={{__html:firstResult.snippet}}></span>
-
-                </div>
-                </div>
-                :
-                 <div></div>}
+            <div className="carousel">
+                <FontAwesomeIcon
+            onClick={slideLeft}
+            className="leftBtn"
+            icon={faCaretLeft}
+            size="4x"
+            color="#B2BFC7"
+             />
+            <div className="card-container">
+            {searchResultsMapped2}
+            </div>
+            <FontAwesomeIcon
+                onClick={slideRight}
+                className="rightBtn"
+                icon={faCaretRight}
+                size="4x"
+                color="#B2BFC7"
+            />
               </div>
           </div>
-
-    <React.Fragment>
-      <div className="accordion">
-        <div className="accordion-item">
-          <div className="accordion-title" onClick={()=> setIsResultsActive(!isResultsActive)}>
-            <h3>Get inspired to learn more:</h3>
-            <div className="plusSign">{isResultsActive ? '-' : '+'}</div>
           </div>
-          
-          {isResultsActive ? <div className="accordion-content ui celled list">{searchResultsMapped}</div> : <div></div>}
-          <div className="accordion-content">
-          {isResultsActive && seeAlso ? <div>{seeAlso}</div> : <div></div>}
-          {isResultsActive && linksInArticle ? <div className="linksWrap"><ul>{linksInArticle}</ul></div> : <div></div>}
-          </div>
-        </div> 
-    </div>
-    </React.Fragment>
-          
-          
+          <div>{index+1}/3</div>
+          <div>{seeAlso}</div>
+          <div className="linksWrap"><ul>{linksInArticle}</ul></div>
       </div>
       )
 

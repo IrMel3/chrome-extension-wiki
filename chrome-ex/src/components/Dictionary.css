@@ -2,7 +2,7 @@
   display: none;
 }
 
-.activeCard {
+.activeDictCard {
   padding: 10px;
   height: 6rem;
   min-width: 4rem;

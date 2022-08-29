@@ -7,6 +7,8 @@ import {
     faCaretRight,
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
+import { UserContext } from './UserContext'
+import axios from 'axios'
 import './Dictionary.css';
 
 
@@ -16,6 +18,7 @@ function Dictionary (){
     const [fullDictionary, setFullDictionary] = useState([])
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
+    const {user, setUser} = useContext(UserContext);
     const [dictionaryLength, setDictionaryLength] = useState(0);
     const [index, setIndex] = useState(0)
 
@@ -33,6 +36,17 @@ function Dictionary (){
     useEffect(() =>{
         setDictionaryLength(value.length);
     })
+
+    useEffect(() =>{
+        axios.get(`http://localhost:3000/getDictionaryEntries?user=${user}`)
+            .then(res => {
+                console.log(res.data)
+                setValue(res.data)
+            }).catch((error) => {
+            error.toString();
+        })
+    }, [])
+
 
    /* useEffect(() =>{
         const sDict = localStorage.getItem("Vocabulary");
@@ -108,8 +122,8 @@ function Dictionary (){
     value && value.map(value =>{
         return(
             <div>
-            <h3>{value.Term}</h3>
-            <a target="_blank" href={`https://${value.Targetlanguage}.wikipedia.org/wiki/${value.Link}`}>{value.Translation}</a>
+            <h3>{value.term}</h3>
+            <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>
             </div>
             
         )
@@ -117,7 +131,7 @@ function Dictionary (){
 
     const words2 = 
         value && value.map((value, n) =>{
-        let position = n > index ? "nextCard" : n === index ? "activeCard" : "prevCard";
+        let position = n > index ? "nextCard" : n === index ? "activeDictCard" : "prevCard";
         return(
         <div className="container">
             <Card {...value} cardStyle={position}></Card>
