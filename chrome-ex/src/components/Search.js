@@ -288,7 +288,7 @@ const Search = () => {
     
     //oh mein Gott es funktioniert -put in useEffekt
 
- /*   useEffect(() =>{
+    useEffect(() =>{
     var anchors = document.getElementsByTagName("a");
 
     for (var i = 0; i < anchors.length; i++) {
@@ -297,7 +297,7 @@ const Search = () => {
             console.log(anchors[i].href)
         }
         
-    }})*/
+    }})
 
   /*  $(document).on('click', 'a', function(e){ 
         e.preventDefault(); 
@@ -503,6 +503,7 @@ useEffect(() =>{
       <div>
           <div className="ui-form">
               <div className="field">
+              <div className="translationBox">
               <div className="langDropdowns">
               <div id="langselect"><label>
                         <select value={motherTounge} onChange={handleMotherTounge}>
@@ -538,12 +539,13 @@ useEffect(() =>{
                  <div className="translation">{translatedTerm}</div>
                  <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
                  </div>
+            </div>
             <div className="carousel">
                 <FontAwesomeIcon
             onClick={slideLeft}
             className="leftBtn"
             icon={faCaretLeft}
-            size="4x"
+            size="2x"
             color="#B2BFC7"
              />
             <div className="card-container">
@@ -553,15 +555,17 @@ useEffect(() =>{
                 onClick={slideRight}
                 className="rightBtn"
                 icon={faCaretRight}
-                size="4x"
+                size="2x"
                 color="#B2BFC7"
             />
               </div>
           </div>
           </div>
           <div>{index+1}/3</div>
+          <div className="getInspired">
           <div>{seeAlso}</div>
           <div className="linksWrap"><ul>{linksInArticle}</ul></div>
+          </div>
       </div>
       )
 
