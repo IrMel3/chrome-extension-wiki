@@ -543,7 +543,7 @@ useEffect(() =>{
             <div className="carousel">
                 <FontAwesomeIcon
             onClick={slideLeft}
-            className="leftBtn"
+            className="leftWikiBtn"
             icon={faCaretLeft}
             size="2x"
             color="#B2BFC7"
@@ -553,7 +553,7 @@ useEffect(() =>{
             </div>
             <FontAwesomeIcon
                 onClick={slideRight}
-                className="rightBtn"
+                className="rightWikiBtn"
                 icon={faCaretRight}
                 size="2x"
                 color="#B2BFC7"

@@ -138,17 +138,17 @@ a:hover {
   display: none;
 }
 
-.rightBtn {
+.rightWikiBtn {
   display: flex;
   right: 1rem;
-  margin-top: 3.5rem;
+  margin-top: 4.2rem;
   cursor: pointer;
 }
 
-.leftBtn {
+.leftWikiBtn {
   display: flex;
   left: -1rem;
-  margin-top: 3.5rem;
+  margin-top: 4.2rem;
   cursor: pointer;
 }
 .carousel {
