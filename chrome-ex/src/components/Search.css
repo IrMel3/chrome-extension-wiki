@@ -7,6 +7,7 @@
 #langselect {
   padding: 10px;
   display: inline;
+  margin-top: 10px;
 }
 
 #search {
@@ -15,7 +16,7 @@
 
 #searchfield {
   padding: 10px;
-  max-width: 100px;
+  max-width: 150px;
 }
 
 #input {
@@ -26,16 +27,27 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-top: 10px;
 }
 
 .translationForm {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: left;
 }
 .translation {
-  margin-top: 1.4rem;
+  margin-top: 20px;
+  margin-left: 20px;
   font-size: 10pt;
+}
+
+hr.solid {
+  border-top: 2px solid #b2bfc7;
+  width: 70%;
+}
+
+.divider {
+  display: flex;
 }
 
 .firstResult {
@@ -165,6 +177,7 @@ a:hover {
 .translationBox {
   background-color: #e7f4fd;
   display: flex;
+  flex-direction: column;
   border-radius: 20px;
   margin-bottom: 20px;
 }

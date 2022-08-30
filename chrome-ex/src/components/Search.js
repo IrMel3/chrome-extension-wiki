@@ -513,12 +513,18 @@ useEffect(() =>{
                         <option value="it">IT</option>
                         </select>
                   </label></div>
-                  <FontAwesomeIcon
-                    icon={faChevronRight}
-                    size="2x" 
-                    color="#B2BFC7" 
-                    className="langFromTo"
+                  <div id="search"> 
+                  <input className="input"
+                  id="searchfield"
+                  value={term}
+                  onChange={e => setTerm(e.target.value)}
                   />
+                  </div>                 
+                  </div>    
+                  <div className="divider">
+                  <hr class="solid"></hr>
+                  </div>              
+                  <div className="translationForm">
                   <div id="langselect"><label>
                         <select value={targetLanguage} onChange={handleTargetLanguage}>
                         <option value="en" selected>EN</option>
@@ -527,15 +533,6 @@ useEffect(() =>{
                         <option value="it">IT</option>
                         </select>
                   </label></div>
-                  </div>
-                  <div className="translationForm">
-                  <div id="search"> 
-                  <input className="input"
-                  id="searchfield"
-                  value={term}
-                  onChange={e => setTerm(e.target.value)}
-                  />
-                  </div>
                  <div className="translation">{translatedTerm}</div>
                  </div>
                  <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
