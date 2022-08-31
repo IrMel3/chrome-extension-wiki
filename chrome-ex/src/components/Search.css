@@ -35,10 +35,20 @@
   flex-direction: row;
   justify-content: left;
 }
+
+.titre {
+  display: none;
+}
+
+#disambigbox {
+  display: none;
+}
+
 .translation {
   margin-top: 20px;
   margin-left: 20px;
   font-size: 10pt;
+  max-width: 150px;
 }
 
 hr.solid {
@@ -63,7 +73,9 @@ hr.solid {
 }
 
 .addToDict {
-  margin-top: 1rem;
+  margin-top: -40px;
+  margin-left: 14rem;
+  padding: 10px;
   cursor: pointer;
 }
 

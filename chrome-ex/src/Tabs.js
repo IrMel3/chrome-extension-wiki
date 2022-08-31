@@ -45,7 +45,7 @@ function Tabs(){
             }>Home</NavLink>
             <NavLink to='/dictionary'  className={({isActive}) =>
                 (isActive ? "active navlink" : "unselected navlink")
-            }>Dictionary</NavLink> </div>
+            }>Favourites</NavLink> </div>
             <Routes>
                 <Route path="/" element={<Search/>} />
                 <Route path="/dictionary" element={<Dictionary/>}/>

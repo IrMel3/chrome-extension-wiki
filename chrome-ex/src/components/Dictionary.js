@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
     faCaretRight,
+    faList
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
 import { UserContext } from './UserContext'
@@ -20,6 +21,7 @@ function Dictionary (){
     const {value, setValue} = useContext(DictionaryContext);
     const {user, setUser} = useContext(UserContext);
     const [dictionaryLength, setDictionaryLength] = useState(0);
+    const [showList, setShowList] = useState(false);
     const [index, setIndex] = useState(0)
 
     /**
@@ -117,8 +119,15 @@ function Dictionary (){
         }
       };
 
-    const words = 
-    
+    const changeList = () => {
+        if(showList == false){
+        setShowList(true)}
+        else{
+            setShowList(false);
+        }
+    }
+
+    const words =     
     value && value.map(value =>{
         return(
             <div>
@@ -143,6 +152,8 @@ function Dictionary (){
     return(
         <div>
             {value != null ?  
+        <div>
+            {showList==false ?  
           <div>
           <div className="dictionary">  
               <FontAwesomeIcon
@@ -164,8 +175,18 @@ function Dictionary (){
             />
             </div>
             <div>{index+1}/{dictionaryLength}</div>
-            </div>
+            </div>: <div>{words}</div> }</div>
+            
             :  <div>No words in dictionary yet.</div>}
+
+            <FontAwesomeIcon 
+            icon={faList}
+            className="listBtn"
+            onClick={changeList}
+            size="2x"
+            color="#000" 
+            />
+            
         </div>
     )
 }   

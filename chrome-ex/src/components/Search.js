@@ -16,6 +16,15 @@ import {
 import { UserContext } from './UserContext';
 var parse = require('html-react-parser');
 
+//needs to be put outside of component
+$(document).on('click', 'a', function(e){ 
+    e.preventDefault(); 
+    var url = $(this).attr('href'); 
+    if((url !== "https://en.wikipedia.org/index.html#/") && (url !== "https://en.wikipedia.org/index.html#/dictionary")){
+    window.open(url, '_blank');
+}
+});
+
 
 const Search = () => { 
   
@@ -218,13 +227,16 @@ const Search = () => {
                     srsearch: translatedTerm,
                 },
             })
-            if(data != null){
+            console.log(data.query.search)
+            if(data.query.search != []){
             setResults(data.query.search)
             let arr = data.query.search;
             let title = data.query.search[0].title
             setFirstResult(arr[0]);
             setFirstResultTitle(title)
             console.log(title);
+            }else{
+                setResults([]);
             }
         }
         if (translatedTerm && !results.length){
@@ -299,11 +311,7 @@ const Search = () => {
         
     }})
 
-  /*  $(document).on('click', 'a', function(e){ 
-        e.preventDefault(); 
-        var url = $(this).attr('href'); 
-        window.open(url, '_blank');
-    });*/
+    
 
 
     //search "see also" e.g. https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&prop=sections
@@ -313,14 +321,17 @@ const Search = () => {
         if (translatedTerm && !seeAlso.length && firstResult){
             searchSA()
                 .then(data=>{
-                    try{
+                try{
+                if(!data.data.error){
                 console.log(data.data);
                // console.log('See also state:' + seeAlso);
                 setSections(data.data.parse.sections);
                // console.log("sections of article "+ data.data.parse.sections)
                 //Check if there is a See Also section
+                }else{
+                    setSections([])
                 }
-                catch(err){console.log(err)}
+            }catch(err){console.log(err)}
                 })
     }
 }, [firstResultTitle])  
@@ -347,14 +358,14 @@ useEffect(() =>{
         searchSA2()
         .then(data=>{
             console.log("Sec num now " + sectionNum)
-            console.log(data.data)
-            if(data.data.parse.text["*"]){
+            console.log(data.data.error)
+            if(!data.data.error){
             console.log("See Also: " + data.data.parse);
             //console.log("See Also parsed " +data.data.parse.text["*"]);
             setSeeAlso(parse(`<div className="seeAlso nodeco">${data.data.parse.text["*"]}</div>`));
             }
             else{
-                setSeeAlso(parse(`<div className="seeAlso">No "See also" section found for ${translatedTerm}</div>`))
+                setSeeAlso([])
             }
         
     }).catch(error => console.log(error))
@@ -377,11 +388,15 @@ useEffect(() =>{
                 },
             })
             //console.log(data);
+            if(data.query.pages !== undefined){
             const keys = Object.keys(data.query.pages)
             //console.log(data.query.pages[keys[0]].links)
             if(data != null){
             setLinks(data.query.pages[keys[0]].links)
             localStorage.setItem("Term", term);
+            }else{
+                setLinks([])
+            }
         }
             
         }
@@ -435,7 +450,7 @@ useEffect(() =>{
 
 
     const searchResultsMapped2 =    
-    results && results.slice(0,3).map((result,n) =>{
+    (results!=null) && results.slice(0,3).map((result,n) =>{
         let position = n > index ? "nextCard" : n === index ? "activeWikiCard" : "prevCard";
 
         return(
@@ -535,8 +550,9 @@ useEffect(() =>{
                   </label></div>
                  <div className="translation">{translatedTerm}</div>
                  </div>
-                 <FontAwesomeIcon onClick={pushToDictionary} title="Add to dictionary" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
+                 <FontAwesomeIcon onClick={pushToDictionary} title="Add to favourites" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
             </div>
+            {(results!==[]) ? (
             <div className="carousel">
                 <FontAwesomeIcon
             onClick={slideLeft}
@@ -555,7 +571,7 @@ useEffect(() =>{
                 size="2x"
                 color="#B2BFC7"
             />
-              </div>
+              </div>): <div>Sorry, no results for "${translatedTerm}"</div>}
           </div>
           </div>
           <div>{index+1}/3</div>
