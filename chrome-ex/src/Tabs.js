@@ -6,6 +6,11 @@ import Test2 from "./components/Test2"
 import Dictionary from "./components/Dictionary"
 import { DictionaryContext } from './components/DictionaryContext';
 import { UserContext } from './components/UserContext';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faHouse,
+    faHeart,
+  } from "@fortawesome/free-solid-svg-icons";
 import Login from "./components/Login"
 import { AuthContext } from './components/AuthContext';
 import { matchPath } from "react-router";
@@ -42,10 +47,20 @@ function Tabs(){
             <div className="navi">
             <NavLink to ='/' className={({isActive}) =>
                 (isActive ? "active navlink" : "unselected navlink")
-            }>Home</NavLink>
+            }><FontAwesomeIcon 
+            icon={faHouse}
+            className="houseBtn"
+            size="2x"
+            color="#B2BFC7" 
+            /></NavLink>
             <NavLink to='/dictionary'  className={({isActive}) =>
                 (isActive ? "active navlink" : "unselected navlink")
-            }>Favourites</NavLink> </div>
+            }><FontAwesomeIcon 
+            icon={faHeart}
+            className="heartBtn"
+            size="2x"
+            color="#B2BFC7" 
+            /></NavLink> </div>
             <Routes>
                 <Route path="/" element={<Search/>} />
                 <Route path="/dictionary" element={<Dictionary/>}/>

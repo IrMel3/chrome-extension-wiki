@@ -1,10 +1,12 @@
 /* global chrome */
 import React, {useState, useContext, useEffect, useRef} from 'react';
 import Card from "./Card";
+import SearchBar from "./SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
     faCaretRight,
+    faClipboard,
     faList
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
@@ -19,7 +21,9 @@ function Dictionary (){
     const [fullDictionary, setFullDictionary] = useState([])
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
+   // const [fullDictionary, setFullDictionary] = useContext([])
     const {user, setUser} = useContext(UserContext);
+    const [searchField, setSearchField] = useState("")
     const [dictionaryLength, setDictionaryLength] = useState(0);
     const [showList, setShowList] = useState(false);
     const [index, setIndex] = useState(0)
@@ -127,13 +131,31 @@ function Dictionary (){
         }
     }
 
+    const handleSearchChange = (e) =>{
+        setSearchField(e.target.value);
+    }
+
+    function searchList(){
+        console.log(filteredVoc)
+        setFullDictionary(value);
+        setValue(filteredVoc)
+    }
+
+    function clearSearch(){
+        setValue(fullDictionary);
+    }
+
     const words =     
     value && value.map(value =>{
         return(
             <div>
             <h3>{value.term}</h3>
             <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>
+            <div>
+            <hr class="solidHR"></hr>
             </div>
+            </div>
+            
             
         )
     })
@@ -148,11 +170,35 @@ function Dictionary (){
     )
     })
 
+    const filteredVoc = value.filter(
+        value =>{
+            return(
+                value
+                    .term
+                    .toLowerCase()
+                    .includes(searchField.toLowerCase()) ||
+                value
+                    .translation
+                    .toLowerCase()
+                    .includes(searchField.toLowerCase())
+            );
+        }
+    );
+
 
     return(
         <div>
             {value != null ?  
         <div>
+            <div><input
+             type="search"
+             id="searchbox"
+             placeholder="Search Favourites"
+             onChange = {handleSearchChange}
+            />
+            <button onClick={searchList}>Search</button>
+            <button onClick={clearSearch}>Clear</button>
+            </div>
             {showList==false ?  
           <div>
           <div className="dictionary">  
@@ -175,17 +221,27 @@ function Dictionary (){
             />
             </div>
             <div>{index+1}/{dictionaryLength}</div>
-            </div>: <div>{words}</div> }</div>
-            
-            :  <div>No words in dictionary yet.</div>}
-
+            <div><hr class="solidHR"></hr></div>
             <FontAwesomeIcon 
             icon={faList}
             className="listBtn"
             onClick={changeList}
             size="2x"
-            color="#000" 
+            color="#B2BFC7" 
             />
+            </div>: <div>
+            <div><hr class="solidHR"></hr></div>
+            {words}<FontAwesomeIcon 
+            icon={faClipboard}
+            className="listBtn"
+            onClick={changeList}
+            size="2x"
+            color="#B2BFC7" 
+            /></div> }</div>
+            
+            :  <div>No words in dictionary yet.</div>}
+
+            
             
         </div>
     )
