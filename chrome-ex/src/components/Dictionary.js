@@ -116,20 +116,25 @@ function Dictionary (){
     const slideLeft = () => {
         if (index - 1 >= 0) {
           setIndex(index - 1);
+          sendLog("Click Card Left", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }
       };
     
       const slideRight = () => {
         if (index + 1 <= value.length - 1) {
           setIndex(index + 1);
+          sendLog("Click Card Right", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }
       };
 
     const changeList = () => {
         if(showList == false){
-        setShowList(true)}
+        setShowList(true)
+        sendLog("Clicked on showList", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
+        }
         else{
             setShowList(false);
+            sendLog("Clicked on showCards", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
         }
     }
 
@@ -141,9 +146,12 @@ function Dictionary (){
         console.log(filteredVoc)
         setFullDictionary(value);
         setValue(filteredVoc)
+        if(filteredVoc){
+        sendLog("Searched for Term " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
     }
 
     function clearSearch(){
+        setSearchField("")
         setValue(fullDictionary);
     }
 
@@ -151,6 +159,7 @@ function Dictionary (){
         const clickedVoc = [...value];
         console.log(clickedVoc[index])
         setClickedVoc(clickedVoc[index])
+        sendLog("Clicked on Dictionary Term " +clickedVoc[index].term, clickedVoc[index].term, clickedVoc[index].translation, clickedVoc[index].motherTounge, clickedVoc[index].targetlanguage)
         //Now display Wiki article again
         const search = async () => {
             const { data } = await axios.get(`https://${clickedVoc[index].targetlanguage}.wikipedia.org/w/api.php`, {
@@ -171,6 +180,26 @@ function Dictionary (){
           search();
           
     }}
+
+
+    const sendLog = (action, term, translatedTerm, motherTounge, targetLanguage) =>{
+        let timestamp = new Date();
+            let dictionaryData = {
+                user: user,
+                timestamp: timestamp,
+                action: action,
+                word: term,
+                translation: translatedTerm,
+                mothertounge: motherTounge,
+                targetlanguage: targetLanguage,
+            }
+            axios
+                .post("http://localhost:3000/addLog", dictionaryData)
+                .then(data => console.log(data))
+                .catch(error => console.log(error))
+        
+    }
+
 
     const wikicard = ()=>{
     if(clickedVoc.targetlanguage!==undefined){
@@ -212,7 +241,7 @@ function Dictionary (){
     )
     })
 
-    const filteredVoc = value.filter(
+    const filteredVoc = () =>{ if(value!== undefined){value.filter(
         value =>{
             return(
                 value
@@ -225,7 +254,7 @@ function Dictionary (){
                     .includes(searchField.toLowerCase())
             );
         }
-    );
+    );}}
 
 
     return(
