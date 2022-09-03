@@ -21,10 +21,9 @@ $(document).on('click', 'a', function(e){
     e.preventDefault(); 
     var url = $(this).attr('href'); 
     if((url !== "https://en.wikipedia.org/index.html#/") && (url !== "https://en.wikipedia.org/index.html#/dictionary")){
-    window.open(url, '_blank');
+    window.open(url, '_blank');    
 }
 });
-
 
 const Search = () => { 
   
@@ -37,6 +36,7 @@ const Search = () => {
     const [seeAlso, setSeeAlso] = useState([])
     const [links, setLinks] = useState([])
     const [index, setIndex] = useState(0)
+    const [searchTerm, setSearchTerm] = useState('')
     const [dictCount, setDictCount] = useState(0);
     const [isResultsActive, setIsResultsActive] = useState(false);
     const [isSeeAlsoActive, setIsSeeAlsoActive] = useState(false);
@@ -147,7 +147,7 @@ const Search = () => {
                 setTerm(changes.visitedPages.pageText)
                 localStorage.setItem("Term", changes.visitedPages.pageText);
                 console.log("New Term:",changes.visitedPages.pageText);
-                sendLog('Term fetched from H1');
+                sendLog('New Term fetched from H1');
         }}
         )
     },[])
@@ -156,7 +156,7 @@ const Search = () => {
         chrome.storage.sync.get("currentURL",function (changes) {
             if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
             setCurrURL(changes.currentURL.location)
-            sendLog('URL changed to ' + changes.currentURL.location);
+            sendLog('URL changed');
         }}
         )
     },[])
@@ -173,11 +173,13 @@ const Search = () => {
             if(searchTerm !== null){
                 setTerm(searchTerm);
                 localStorage.setItem("Term", searchTerm);
+                sendLog('New Term fetched from Google Search');
                 
             }
             if(ytSearchTerm !== null){
                 setTerm(ytSearchTerm);
                 localStorage.setItem("Term", ytSearchTerm);
+                sendLog('New Term fetched from Youtube Search');
                 
             }
             console.log(ytSearchTerm);
@@ -354,23 +356,24 @@ useEffect(() =>{
     searchSectionsForSeeAlso()
 },[sections])
 
-    useEffect(() =>{
-        searchSA2()
-        .then(data=>{
-            console.log("Sec num now " + sectionNum)
-            console.log(data.data.error)
-            if(!data.data.error){
-            console.log("See Also: " + data.data.parse);
-            //console.log("See Also parsed " +data.data.parse.text["*"]);
-            setSeeAlso(parse(`<div className="seeAlso nodeco">${data.data.parse.text["*"]}</div>`));
-            }
-            else{
-                setSeeAlso([])
-            }
-        
-    }).catch(error => console.log(error))
-    },[sectionNum])
-                
+useEffect(() =>{
+    searchSA2()
+    .then(data=>{
+        console.log("Sec num now " + sectionNum)
+        console.log(data.data.error)
+        if(!data.data.error){
+        console.log("See Also: " + data.data.parse);
+        //console.log("See Also parsed " +data.data.parse.text["*"]);
+        setSeeAlso(parse(`<div className="seeAlso nodeco">${data.data.parse.text["*"]}</div>`));
+        }
+        else{
+            setSeeAlso([])
+        }
+    
+}).catch(error => console.log(error))
+},[sectionNum])
+
+              
             
    
 
@@ -428,7 +431,7 @@ useEffect(() =>{
         }
       };
 
-
+    
 
     const searchResultsMapped = 
     
@@ -447,14 +450,35 @@ useEffect(() =>{
         )
     }
     )
+    const handleclick = (index) =>{
+        sendLog("clicked on Wikicard " + results[index].title)
+    }
 
+    const handleLinkClick = (index) =>{
+        sendLog("clicked on Link " + links[index].title)
+    }
+
+    //get if seeAlso Link was clicked
+   /* var lis = document.getElementsByTagName('li');
+    for (var i = 0; i < lis.length; i++) {
+    lis[i].addEventListener('click', seeAlsoClickHandler)
+    }
+
+    function seeAlsoClickHandler(event) {
+        event = event || window.event;
+        var target = event.target || event.srcElement;
+        console.log(target.getAttribute("href"));
+        
+        sendLog("See Also Link clicked: " + target.getAttribute('href'))
+
+      }*/
 
     const searchResultsMapped2 =    
     (results!=null) && results.slice(0,3).map((result,n) =>{
         let position = n > index ? "nextCard" : n === index ? "activeWikiCard" : "prevCard";
 
         return(
-            <div className="container">
+            <div className="container" onClick={() => {handleclick(n);}} key={n}>
                <WikiCard {...result} targetLanguage={targetLanguage} cardStyle={position}></WikiCard> 
             </div>
             
@@ -466,9 +490,9 @@ useEffect(() =>{
 
     const linksInArticle = 
     
-    links && links.map(link =>{
+    links && links.map((link,index) =>{
         return (
-            <li>
+            <li onClick={() => {handleLinkClick(index);}} key={index}>
             <span className='link'><a className="nodeco"target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
             </li>
         )
@@ -476,13 +500,13 @@ useEffect(() =>{
 
     const handleTargetLanguage = (event) => {
         setTargetLanguage(event.target.value);
-        sendLog('changedTargetLanguage');
+        sendLog('changed target Language');
         localStorage.setItem("Language", event.target.value)
     };
 
     const handleMotherTounge = (event) => {
         setMotherTounge(event.target.value);
-        sendLog('changedMotherTounge');
+        sendLog('changed mothertounge');
         localStorage.setItem("Mothertounge", event.target.value)
     };
 
@@ -510,6 +534,17 @@ useEffect(() =>{
     }*/
 
 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+          console.log(searchTerm)
+          if(searchTerm !== ''){
+          sendLog("Input to search field: " + searchTerm)}
+        }, 3000)
+    
+        return () => clearTimeout(delayDebounceFn)
+      }, [searchTerm])
+
+
     return(
       <div>
           <div className="ui-form">
@@ -528,7 +563,7 @@ useEffect(() =>{
                   <input className="input"
                   id="searchfield"
                   value={term}
-                  onChange={e => setTerm(e.target.value)}
+                  onChange={function(e){setTerm(e.target.value); setSearchTerm(e.target.value);}}
                   />
                   </div>                 
                   </div>    
@@ -572,7 +607,7 @@ useEffect(() =>{
           </div>
           <div>{index+1}/3</div>
           <div className="getInspired">
-          <div>{seeAlso}</div>
+          <div id="SA">{seeAlso}</div>
           <div className="linksWrap"><ul>{linksInArticle}</ul></div>
           </div>
       </div>
