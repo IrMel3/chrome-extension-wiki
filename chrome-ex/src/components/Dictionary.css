@@ -3,9 +3,12 @@
 }
 
 .activeDictCard {
+  margin-top: 10px;
   padding: 10px;
   height: 6rem;
   min-width: 4rem;
+  background-color: #d4e6f1;
+  border-radius: 15px;
 }
 
 .nextCard {
@@ -40,4 +43,8 @@ hr.solidHR {
   border-top: 2px solid #b2bfc7;
   width: 20%;
   margin-top: 20px;
+}
+
+.container {
+  cursor: pointer;
 }

@@ -96,6 +96,7 @@ chrome.storage.sync.set({'searchParams':
 const app = document.createElement('iframe');
 //const yt = document.getElementsByClassName('style-scope ytd-channel-name');
 app.style.border = "none"
+app.id = 'chromeapp';
 app.style.width = "300px";
 app.style.height = "700px"
 app.style.top = "0px";
@@ -103,6 +104,16 @@ app.style.right = "0px";
 app.style.position = "fixed";
 app.style.zIndex = "950"
 app.src = chrome.runtime.getURL("index.html");
+
+/*const button = document.createElement('button');
+button.text='Resize'
+button.id = 'resize';
+button.onclick = function(){app.style.height = "300px"}
+
+if(document.getElementById("resize")){
+document.getElementById("resize").onclick= function(){app.style.height= "500px"};
+}
+*/
 if(document.getElementById("mw-head")){
     document.getElementById("mw-head").style.paddingRight = "300px";
 }

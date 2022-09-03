@@ -486,10 +486,6 @@ useEffect(() =>{
         localStorage.setItem("Mothertounge", event.target.value)
     };
 
-    const addToDictionary = () =>{
-        localStorage.setItem("putIntoDictionary", term);
-        localStorage.setItem("putTranslationIntoDictionary", translatedTerm)
-    }
 
     const sendLog = (action) =>{
         let timestamp = new Date();

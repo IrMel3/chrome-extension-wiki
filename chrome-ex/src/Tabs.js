@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faHouse,
     faHeart,
+    faCompress,
   } from "@fortawesome/free-solid-svg-icons";
 import Login from "./components/Login"
 import { AuthContext } from './components/AuthContext';
@@ -32,6 +33,10 @@ function Tabs(){
     }
   })
 
+  /*const resize = () =>{
+      let iframe = document.getElementsByTagName("iFrame")
+      iframe.height = "300px";  
+  }*/
 
     /**
      * falls ich dazu nicht mehr komme, einfach die Login Komponente wieder hier hinein setzen.

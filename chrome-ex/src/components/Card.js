@@ -1,6 +1,7 @@
-const Card = ({ term, translation, targetlanguage, link, cardStyle }) => {
+const Card = ({ handleMouseDown, term, translation, targetlanguage, link, cardStyle }) => {
+  
     return (
-      <div className={cardStyle}>
+      <div className={cardStyle} onMouseDown={handleMouseDown}>
             <h3>{term}</h3>
             <a target="_blank" href={`https://${targetlanguage}.wikipedia.org/wiki/${link}`}>{translation}</a>
       </div>

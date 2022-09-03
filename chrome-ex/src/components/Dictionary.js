@@ -1,7 +1,6 @@
 /* global chrome */
 import React, {useState, useContext, useEffect, useRef} from 'react';
 import Card from "./Card";
-import SearchBar from "./SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
@@ -10,6 +9,7 @@ import {
     faList
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
+import WikiCard from "./WikiCard";
 import { UserContext } from './UserContext'
 import axios from 'axios'
 import './Dictionary.css';
@@ -24,9 +24,11 @@ function Dictionary (){
    // const [fullDictionary, setFullDictionary] = useContext([])
     const {user, setUser} = useContext(UserContext);
     const [searchField, setSearchField] = useState("")
+    const [result, setResult] = useState([])
     const [dictionaryLength, setDictionaryLength] = useState(0);
     const [showList, setShowList] = useState(false);
     const [index, setIndex] = useState(0)
+    const [clickedVoc, setClickedVoc] = useState([])
 
     /**
      * fetch new word from local storage
@@ -145,10 +147,42 @@ function Dictionary (){
         setValue(fullDictionary);
     }
 
+    const handlechange = (index) => {
+        const clickedVoc = [...value];
+        console.log(clickedVoc[index])
+        setClickedVoc(clickedVoc[index])
+        //Now display Wiki article again
+        const search = async () => {
+            const { data } = await axios.get(`https://${clickedVoc[index].targetlanguage}.wikipedia.org/w/api.php`, {
+                params: {
+                    action: "query",
+                    list: "search",
+                    origin: "*",
+                    format: "json",
+                    srsearch: clickedVoc[index].translation,
+                },
+            })   
+            if(data.query.search != []){
+                let arr = data.query.search;
+                setResult(arr[0]);
+                console.log(result)
+      };}
+      if(clickedVoc[index]){
+          search();
+          
+    }}
+
+    const wikicard=
+    <div className="container">
+        <WikiCard {...result} targetLanguage={clickedVoc.targetlanguage}></WikiCard> 
+    </div>
+            
+        
+
     const words =     
-    value && value.map(value =>{
+    value && value.map((value,index) =>{
         return(
-            <div>
+            <div onClick={() => {handlechange(index);}} key={index} className="container">
             <h3>{value.term}</h3>
             <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>
             <div>
@@ -160,11 +194,12 @@ function Dictionary (){
         )
     })
 
+
     const words2 = 
         value && value.map((value, n) =>{
         let position = n > index ? "nextCard" : n === index ? "activeDictCard" : "prevCard";
         return(
-        <div className="container">
+        <div onClick={() => {handlechange(n);}} className="container" key={n}>
             <Card {...value} cardStyle={position}></Card>
         </div>
     )
@@ -199,6 +234,7 @@ function Dictionary (){
             <button onClick={searchList}>Search</button>
             <button onClick={clearSearch}>Clear</button>
             </div>
+            <div>{wikicard}</div>
             {showList==false ?  
           <div>
           <div className="dictionary">  

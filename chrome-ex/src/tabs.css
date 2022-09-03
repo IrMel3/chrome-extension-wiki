@@ -114,3 +114,7 @@ h3 {
   justify-content: space-evenly;
   margin-bottom: 30px;
 }
+
+#resize {
+  cursor: pointer;
+}
