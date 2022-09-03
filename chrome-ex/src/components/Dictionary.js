@@ -172,10 +172,17 @@ function Dictionary (){
           
     }}
 
-    const wikicard=
+    const wikicard = ()=>{
+    if(clickedVoc.targetlanguage!==undefined){
+    return(
     <div className="container">
         <WikiCard {...result} targetLanguage={clickedVoc.targetlanguage}></WikiCard> 
     </div>
+    )}
+    else{
+        return(<div></div>)
+    }
+}
             
         
 
@@ -234,7 +241,7 @@ function Dictionary (){
             <button onClick={searchList}>Search</button>
             <button onClick={clearSearch}>Clear</button>
             </div>
-            <div>{wikicard}</div>
+            <div>{wikicard()}</div>
             {showList==false ?  
           <div>
           <div className="dictionary">  

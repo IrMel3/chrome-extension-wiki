@@ -31,16 +31,13 @@ function Tabs(){
       setUser(localStorage.getItem("User"))
       setIsAuth(true)
     }
-  })
+  },[user])
 
   /*const resize = () =>{
       let iframe = document.getElementsByTagName("iFrame")
       iframe.height = "300px";  
   }*/
 
-    /**
-     * falls ich dazu nicht mehr komme, einfach die Login Komponente wieder hier hinein setzen.
-     */
 
     return(
         <div className="App">

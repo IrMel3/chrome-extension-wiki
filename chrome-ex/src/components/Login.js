@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState,useContext} from 'react'
 import axios from 'axios';
+import { AuthContext } from './AuthContext';
 
 function Login(){
 
     const [user, setUser] = useState(null);
     const [newUser, setNewUser] = useState(null);
-    const [isAuth, setIsAuth] = useState(false);
+    const {isAuth, setIsAuth} = useContext(AuthContext);
 
     const checkIfUserExists = () =>{
         //check if user is in database 
