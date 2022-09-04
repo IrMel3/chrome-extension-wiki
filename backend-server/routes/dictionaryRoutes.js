@@ -32,7 +32,13 @@ app.post("/addToDictionary", cors(), (req, res) => {
 })
 
 app.delete("/deleteDictionaryEntry", cors(), (req, res) => {
-    Dictionary.findOneAndDelete({_id: req.body.entry})
+    console.log(req.body);
+    let dbFilter = {user: req.body.user, term: req.body.term, translation: req.body.translation}
+  /*  if (req.body.term) dbFilter.term = req.body.term
+    if (req.body.translation) dbFilter.translation = req.body.translation
+    if (req.body.user) dbFilter.user = req.body.user*/
+    console.log(dbFilter);
+    Dictionary.findOneAndDelete(dbFilter)
               .then(result => {
                 if (result) {
                     res.send(result)

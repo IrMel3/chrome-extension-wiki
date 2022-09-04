@@ -5,6 +5,7 @@ import './Search.css';
 import axios from 'axios';
 import $ from 'jquery';
 import WikiCard from "./WikiCard";
+import Alert from 'react-bootstrap/Alert';
 import { DictionaryContext } from './DictionaryContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -91,8 +92,14 @@ const Search = () => {
         }
         axios
             .post("http://localhost:3000/addToDictionary", newEntry)
-            .then(data => console.log(data))
-            .catch(error => console.log(error))
+            .then(data => {if(data.status == 200){
+                alert("Successfully saved " + term +"-"+ translatedTerm +" to dictionary.")
+                }
+                
+            })
+            .catch(error => {console.log(error)
+                alert("Something went wrong. Please reload the page and try again.")}
+            )
     }
 
 
@@ -136,6 +143,24 @@ const Search = () => {
             }) 
     
     })
+
+    /**
+     * request to deepl API
+     */
+  /*  useEffect(() =>{
+        let data = {
+            text : term,
+            target_lang: targetLanguage,
+            auth_key: 'authkey',
+        }
+        axios.post(`https://api-free.deepl.com/v2/translate`, data)
+        .then((response) => {
+           // console.log("libretranslate: " + response.data.translatedText)
+            setTranslatedTerm(response.data.translations.text);
+            localStorage.setItem("Translation", response.data.translations.text);
+        }) 
+        
+    })*/
 
     /**
      * fetches h1 from chrome storage 
@@ -230,10 +255,10 @@ const Search = () => {
                 },
             })
             console.log(data.query.search)
-            if(data.query.search != []){
+            if(data.query.search.length != 0){
             setResults(data.query.search)
             let arr = data.query.search;
-            let title = data.query.search[0].title
+            let title = data.query?.search[0]?.title
             setFirstResult(arr[0]);
             setFirstResultTitle(title)
             console.log(title);
@@ -243,7 +268,6 @@ const Search = () => {
         }
         if (translatedTerm && !results.length){
             search();
-            
         }else{
         let timeoutID = setTimeout(() =>{
         if(translatedTerm){
@@ -308,7 +332,7 @@ const Search = () => {
     for (var i = 0; i < anchors.length; i++) {
        if(anchors[i].href.startsWith('chrome')){
             anchors[i].href= `https://${targetLanguage}.wikipedia.org` + anchors[i].href.replace('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea','')
-            console.log(anchors[i].href)
+           // console.log(anchors[i].href)
         }
         
     }})
@@ -360,7 +384,7 @@ useEffect(() =>{
     searchSA2()
     .then(data=>{
         console.log("Sec num now " + sectionNum)
-        console.log(data.data.error)
+        //console.log(data.data.error.code)
         if(!data.data.error){
         console.log("See Also: " + data.data.parse);
         //console.log("See Also parsed " +data.data.parse.text["*"]);
@@ -373,7 +397,24 @@ useEffect(() =>{
 }).catch(error => console.log(error))
 },[sectionNum])
 
-              
+   const shuffleData = (data) =>{
+    let randomGroupSortKey = {}
+    data.forEach(d => randomGroupSortKey[d.title] = Math.random())
+    console.log("Group sort keys:", randomGroupSortKey)
+    
+    //add the sortKey property to the individual array entries
+    let dataSortable = data.map(x => {
+      return {
+        ...x, 
+        sortKey: randomGroupSortKey[x.title]
+      }
+    })
+    
+    dataSortable.sort((a, b) => a.sortKey - b.sortKey) //sort the groups!
+    
+    console.log("Result:", dataSortable)
+    console.log("Result without sortKey:", dataSortable.map(({ sortKey, ...x }) => x))
+   }
             
    
 
@@ -388,19 +429,23 @@ useEffect(() =>{
                     format: "json",
                     origin: "*",
                     titles: firstResultTitle,
+                    pllimit: "10", 
                 },
             })
             //console.log(data);
-            if(data.query.pages !== undefined){
+            if(data?.query?.pages){  //!=undefined
             const keys = Object.keys(data.query.pages)
             //console.log(data.query.pages[keys[0]].links)
             if(data != null){
             setLinks(data.query.pages[keys[0]].links)
+            console.log(links);
+            //shuffleData(links);
+            //console.log(shuffled);
             localStorage.setItem("Term", term);
-            }else{
+            }}else{
                 setLinks([])
             }
-        }
+        
             
         }
         if (translatedTerm){
@@ -583,7 +628,8 @@ useEffect(() =>{
                  </div>
                  <FontAwesomeIcon onClick={pushToDictionary} title="Add to favourites" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
             </div>
-            {(results!==[]) ? (
+            {(results?.length>0) ? (
+            <div>
             <div className="carousel">
                 <FontAwesomeIcon
             onClick={slideLeft}
@@ -602,15 +648,18 @@ useEffect(() =>{
                 size="2x"
                 color="#B2BFC7"
             />
-              </div>): <div>Sorry, no results for "${translatedTerm}"</div>}
+              </div>
+              <div>{index+1}/3</div></div>): <div>Sorry, no results for "{translatedTerm}"</div>}
           </div>
           </div>
-          <div>{index+1}/3</div>
+          
+          
+          {(links?.length>0) ?(
           <div className="getInspired">
           <div id="SA">{seeAlso}</div>
-          <div className="linksWrap"><ul>{linksInArticle}</ul></div>
+          <div className="linksWrap"><ul>{linksInArticle}</ul></div></div>):<div>Sorry, no  suggestions for "{translatedTerm}"</div>}
           </div>
-      </div>
+      
       )
 
 }

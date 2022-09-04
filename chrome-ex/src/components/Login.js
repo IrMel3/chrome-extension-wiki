@@ -34,7 +34,7 @@ function Login(){
           user: newUser,
       }
       axios
-          .post("http://localhost:10020/registerUser", userData) //http://localhost:3000/  https://pwp.um.ifi.lmu.de/g20/registerUser
+          .post("http://localhost:3000/registerUser", userData) //http://localhost:3000/  https://pwp.um.ifi.lmu.de/g20/registerUser
           .then(res => {
             console.log(res.data)
             if(res.data.message === "Saved new user!"){

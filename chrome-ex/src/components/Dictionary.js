@@ -6,7 +6,8 @@ import {
     faCaretLeft,
     faCaretRight,
     faClipboard,
-    faList
+    faList,
+    faXmark
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
 import WikiCard from "./WikiCard";
@@ -41,19 +42,19 @@ function Dictionary (){
     },[])
 
 
-    useEffect(() =>{
+    useEffect(() =>{ 
         setDictionaryLength(value.length);
     })
 
     useEffect(() =>{
         axios.get(`http://localhost:3000/getDictionaryEntries?user=${user}`)
             .then(res => {
-                console.log(res.data)
+               // console.log(res.data)
                 setValue(res.data)
             }).catch((error) => {
             error.toString();
         })
-    }, [])
+    }, [value])
 
 
    /* useEffect(() =>{
@@ -146,8 +147,8 @@ function Dictionary (){
         console.log(filteredVoc)
         setFullDictionary(value);
         setValue(filteredVoc)
-        if(filteredVoc){
-        sendLog("Searched for Term " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
+       // if(filteredVoc){
+        //sendLog("Searched for Term " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
     }
 
     function clearSearch(){
@@ -180,6 +181,28 @@ function Dictionary (){
           search();
           
     }}
+
+    const deleteEntry = (index) =>{
+        const clickedVocab = [...value];
+        console.log(clickedVocab[index])
+        let timestamp = new Date();
+        let entry = {
+            user: user,
+            term: clickedVocab[index].term,
+            translation: clickedVocab[index].translation,
+        }
+        console.log(entry)
+        axios
+            .delete("http://localhost:3000/deleteDictionaryEntry", {data: entry})
+            .then(data => { if(data.status == 200){
+                alert("Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.")
+                sendLog("Deleted Word from dictionary", clickedVocab[index].term, clickedVocab[index].translation, localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
+                };
+
+            })
+            .catch(error => alert("Something went wrong. Please reload the page and try again."))
+   
+    }
 
 
     const sendLog = (action, term, translatedTerm, motherTounge, targetLanguage) =>{
@@ -222,6 +245,13 @@ function Dictionary (){
             <h3>{value.term}</h3>
             <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>
             <div>
+            <FontAwesomeIcon
+            onClick={() => deleteEntry(index)}
+            className="deleteBtn"
+            icon={faXmark}
+            size="2x"
+            color="#B2BFC7"
+             />
             <hr class="solidHR"></hr>
             </div>
             </div>
@@ -241,20 +271,14 @@ function Dictionary (){
     )
     })
 
-    const filteredVoc = () =>{ if(value!== undefined){value.filter(
+    const filteredVoc = value && value.filter(
         value =>{
             return(
-                value
-                    .term
-                    .toLowerCase()
-                    .includes(searchField.toLowerCase()) ||
-                value
-                    .translation
-                    .toLowerCase()
-                    .includes(searchField.toLowerCase())
+                value.term?.toLowerCase().includes(searchField.toLowerCase()) ||
+                value?.translation?.toLowerCase().includes(searchField.toLowerCase())
             );
         }
-    );}}
+    );
 
 
     return(
