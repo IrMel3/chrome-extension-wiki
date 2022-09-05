@@ -24,7 +24,9 @@ function Login(){
                       setIsAuth(true);
                       }
                     })
-                    .catch(error => console.log(error))
+                    .catch(error => {console.log(error)
+                    alert(error.message)}
+                    )
       }
     
       const registerNewUser = () =>{
@@ -39,9 +41,15 @@ function Login(){
             console.log(res.data)
             if(res.data.message === "Saved new user!"){
             localStorage.setItem("User", newUser);
+            alert("You successfully registered.")
+            //sendlog
             }
           })
-          .catch(error => console.log(error))
+          .catch(error => {console.log(error)
+            alert(error.message)
+            //sendlog
+          }
+            )
     
       }
 

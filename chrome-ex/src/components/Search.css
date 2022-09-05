@@ -165,14 +165,14 @@ a:hover {
 .rightWikiBtn {
   display: flex;
   right: 1rem;
-  margin-top: 4.2rem;
+  margin-top: 6rem;
   cursor: pointer;
 }
 
 .leftWikiBtn {
   display: flex;
   left: -1rem;
-  margin-top: 4.2rem;
+  margin-top: 6rem;
   cursor: pointer;
 }
 .carousel {
@@ -198,4 +198,8 @@ a:hover {
   padding: 5px;
   right: 0;
   font-size: smaller;
+}
+
+.css-s18byi {
+  background-color: #d4e6f1;
 }

@@ -1,11 +1,13 @@
 /* global chrome */
 import React, {useState, useContext, useEffect, useRef} from 'react';
 import Card from "./Card";
+import BasicWikiCard from '../BasicWikiCard';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
     faCaretRight,
     faClipboard,
+    faCirclePlus,
     faList,
     faXmark
   } from "@fortawesome/free-solid-svg-icons";
@@ -228,7 +230,7 @@ function Dictionary (){
     if(clickedVoc.targetlanguage!==undefined){
     return(
     <div className="container">
-        <WikiCard {...result} targetLanguage={clickedVoc.targetlanguage}></WikiCard> 
+        <BasicWikiCard {...result} targetLanguage={clickedVoc.targetlanguage} />
     </div>
     )}
     else{
@@ -283,7 +285,7 @@ function Dictionary (){
 
     return(
         <div>
-            {value != null ?  
+            {(value?.length>0) ?  
         <div>
             <div><input
              type="search"
@@ -335,7 +337,10 @@ function Dictionary (){
             color="#B2BFC7" 
             /></div> }</div>
             
-            :  <div>No words in dictionary yet.</div>}
+            :  <div>No words saved in your favourites yet.
+                Click <FontAwesomeIcon title="Add to favourites" icon={faCirclePlus} size="1x" color="#B2BFC7" className="plus"/>
+                next to the vocabulary to add your first one!
+                </div>}
 
             
             

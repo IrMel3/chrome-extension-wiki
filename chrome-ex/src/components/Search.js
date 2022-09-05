@@ -5,8 +5,15 @@ import './Search.css';
 import axios from 'axios';
 import $ from 'jquery';
 import WikiCard from "./WikiCard";
+import BasicCard from './BasicCard'
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import Alert from 'react-bootstrap/Alert';
 import { DictionaryContext } from './DictionaryContext';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
@@ -524,7 +531,7 @@ useEffect(() =>{
 
         return(
             <div className="container" onClick={() => {handleclick(n);}} key={n}>
-               <WikiCard {...result} targetLanguage={targetLanguage} cardStyle={position}></WikiCard> 
+           <BasicCard {...result} targetLanguage={targetLanguage} cardStyle={position}/>
             </div>
             
         )
@@ -540,6 +547,16 @@ useEffect(() =>{
             <li onClick={() => {handleLinkClick(index);}} key={index}>
             <span className='link'><a className="nodeco"target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
             </li>
+        )
+    })
+
+    const linksInArticle2 = 
+    
+    links && links.map((link,index) =>{
+        return (
+            <div onClick={() => {handleLinkClick(index);}} key={index}>
+            <Chip label={link.title} component="a" target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`} clickable />
+            </div>
         )
     })
 
@@ -603,7 +620,8 @@ useEffect(() =>{
                         <option value="fr">FR</option>
                         <option value="it">IT</option>
                         </select>
-                  </label></div>
+                  </label>
+                  </div>
                   <div id="search"> 
                   <input className="input"
                   id="searchfield"

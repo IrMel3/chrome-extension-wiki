@@ -47,4 +47,12 @@ hr.solidHR {
 
 .container {
   cursor: pointer;
+  background-color: #d4e6f1;
+}
+
+.plus {
+  padding: 5px;
+}
+.css-s18byi {
+  background-color: #d4e6f1;
 }
