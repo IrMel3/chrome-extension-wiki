@@ -48,6 +48,7 @@ hr.solidHR {
 .container {
   cursor: pointer;
   background-color: #d4e6f1;
+  border-radius: 20px;
 }
 
 .plus {
@@ -55,4 +56,18 @@ hr.solidHR {
 }
 .css-s18byi {
   background-color: #d4e6f1;
+  margin-top: 10px;
+}
+
+.css-8hdryf {
+  display: flex;
+  /* width: 200px; */
+  /* height: 200px; */
+  align-content: center;
+  /* flex-wrap: wrap; */
+  overflow: visible;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  margin: 10px;
 }
