@@ -10,10 +10,8 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Alert from 'react-bootstrap/Alert';
 import { DictionaryContext } from './DictionaryContext';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import Card from '@mui/material/Card';
+import { FormControl, InputLabel, Select, MenuItem, TextField, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
@@ -611,18 +609,25 @@ useEffect(() =>{
       <div>
           <div className="ui-form">
               <div className="field">
-              <div className="translationBox">
+              <Card className="translationBox" style={{backgroundColor: "#e7f4fd"}}>
+              <div>
               <div className="langDropdowns">
-              <div id="langselect"><label>
-                        <select value={motherTounge} onChange={handleMotherTounge}>
-                        <option value="en">EN</option>
-                        <option value="de" selected>DE</option>
-                        <option value="fr">FR</option>
-                        <option value="it">IT</option>
-                        </select>
-                  </label>
-                  </div>
-                  <div id="search"> 
+              <FormControl sx={{ m: 1, maxWidth: 120 }} size="small" variant="standard">
+                <InputLabel id="demo-simple-select-label" sx={{overflow:"visible"}}>From</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={motherTounge}
+                    label="Mother tounge"
+                    onChange={handleMotherTounge}
+                >
+                    <MenuItem value="en">EN</MenuItem>
+                    <MenuItem value="de" selected>DE</MenuItem>
+                    <MenuItem value="fr">FR</MenuItem>
+                    <MenuItem value="it">IT</MenuItem>
+                </Select>
+              </FormControl>
+                  <div id="search">    
                   <input className="input"
                   id="searchfield"
                   value={term}
@@ -634,18 +639,28 @@ useEffect(() =>{
                   <hr class="solid"></hr>
                   </div>              
                   <div className="translationForm">
-                  <div id="langselect"><label>
-                        <select value={targetLanguage} onChange={handleTargetLanguage}>
-                        <option value="en" selected>EN</option>
-                        <option value="de">DE</option>
-                        <option value="fr">FR</option>
-                        <option value="it">IT</option>
-                        </select>
-                  </label></div>
+                  <FormControl sx={{ m: 1, maxWidth: 120 }} size="small" variant="standard">
+                <InputLabel id="demo-simple-select-label" sx={{overflow:"visible"}}>To</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={targetLanguage}
+                    label="Target Language"
+                    onChange={handleTargetLanguage}
+                >
+                    <MenuItem value="en" selected>EN</MenuItem>
+                    <MenuItem value="de">DE</MenuItem>
+                    <MenuItem value="fr">FR</MenuItem>
+                    <MenuItem value="it">IT</MenuItem>
+                </Select>
+              </FormControl>
                  <div className="translation">{translatedTerm}</div>
                  </div>
-                 <FontAwesomeIcon onClick={pushToDictionary} title="Add to favourites" icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
+                 <Tooltip title="Add to favourites">
+                 <FontAwesomeIcon onClick={pushToDictionary} icon={faCirclePlus} size="2x" color="#B2BFC7" className="addToDict"/>
+                 </Tooltip>
             </div>
+            </Card>
             {(results?.length>0) ? (
             <div>
             <div className="carousel">

@@ -15,6 +15,10 @@
   display: none;
 }
 
+.search {
+  padding: 10px;
+}
+
 .rightBtn {
   display: flex;
   right: 1rem;
@@ -22,8 +26,22 @@
   cursor: pointer;
 }
 
+.glasses,
+.clear {
+  margin: 5px;
+  cursor: pointer;
+}
+
 .listBtn {
   cursor: pointer;
+}
+
+.cardBtn {
+  cursor: pointer;
+}
+
+.listBtn {
+  margin-top: 10px;
 }
 
 .leftBtn {
@@ -57,6 +75,7 @@ hr.solidHR {
 .css-s18byi {
   background-color: #d4e6f1;
   margin-top: 10px;
+  overflow: visible;
 }
 
 .css-8hdryf {
@@ -70,4 +89,10 @@ hr.solidHR {
   justify-content: center;
   align-items: stretch;
   margin: 10px;
+}
+
+.favsearchcontainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }

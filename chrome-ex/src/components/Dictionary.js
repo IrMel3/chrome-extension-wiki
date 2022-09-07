@@ -2,7 +2,7 @@
 import React, {useState, useContext, useEffect, useRef} from 'react';
 import IndexCard from "./IndexCard";
 import BasicWikiCard from '../BasicWikiCard';
-import Card from '@mui/material/Card';
+import {Card, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
@@ -10,7 +10,8 @@ import {
     faClipboard,
     faCirclePlus,
     faList,
-    faXmark
+    faXmark,
+    faMagnifyingGlass
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
 import WikiCard from "./WikiCard";
@@ -28,6 +29,7 @@ function Dictionary (){
    // const [fullDictionary, setFullDictionary] = useContext([])
     const {user, setUser} = useContext(UserContext);
     const [searchField, setSearchField] = useState("")
+    const [searched, setSearched] = useState(false);
     const [result, setResult] = useState([])
     const [dictionaryLength, setDictionaryLength] = useState(0);
     const [showList, setShowList] = useState(false);
@@ -57,7 +59,7 @@ function Dictionary (){
             }).catch((error) => {
             error.toString();
         })
-    })
+    },[])
 
 
 
@@ -94,6 +96,7 @@ function Dictionary (){
         console.log(filteredVoc)
         setFullDictionary(value);
         setValue(filteredVoc)
+        setSearched(true);
         console.log(value);
        // if(filteredVoc){
         //sendLog("Searched for Term " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
@@ -189,7 +192,7 @@ function Dictionary (){
     const words =     
     value && value.map((value,index) =>{
         return(
-            <Card  className="cardcontainer" >
+            <Card  className="cardcontainer" style={{backgroundColor: "#d4e6f1"}} >
             <div onClick={() => {handlechange(index);}} key={index} className="container">
             <h3>{value.term}</h3>
             <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>
@@ -220,7 +223,7 @@ function Dictionary (){
     )
     })
 
-    const filteredVoc = value.filter(
+    const filteredVoc = value && value.filter(
         value =>{
             return(
                 value.term?.toLowerCase().includes(searchField.toLowerCase()) ||
@@ -232,62 +235,85 @@ function Dictionary (){
 
     return(
         <div>
-            {value !=null ?  
+            {(value?.length>0) ?  
         <div>
-            <div><input
+            <div className="favsearchcontainer"><input
              type="search"
              id="searchbox"
              placeholder="Search Favourites"
              onChange = {handleSearchChange}
+             value={searchField}
             />
-            <button onClick={searchList}>Search</button>
-            <button onClick={clearSearch}>Clear</button>
+            <Tooltip title="Search in favourites">
+            <FontAwesomeIcon
+            onClick={searchList}
+            className="glasses"
+            icon={faMagnifyingGlass}
+            size="2x"
+            color="#B2BFC7"
+             /></Tooltip>
+             <Tooltip title="Clear Search">
+             <FontAwesomeIcon
+            onClick={clearSearch}
+            className="clear"
+            icon={faXmark}
+            size="2x"
+            color="#B2BFC7"
+             />
+             </Tooltip>
             </div>
             <div>{wikicard()}</div>
             {showList==false ?  
           <div>
-          <div className="dictionary">  
-              <FontAwesomeIcon
+          <div className="dictionary">
+            <Tooltip title="Previous">
+            <FontAwesomeIcon
             onClick={slideLeft}
             className="leftBtn"
             icon={faCaretLeft}
             size="4x"
             color="#B2BFC7"
-             />
+             /></Tooltip>
             <div className="card-container">
             {words2}
             </div>
+            <Tooltip title="Next">
             <FontAwesomeIcon
                 onClick={slideRight}
                 className="rightBtn"
                 icon={faCaretRight}
                 size="4x"
                 color="#B2BFC7"
-            />
+            /></Tooltip>
             </div>
             <div>{index+1}/{dictionaryLength}</div>
             <div><hr class="solidHR"></hr></div>
+            <Tooltip title="Show List">
             <FontAwesomeIcon 
             icon={faList}
-            className="listBtn"
+            className="cardBtn"
             onClick={changeList}
             size="2x"
             color="#B2BFC7" 
-            />
+            /></Tooltip>
             </div>: <div>
             <div><hr class="solidHR"></hr></div>
-            {words}<FontAwesomeIcon 
+            {words}
+            <Tooltip title="Show cards">
+            <FontAwesomeIcon 
             icon={faClipboard}
             className="listBtn"
             onClick={changeList}
             size="2x"
             color="#B2BFC7" 
-            /></div> }</div>
+            /></Tooltip></div> }</div>
             
             :  <div>No words saved in your favourites yet.
                 Click <FontAwesomeIcon title="Add to favourites" icon={faCirclePlus} size="1x" color="#B2BFC7" className="plus"/>
                 next to the vocabulary to add your first one!
-                </div>}
+                </div>
+                
+            }
 
             
             
