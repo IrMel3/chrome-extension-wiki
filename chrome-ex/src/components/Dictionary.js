@@ -4,6 +4,7 @@ import IndexCard from "./IndexCard";
 import BasicWikiCard from '../BasicWikiCard';
 import {Card, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DE,EN,IT,FR } from 'country-flag-icons/react/3x2'
 import {
     faCaretLeft,
     faCaretRight,
@@ -192,7 +193,7 @@ function Dictionary (){
     const words =     
     value && value.map((value,index) =>{
         return(
-            <Card  className="cardcontainer" style={{backgroundColor: "#d4e6f1"}} >
+            <Card  className="cardcontainer" style={{backgroundColor: "#d4e6f1", borderRadius: "15px"}} >
             <div onClick={() => {handlechange(index);}} key={index} className="container">
             <h3>{value.term}</h3>
             <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>

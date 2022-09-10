@@ -11,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import Alert from 'react-bootstrap/Alert';
 import { DictionaryContext } from './DictionaryContext';
 import Card from '@mui/material/Card';
-import { FormControl, InputLabel, Select, MenuItem, TextField, Tooltip} from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, TextField, Tooltip,Typography} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
@@ -55,7 +55,7 @@ const Search = () => {
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
     const {user, setUser} = useContext(UserContext);
-    const seeAlsoText = ["See also", "Siehe auch", "Voir aussi", "Voci correlate"]
+    const seeAlsoText = ["See also", "Siehe auch", "Voir aussi", "Voci correlate", "Véase también"]
 
     /**
      * looks if the language was already set and fetches it from local storage
@@ -147,7 +147,7 @@ const Search = () => {
                 localStorage.setItem("Translation", response.data.translatedText);
             }) 
     
-    })
+    },[term])
 
     /**
      * request to deepl API
@@ -370,7 +370,7 @@ const Search = () => {
 const searchSectionsForSeeAlso = () =>{
     if(sections.length !== null){
     for(var i=0; i < sections.length; i++){
-        if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3]){
+        if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3] || sections[i].line == seeAlsoText[4]){
             console.log(sections[i].index);
             //console.log(i);
             //section = i;
@@ -390,7 +390,7 @@ useEffect(() =>{
     .then(data=>{
         console.log("Sec num now " + sectionNum)
         //console.log(data.data.error.code)
-        if(!data.data.error){
+        if(!data.data.error && sectionNum!=0){
         console.log("See Also: " + data.data.parse);
         //console.log("See Also parsed " +data.data.parse.text["*"]);
         setSeeAlso(parse(`<div className="seeAlso nodeco">${data.data.parse.text["*"]}</div>`));
@@ -609,7 +609,7 @@ useEffect(() =>{
       <div>
           <div className="ui-form">
               <div className="field">
-              <Card className="translationBox" style={{backgroundColor: "#e7f4fd"}}>
+              <Card className="translationBox" sx={{backgroundColor: "#e7f4fd",borderRadius: "15px"}}>
               <div>
               <div className="langDropdowns">
               <FormControl sx={{ m: 1, maxWidth: 120 }} size="small" variant="standard">
@@ -620,11 +620,13 @@ useEffect(() =>{
                     value={motherTounge}
                     label="Mother tounge"
                     onChange={handleMotherTounge}
+                    sx={{left: "5px"}}
                 >
                     <MenuItem value="en">EN</MenuItem>
                     <MenuItem value="de" selected>DE</MenuItem>
                     <MenuItem value="fr">FR</MenuItem>
                     <MenuItem value="it">IT</MenuItem>
+                    <MenuItem value="es">ES</MenuItem>
                 </Select>
               </FormControl>
                   <div id="search">    
@@ -647,11 +649,13 @@ useEffect(() =>{
                     value={targetLanguage}
                     label="Target Language"
                     onChange={handleTargetLanguage}
+                    sx={{left: "5px"}}
                 >
                     <MenuItem value="en" selected>EN</MenuItem>
                     <MenuItem value="de">DE</MenuItem>
                     <MenuItem value="fr">FR</MenuItem>
                     <MenuItem value="it">IT</MenuItem>
+                    <MenuItem value="es">ES</MenuItem>
                 </Select>
               </FormControl>
                  <div className="translation">{translatedTerm}</div>
@@ -664,29 +668,29 @@ useEffect(() =>{
             {(results?.length>0) ? (
             <div>
             <div className="carousel">
+            <Tooltip title="Previous">
                 <FontAwesomeIcon
             onClick={slideLeft}
             className="leftWikiBtn"
             icon={faCaretLeft}
             size="2x"
             color="#B2BFC7"
-             />
+             /></Tooltip>
             <div className="card-container">
             {searchResultsMapped2}
             </div>
+            <Tooltip title="Next">
             <FontAwesomeIcon
                 onClick={slideRight}
                 className="rightWikiBtn"
                 icon={faCaretRight}
                 size="2x"
                 color="#B2BFC7"
-            />
+            /></Tooltip>
               </div>
               <div>{index+1}/3</div></div>): <div>Sorry, no results for "{translatedTerm}"</div>}
           </div>
           </div>
-          
-          
           {(links?.length>0) ?(
           <div className="getInspired">
           <div id="SA">{seeAlso}</div>

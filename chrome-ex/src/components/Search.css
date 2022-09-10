@@ -203,3 +203,19 @@ a:hover {
 .css-s18byi {
   background-color: #d4e6f1;
 }
+
+.inspired {
+  padding: 10px;
+}
+
+.mw-parser-output .sidebar {
+  display: none !important;
+}
+
+.mw-parser-output .side-box {
+  display: none !important;
+}
+
+img {
+  display: none !important;
+}

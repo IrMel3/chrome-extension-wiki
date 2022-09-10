@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 export default function BasicWikiCard({ title, snippet, targetLanguage, pageid, cardStyle }) {
   return (
-    <Card className={cardStyle} key={pageid} style={{backgroundColor: "#d4e6f1"}}>
+    <Card className={cardStyle} key={pageid} sx={{backgroundColor: "#d4e6f1", borderRadius: "15px", marginTop: "5px"}}>
       <CardContent>
         <Typography variant="h6" component="div">
           {title}
