@@ -180,7 +180,7 @@ function Dictionary (){
     if(clickedVoc.targetlanguage!==undefined){
     return(
     <div className="container">
-        <BasicWikiCard {...result} targetLanguage={clickedVoc.targetlanguage} />
+        <BasicWikiCard {...result[0]} targetLanguage={clickedVoc.targetlanguage} />
     </div>
     )}
     else{
@@ -205,6 +205,14 @@ function Dictionary (){
             size="2x"
             color="#B2BFC7"
              />
+             <div>
+                {(clickedVoc.targetlanguage!==undefined) && (value.translation == clickedVoc.translation)?
+                    <div>
+                    <BasicWikiCard {...result} targetLanguage={clickedVoc.targetlanguage} />
+                    </div>: <div></div>
+                }
+            
+            </div>
             </div>
             </div>
             </Card>
@@ -263,7 +271,6 @@ function Dictionary (){
              />
              </Tooltip>
             </div>
-            <div>{wikicard()}</div>
             {showList==false ?  
           <div>
           <div className="dictionary">
