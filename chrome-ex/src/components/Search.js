@@ -49,6 +49,8 @@ const Search = () => {
     const [isLinksActive, setIsLinksActive] = useState(false);
     const [pageContent, setPageContent] = useState('N/A');
     const [currURL, setCurrURL] = useState('');
+    //const [motherTounge, setMotherTounge] = useState('DE')
+    //const [targetLanguage, setTargetLanguage] = useState('EN');
     const [motherTounge, setMotherTounge] = useState('de')
     const [targetLanguage, setTargetLanguage] = useState('en');
     const [sectionNum, setSectionNum] = useState(0);
@@ -147,25 +149,29 @@ const Search = () => {
                 localStorage.setItem("Translation", response.data.translatedText);
             }) 
     
-    },[term])
+    },[term, targetLanguage])
 
     /**
      * request to deepl API
      */
-  /*  useEffect(() =>{
+   /* useEffect(() =>{
         let data = {
             text : term,
             target_lang: targetLanguage,
-            auth_key: 'authkey',
+            auth_key: '',
         }
-        axios.post(`https://api-free.deepl.com/v2/translate`, data)
-        .then((response) => {
-           // console.log("libretranslate: " + response.data.translatedText)
-            setTranslatedTerm(response.data.translations.text);
-            localStorage.setItem("Translation", response.data.translations.text);
-        }) 
         
-    })*/
+        const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${process.env.REACT_APP_DEEPL_KEY}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
+
+        axios.get(deeplUrl)
+        .then((response) => {
+            console.log("deepL: " + response.data.translations[0].text)
+            setTranslatedTerm(response.data.translations[0].text);
+            localStorage.setItem("Translation", response.data.translations[0].text);
+        })
+        .catch(err=> console.log(err)) 
+        
+    },[term, targetLanguage])*/
 
     /**
      * fetches h1 from chrome storage 
@@ -656,6 +662,11 @@ useEffect(() =>{
                     <MenuItem value="fr">FR</MenuItem>
                     <MenuItem value="it">IT</MenuItem>
                     <MenuItem value="es">ES</MenuItem>
+                 { /*  <MenuItem value="EN" selected>EN</MenuItem>
+                    <MenuItem value="DE">DE</MenuItem>
+                    <MenuItem value="FR">FR</MenuItem>
+                    <MenuItem value="IT">IT</MenuItem>
+                     <MenuItem value="ES">ES</MenuItem> */}
                 </Select>
               </FormControl>
                  <div className="translation">{translatedTerm}</div>
