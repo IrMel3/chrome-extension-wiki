@@ -6,8 +6,8 @@ const IndexCard = ({ handleMouseDown, term, translation, targetlanguage, link, c
     return (
       <Card style={{backgroundColor: "#d4e6f1", overflow: "visible", borderRadius: "15px"}}>
       <div className={cardStyle} onMouseDown={handleMouseDown}>
-            <h3>{term}</h3>
-            <a target="_blank" href={`https://${targetlanguage}.wikipedia.org/wiki/${link}`}>{translation}</a>
+            <div>{term}</div>
+            <h3><a target="_blank" href={`https://${targetlanguage}.wikipedia.org/wiki/${link}`}>{translation}</a></h3>
       </div>
       </Card>
     );

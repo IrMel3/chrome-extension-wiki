@@ -69,7 +69,7 @@ const Search = () => {
         if(localStorage.getItem("Mothertounge") != 'de'){
             setMotherTounge(localStorage.getItem("Mothertounge"))
         }
-    })
+    },[])
 
     /**
      * set languages to local storage
@@ -84,7 +84,7 @@ const Search = () => {
         if(localStorage.getItem("Vocabulary") == null){
             localStorage.setItem("Vocabulary", [])
         }
-    })
+    },[])
 
     const addDictionaryEntryToDB =() =>{
         let timestamp = new Date();
@@ -277,7 +277,7 @@ const Search = () => {
                 setResults([]);
             }
         }
-        if (translatedTerm && !results.length){
+        if (translatedTerm && !results.length && targetLanguage!=undefined){
             search();
         }else{
         let timeoutID = setTimeout(() =>{
@@ -471,7 +471,7 @@ useEffect(() =>{
         clearTimeout(timeoutID);
     }
 }
-    }, [firstResultTitle])
+    }, [firstResultTitle, targetLanguage])
 
     //for Cards
 

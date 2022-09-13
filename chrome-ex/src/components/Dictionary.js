@@ -12,7 +12,8 @@ import {
     faCirclePlus,
     faList,
     faXmark,
-    faMagnifyingGlass
+    faMagnifyingGlass,
+    faTrash
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
 import WikiCard from "./WikiCard";
@@ -33,9 +34,15 @@ function Dictionary (){
     const [searched, setSearched] = useState(false);
     const [result, setResult] = useState([])
     const [dictionaryLength, setDictionaryLength] = useState(0);
+    const [fixedDictLength, setFixedDictLength] = useState(0)
     const [showList, setShowList] = useState(false);
     const [index, setIndex] = useState(0)
     const [clickedVoc, setClickedVoc] = useState([])
+    const [activePage, setActivePage] = useState(1);
+    const [beginning, setBeginning]= useState(0);
+    const [end, setEnd] = useState(3);
+    const [cardOpen, setCardOpen] = useState(false);
+
 
     /**
      * fetch new word from local storage
@@ -57,6 +64,7 @@ function Dictionary (){
             .then(res => {
                // console.log(res.data)
                 setValue(res.data)
+                setFixedDictLength(res.data?.length)
             }).catch((error) => {
             error.toString();
         })
@@ -134,6 +142,10 @@ function Dictionary (){
           
     }}
 
+    const closeEntry = (index) =>{
+        setCardOpen(false);
+    }
+
     const deleteEntry = (index) =>{
         const clickedVocab = [...value];
         console.log(clickedVocab[index])
@@ -175,6 +187,22 @@ function Dictionary (){
         
     }
 
+    const showNextPage = () =>{
+        if(value?.length > end){
+            setBeginning(beginning+3);
+            setEnd(end+3);
+            setActivePage(activePage+1)
+        }
+    }
+
+    const showPreviousPage = () =>{
+        if(beginning > 0){
+            setBeginning(beginning-3);
+            setEnd(end-3);
+            setActivePage(activePage-1)
+        }
+    }
+
 
     const wikicard = ()=>{
     if(clickedVoc.targetlanguage!==undefined){
@@ -189,25 +217,34 @@ function Dictionary (){
 }
             
         
-
+    //map dictionary entries, use slice (1,5) for page 1, 
     const words =     
-    value && value.map((value,index) =>{
+    value && value.slice(beginning, end).map((value,index) =>{
         return(
             <Card  className="cardcontainer" style={{backgroundColor: "#d4e6f1", borderRadius: "15px"}} >
-            <div onClick={() => {handlechange(index);}} key={index} className="container">
-            <h3>{value.term}</h3>
-            <a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a>
+            <div onClick={() => {handlechange(beginning+index);}} key={beginning+index} className="container">
+            <div>{value.term}</div>
+            <h3><a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a></h3>
             <div>
+            <Tooltip title="Delete Entry">
             <FontAwesomeIcon
-            onClick={() => deleteEntry(index)}
+            onClick={() => deleteEntry(beginning+index)}
             className="deleteBtn"
-            icon={faXmark}
+            icon={faTrash}
             size="2x"
             color="#B2BFC7"
-             />
+             /></Tooltip>
              <div>
                 {(clickedVoc.targetlanguage!==undefined) && (value.translation == clickedVoc.translation)?
                     <div>
+                    <Tooltip title="Close">
+                    <FontAwesomeIcon
+                    onClick={() => closeEntry(beginning+index)}
+                    className="closeBtn"
+                    icon={faXmark}
+                    size="2x"
+                    color="#B2BFC7"
+                    /></Tooltip>
                     <BasicWikiCard {...result} targetLanguage={clickedVoc.targetlanguage} />
                     </div>: <div></div>
                 }
@@ -270,6 +307,7 @@ function Dictionary (){
             color="#B2BFC7"
              />
              </Tooltip>
+             {value?.length==0 && searched ? <div>Sorry, no search results found.</div>:<div></div>}
             </div>
             {showList==false ?  
           <div>
@@ -307,7 +345,26 @@ function Dictionary (){
             </div>: <div>
             <div><hr class="solidHR"></hr></div>
             {words}
-            <Tooltip title="Show cards">
+            <div className="pageDisplay">
+            <Tooltip title="Previous Page">
+            <FontAwesomeIcon
+            onClick={showPreviousPage}
+            className="leftBtn"
+            icon={faCaretLeft}
+            size="4x"
+            color="#B2BFC7"
+             /></Tooltip>
+            <div className="pages">{activePage}/{Math.ceil(value?.length/3)}</div>
+            <Tooltip title="Next Page">
+            <FontAwesomeIcon
+            onClick={showNextPage}
+            className="rightBtn"
+            icon={faCaretRight}
+            size="4x"
+            color="#B2BFC7"
+             /></Tooltip>
+             </div>
+             <Tooltip title="Show cards">
             <FontAwesomeIcon 
             icon={faClipboard}
             className="listBtn"
@@ -316,10 +373,10 @@ function Dictionary (){
             color="#B2BFC7" 
             /></Tooltip></div> }</div>
             
-            :  <div>No words saved in your favourites yet.
+            : <div>{(fixedDictLength==0) ?<div>No words saved in your favourites yet.
                 Click <FontAwesomeIcon title="Add to favourites" icon={faCirclePlus} size="1x" color="#B2BFC7" className="plus"/>
                 next to the vocabulary to add your first one!
-                </div>
+                </div>: <div></div>}</div>
                 
             }
 
