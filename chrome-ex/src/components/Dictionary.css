@@ -54,6 +54,14 @@
   cursor: pointer;
 }
 
+.deleteBtn {
+  cursor: pointer;
+}
+
+.showBtn {
+  cursor: pointer;
+}
+
 .dictionary {
   display: flex;
   flex-direction: row;
@@ -67,7 +75,6 @@ hr.solidHR {
 }
 
 .container {
-  cursor: pointer;
   background-color: #d4e6f1;
   border-radius: 20px;
 }
@@ -104,5 +111,29 @@ hr.solidHR {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-top: 10px;
+}
+
+.cardBtns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 10px;
+}
+
+.term {
   margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.termFlag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.translationFlag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }

@@ -1,0 +1,35 @@
+.input {
+  margin: 10px;
+  padding: 5px;
+}
+
+.loginBtn {
+  margin: 5px;
+  margin-bottom: 10px;
+}
+
+.registerBtn {
+  margin: 5px;
+}
+
+.loginContainer {
+  padding: 15px;
+  text-align: left !important;
+}
+
+.loginText {
+  margin-left: 10px;
+  font-size: small;
+}
+
+.registerText {
+  margin-left: 10px;
+  font-size: small;
+}
+
+.loginSeperator {
+  border-top: 2px solid #b2bfc7;
+  margin-top: 20px;
+  width: 20%;
+  margin-bottom: 20px;
+}

@@ -4,7 +4,7 @@ import IndexCard from "./IndexCard";
 import BasicWikiCard from '../BasicWikiCard';
 import {Card, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DE,EN,IT,FR } from 'country-flag-icons/react/3x2'
+import { CircleFlag} from 'react-circle-flags';
 import {
     faCaretLeft,
     faCaretRight,
@@ -13,7 +13,8 @@ import {
     faList,
     faXmark,
     faMagnifyingGlass,
-    faTrash
+    faTrash,
+    faEye
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
 import WikiCard from "./WikiCard";
@@ -107,20 +108,26 @@ function Dictionary (){
         setValue(filteredVoc)
         setSearched(true);
         console.log(value);
-       // if(filteredVoc){
-        //sendLog("Searched for Term " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
+        if(filteredVoc){
+        sendLog("Searched in Favorites for: " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
     }
 
     function clearSearch(){
         setSearchField("")
         setValue(fullDictionary);
+        sendLog("Clear Search ", localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
+
     }
 
     const handlechange = (index) => {
         const clickedVoc = [...value];
         console.log(clickedVoc[index])
         setClickedVoc(clickedVoc[index])
-        sendLog("Clicked on Dictionary Term " +clickedVoc[index].term, clickedVoc[index].term, clickedVoc[index].translation, clickedVoc[index].motherTounge, clickedVoc[index].targetlanguage)
+        if(!cardOpen){
+        sendLog("Showed Wiki Card of Favourites Term " +clickedVoc[index].term, clickedVoc[index].term, clickedVoc[index].translation, clickedVoc[index].motherTounge, clickedVoc[index].targetlanguage)
+        }else{
+        sendLog("Closed Wiki Card of Favourites Term " +clickedVoc[index].term, clickedVoc[index].term, clickedVoc[index].translation, clickedVoc[index].motherTounge, clickedVoc[index].targetlanguage)
+        }
         //Now display Wiki article again
         const search = async () => {
             const { data } = await axios.get(`https://${clickedVoc[index].targetlanguage}.wikipedia.org/w/api.php`, {
@@ -137,10 +144,11 @@ function Dictionary (){
                 setResult(arr[0]);
                 console.log(result)
       };}
-      if(clickedVoc[index]){
+      if(clickedVoc[index] && !cardOpen){
           search();
+          setCardOpen(true)
           
-    }}
+    }else{setCardOpen(false)}}
 
     const closeEntry = (index) =>{
         setCardOpen(false);
@@ -191,7 +199,10 @@ function Dictionary (){
         if(value?.length > end){
             setBeginning(beginning+3);
             setEnd(end+3);
-            setActivePage(activePage+1)
+            setActivePage(activePage+1);
+            let page = activePage+1;
+            sendLog("Show next page in Favourites: Now Page " + page, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
+      
         }
     }
 
@@ -199,7 +210,10 @@ function Dictionary (){
         if(beginning > 0){
             setBeginning(beginning-3);
             setEnd(end-3);
-            setActivePage(activePage-1)
+            setActivePage(activePage-1);
+            let page = activePage+1;
+            sendLog("Show previous page in Favourites: Now Page " + page, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
+      
         }
     }
 
@@ -217,15 +231,30 @@ function Dictionary (){
 }
             
         
-    //map dictionary entries, use slice (1,5) for page 1, 
+    //map dictionary entries, use slice (1,3) for page 1, 
     const words =     
     value && value.slice(beginning, end).map((value,index) =>{
         return(
             <Card  className="cardcontainer" style={{backgroundColor: "#d4e6f1", borderRadius: "15px"}} >
-            <div onClick={() => {handlechange(beginning+index);}} key={beginning+index} className="container">
-            <div>{value.term}</div>
-            <h3><a target="_blank" href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a></h3>
-            <div>
+            <div className="container">
+            <div className="termFlag">
+            <CircleFlag className="fromFlag" countryCode={value.mothertounge=='en' ? 'gb' : value.mothertounge} height="15" style={{marginTop: '20px', paddingRight: '10px'}} />
+            <div className="term">{value.term}</div>
+            </div>
+            <div className="translationFlag">
+            <CircleFlag className="toFlag" countryCode={value.targetlanguage=='en' ? 'gb' : value.targetlanguage} height="15" style={{marginTop: '15px', paddingRight: '10px'}} />
+            <h3><a target="_blank" onClick={() => sendLog("Clicked Link in Dictionary", value.term, value.translation, value.mothertounge, value.targetlanguage)} href={`https://${value.targetlanguage}.wikipedia.org/wiki/${value.link}`}>{value.translation}</a></h3>
+            </div><div>
+            <div className="cardBtns">
+            <Tooltip title={!cardOpen ? "Show Wiki Entry" : "Hide Wiki Entry"}>
+            <FontAwesomeIcon
+            onClick={() => handlechange(beginning+index)}
+            key={beginning+index}
+            className="showBtn"
+            icon={faEye}
+            size="2x"
+            color="#B2BFC7"
+             /></Tooltip>
             <Tooltip title="Delete Entry">
             <FontAwesomeIcon
             onClick={() => deleteEntry(beginning+index)}
@@ -234,17 +263,19 @@ function Dictionary (){
             size="2x"
             color="#B2BFC7"
              /></Tooltip>
+             </div>
              <div>
-                {(clickedVoc.targetlanguage!==undefined) && (value.translation == clickedVoc.translation)?
+                {cardOpen && (clickedVoc.targetlanguage!==undefined) && (value.translation == clickedVoc.translation) ?
                     <div>
-                    <Tooltip title="Close">
+                    <div><hr class="solidHR"></hr></div>
+                    {/*<Tooltip title="Close">
                     <FontAwesomeIcon
                     onClick={() => closeEntry(beginning+index)}
                     className="closeBtn"
                     icon={faXmark}
                     size="2x"
                     color="#B2BFC7"
-                    /></Tooltip>
+                    /></Tooltip> */}
                     <BasicWikiCard {...result} targetLanguage={clickedVoc.targetlanguage} />
                     </div>: <div></div>
                 }
@@ -309,42 +340,10 @@ function Dictionary (){
              </Tooltip>
              {value?.length==0 && searched ? <div>Sorry, no search results found.</div>:<div></div>}
             </div>
-            {showList==false ?  
-          <div>
-          <div className="dictionary">
-            <Tooltip title="Previous">
-            <FontAwesomeIcon
-            onClick={slideLeft}
-            className="leftBtn"
-            icon={faCaretLeft}
-            size="4x"
-            color="#B2BFC7"
-             /></Tooltip>
-            <div className="card-container">
-            {words2}
-            </div>
-            <Tooltip title="Next">
-            <FontAwesomeIcon
-                onClick={slideRight}
-                className="rightBtn"
-                icon={faCaretRight}
-                size="4x"
-                color="#B2BFC7"
-            /></Tooltip>
-            </div>
-            <div>{index+1}/{dictionaryLength}</div>
-            <div><hr class="solidHR"></hr></div>
-            <Tooltip title="Show List">
-            <FontAwesomeIcon 
-            icon={faList}
-            className="cardBtn"
-            onClick={changeList}
-            size="2x"
-            color="#B2BFC7" 
-            /></Tooltip>
-            </div>: <div>
+            <div>
             <div><hr class="solidHR"></hr></div>
             {words}
+            <div><hr class="solidHR"></hr></div>
             <div className="pageDisplay">
             <Tooltip title="Previous Page">
             <FontAwesomeIcon
@@ -363,15 +362,7 @@ function Dictionary (){
             size="4x"
             color="#B2BFC7"
              /></Tooltip>
-             </div>
-             <Tooltip title="Show cards">
-            <FontAwesomeIcon 
-            icon={faClipboard}
-            className="listBtn"
-            onClick={changeList}
-            size="2x"
-            color="#B2BFC7" 
-            /></Tooltip></div> }</div>
+             </div></div></div>
             
             : <div>{(fixedDictLength==0) ?<div>No words saved in your favourites yet.
                 Click <FontAwesomeIcon title="Add to favourites" icon={faCirclePlus} size="1x" color="#B2BFC7" className="plus"/>

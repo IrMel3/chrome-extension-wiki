@@ -121,13 +121,13 @@ const Search = () => {
         if(value == []){
             setValue([obj])
             localStorage.setItem("Vocabulary", JSON.stringify(obj));
-            sendLog('pushToDictionary(first)');
+            sendLog('Add first Word to Dictionary',localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
             console.log("First item in dictionary: " + JSON.stringify(obj))
     
         }else{
             setValue(oldArr => [...oldArr,obj])
             localStorage.setItem("Vocabulary", JSON.stringify(value));
-            sendLog('pushToDictionary');
+            sendLog('Add Word to Dictionary', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
             
         }
     }}
@@ -183,7 +183,7 @@ const Search = () => {
                 setTerm(changes.visitedPages.pageText)
                 localStorage.setItem("Term", changes.visitedPages.pageText);
                 console.log("New Term:",changes.visitedPages.pageText);
-                sendLog('New Term fetched from H1');
+                sendLog('New Term fetched from H1', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
     },[])
@@ -192,7 +192,7 @@ const Search = () => {
         chrome.storage.sync.get("currentURL",function (changes) {
             if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
             setCurrURL(changes.currentURL.location)
-            sendLog('URL changed');
+            sendLog('URL changed', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
     },[])
@@ -209,13 +209,13 @@ const Search = () => {
             if(searchTerm !== null){
                 setTerm(searchTerm);
                 localStorage.setItem("Term", searchTerm);
-                sendLog('New Term fetched from Google Search');
+                sendLog('New Term fetched from Google Search', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
                 
             }
             if(ytSearchTerm !== null){
                 setTerm(ytSearchTerm);
                 localStorage.setItem("Term", ytSearchTerm);
-                sendLog('New Term fetched from Youtube Search');
+                sendLog('New Term fetched from Youtube Search', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
                 
             }
             console.log(ytSearchTerm);
@@ -478,12 +478,15 @@ useEffect(() =>{
     const slideLeft = () => {
         if (index - 1 >= 0) {
           setIndex(index - 1);
+          sendLog("Click Wiki Card Left - Title now: " + results[index-1].title, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
+     
         }
       };
     
       const slideRight = () => {
         if (index < 2) {
           setIndex(index + 1);
+          sendLog("Click Wiki Card Right - Title now: " + results[index+1].title, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }
       };
 
@@ -507,11 +510,11 @@ useEffect(() =>{
     }
     )
     const handleclick = (index) =>{
-        sendLog("clicked on Wikicard " + results[index].title)
+        sendLog("clicked on Wikicard " + results[index].title, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
     }
 
     const handleLinkClick = (index) =>{
-        sendLog("clicked on Link " + links[index].title)
+        sendLog("clicked on Link " + links[index].title, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
     }
 
     //get if seeAlso Link was clicked
@@ -566,18 +569,18 @@ useEffect(() =>{
 
     const handleTargetLanguage = (event) => {
         setTargetLanguage(event.target.value);
-        sendLog('changed target Language');
+        sendLog('changed target Language to ' + event.target.value, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         localStorage.setItem("Language", event.target.value)
     };
 
     const handleMotherTounge = (event) => {
         setMotherTounge(event.target.value);
-        sendLog('changed mothertounge');
+        sendLog('changed Mother Tounge to ' + event.target.value, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         localStorage.setItem("Mothertounge", event.target.value)
     };
 
 
-    const sendLog = (action) =>{
+    const sendLog = (action, term, translatedTerm, motherTounge, targetLanguage) =>{
         let timestamp = new Date();
             let dictionaryData = {
                 user: user,
@@ -604,7 +607,7 @@ useEffect(() =>{
         const delayDebounceFn = setTimeout(() => {
           console.log(searchTerm)
           if(searchTerm !== ''){
-          sendLog("Input to search field: " + searchTerm)}
+          sendLog("Input to search field: " + searchTerm, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))}
         }, 3000)
     
         return () => clearTimeout(delayDebounceFn)
