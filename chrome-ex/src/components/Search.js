@@ -6,17 +6,16 @@ import axios from 'axios';
 import $ from 'jquery';
 import WikiCard from "./WikiCard";
 import BasicCard from './BasicCard'
+import Alerts from './Alerts/Alerts'
+import { AlertContainer, alert } from 'react-custom-alert';
 import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Alert from 'react-bootstrap/Alert';
 import { DictionaryContext } from './DictionaryContext';
 import Card from '@mui/material/Card';
-import { FormControl, InputLabel, Select, MenuItem, TextField, Tooltip,Typography} from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Alert, TextField, Tooltip,Typography} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
     faCaretRight,
-    faChevronRight,
     faCirclePlus,
   } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from './UserContext';
@@ -31,6 +30,7 @@ $(document).on('click', 'a', function(e){
 }
 });
 
+
 const Search = () => { 
   
     const [term, setTerm] = useState(localStorage.getItem("Term") || "")
@@ -43,16 +43,17 @@ const Search = () => {
     const [links, setLinks] = useState([])
     const [index, setIndex] = useState(0)
     const [searchTerm, setSearchTerm] = useState('')
-    const [dictCount, setDictCount] = useState(0);
-    const [isResultsActive, setIsResultsActive] = useState(false);
-    const [isSeeAlsoActive, setIsSeeAlsoActive] = useState(false);
-    const [isLinksActive, setIsLinksActive] = useState(false);
     const [pageContent, setPageContent] = useState('N/A');
     const [currURL, setCurrURL] = useState('');
+    const [callAlert, setCallAlert] = useState(false);
+    const [alertType, setAlertType] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+    const [prevMsg, setPrevMsg] = useState('');
     //const [motherTounge, setMotherTounge] = useState('DE')
     //const [targetLanguage, setTargetLanguage] = useState('EN');
-    const [motherTounge, setMotherTounge] = useState('de')
-    const [targetLanguage, setTargetLanguage] = useState('en');
+    const [motherTounge, setMotherTounge] = useState("de")
+    const [targetLanguage, setTargetLanguage] = useState("en");
     const [sectionNum, setSectionNum] = useState(0);
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
@@ -62,14 +63,14 @@ const Search = () => {
     /**
      * looks if the language was already set and fetches it from local storage
      */
-    useEffect(() =>{
+   /* useEffect(() =>{
         if(localStorage.getItem("Language") != 'en'){
             setTargetLanguage(localStorage.getItem("Language"))
         }
         if(localStorage.getItem("Mothertounge") != 'de'){
             setMotherTounge(localStorage.getItem("Mothertounge"))
         }
-    },[])
+    },[])*/
 
     /**
      * set languages to local storage
@@ -100,12 +101,17 @@ const Search = () => {
         axios
             .post("http://localhost:3000/addToDictionary", newEntry)
             .then(data => {if(data.status == 200){
-                alert("Successfully saved " + term +"-"+ translatedTerm +" to dictionary.")
+                //alert({message: "Successfully saved ",type: 'success'})
+              // alert( "Successfully saved " + term +"-"+ translatedTerm +" to favourites.")
+               showAlert("success", "Success", "Successfully saved "+ term +"-"+ translatedTerm +" to favourites.");
+                  //  {<Alerts type="success" title="Success" message="Successfully saved"></Alerts>}
                 }
                 
             })
             .catch(error => {console.log(error)
-                alert("Something went wrong. Please reload the page and try again.")}
+               // alert("Something went wrong. Please reload the page and try again.")}
+                showAlert("error", "Error", "Something went wrong. Please reload the page and try again."); }
+               
             )
     }
 
@@ -137,6 +143,8 @@ const Search = () => {
      * translates the fetched term and saves it to state
      */
     useEffect(() =>{
+            if(motherTounge==""){setMotherTounge('de')}
+            if(targetLanguage==""){setTargetLanguage('en')}
             let data = {
                 q : term,
                 source: motherTounge,
@@ -399,7 +407,7 @@ useEffect(() =>{
         if(!data.data.error && sectionNum!=0){
         console.log("See Also: " + data.data.parse);
         //console.log("See Also parsed " +data.data.parse.text["*"]);
-        setSeeAlso(parse(`<div className="seeAlso nodeco">${data.data.parse.text["*"]}</div>`));
+        setSeeAlso(parse(`<div className="seeAlso nodeco" id="seeAlso" onClick=${handleSAClick}>${data.data.parse.text["*"]}</div>`));
         }
         else{
             setSeeAlso([])
@@ -407,6 +415,8 @@ useEffect(() =>{
     
 }).catch(error => console.log(error))
 },[sectionNum])
+
+   
 
    const shuffleData = (data) =>{
     let randomGroupSortKey = {}
@@ -473,6 +483,15 @@ useEffect(() =>{
 }
     }, [firstResultTitle, targetLanguage])
 
+    const showAlert = (type, title, message) =>{
+        setPrevMsg(alertMessage);
+        setCallAlert(true);
+        setAlertType(type);
+        setAlertTitle(title);
+        setAlertMessage(message)
+        console.log(type,title,message)
+    }
+
     //for Cards
 
     const slideLeft = () => {
@@ -491,7 +510,8 @@ useEffect(() =>{
       };
 
     
-
+    
+    
     const searchResultsMapped = 
     
     results && results.slice(1,3).map(result =>{
@@ -514,8 +534,18 @@ useEffect(() =>{
     }
 
     const handleLinkClick = (index) =>{
-        sendLog("clicked on Link " + links[index].title, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
+        sendLog("clicked on suggested Link " + links[index].title, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
     }
+
+    const handleSAClick = () =>{
+        sendLog("clicked on See Also Link" , localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
+    }
+
+    const div = document.getElementById("seeAlso")
+
+    div?.addEventListener('click' , () => {
+        handleSAClick();
+    })
 
     //get if seeAlso Link was clicked
    /* var lis = document.getElementsByTagName('li');
@@ -543,9 +573,7 @@ useEffect(() =>{
             
         )
     }
-    )
-
-
+    ) 
 
     const linksInArticle = 
     
@@ -618,6 +646,8 @@ useEffect(() =>{
       <div>
           <div className="ui-form">
               <div className="field">
+              {alertMessage !== prevMsg ? (<Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle}></Alerts>): <div></div>
+            }
               <Card className="translationBox" sx={{backgroundColor: "#e7f4fd",borderRadius: "15px"}}>
               <div>
               <div className="langDropdowns">
@@ -627,16 +657,17 @@ useEffect(() =>{
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={motherTounge}
+                    defaultValue="de"
                     label="Mother tounge"
                     onChange={handleMotherTounge}
                     sx={{left: "5px"}}
                 >
-                    <MenuItem value="en">EN</MenuItem>
-                    <MenuItem value="de" selected>DE</MenuItem>
-                    <MenuItem value="fr">FR</MenuItem>
-                    <MenuItem value="it">IT</MenuItem>
-                    <MenuItem value="es">ES</MenuItem>
-                </Select>
+                    
+                    <MenuItem key="en" value="en">EN</MenuItem>
+                    <MenuItem key="de" value="de">DE</MenuItem>
+                    <MenuItem key="fr" value="fr">FR</MenuItem>
+                    <MenuItem key="it" value="it">IT</MenuItem>
+                <MenuItem key="es" value="es">ES</MenuItem>               </Select>
               </FormControl>
                   <div id="search">    
                   <input className="input"
@@ -656,15 +687,17 @@ useEffect(() =>{
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={targetLanguage}
+                    defaultValue="en"
                     label="Target Language"
                     onChange={handleTargetLanguage}
                     sx={{left: "5px"}}
                 >
-                    <MenuItem value="en" selected>EN</MenuItem>
-                    <MenuItem value="de">DE</MenuItem>
-                    <MenuItem value="fr">FR</MenuItem>
-                    <MenuItem value="it">IT</MenuItem>
-                    <MenuItem value="es">ES</MenuItem>
+                    
+                    <MenuItem key="en" value="en">EN</MenuItem>
+                    <MenuItem key="de" value="de">DE</MenuItem>
+                    <MenuItem key="fr" value="fr">FR</MenuItem>
+                    <MenuItem key="it" value="it">IT</MenuItem>
+                    <MenuItem key="es" value="es">ES</MenuItem>
                  { /*  <MenuItem value="EN" selected>EN</MenuItem>
                     <MenuItem value="DE">DE</MenuItem>
                     <MenuItem value="FR">FR</MenuItem>

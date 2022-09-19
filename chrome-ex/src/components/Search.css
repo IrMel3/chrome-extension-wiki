@@ -219,3 +219,20 @@ a:hover {
 /*img {
   display: none !important;
 }*/
+
+.ui-form {
+  position: relative;
+}
+
+field,
+alert {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+alert {
+  z-index: 10;
+}

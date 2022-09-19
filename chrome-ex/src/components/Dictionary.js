@@ -1,6 +1,7 @@
 /* global chrome */
 import React, {useState, useContext, useEffect, useRef} from 'react';
 import IndexCard from "./IndexCard";
+import Alerts from './Alerts/Alerts'
 import BasicWikiCard from '../BasicWikiCard';
 import {Card, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,6 +44,9 @@ function Dictionary (){
     const [beginning, setBeginning]= useState(0);
     const [end, setEnd] = useState(3);
     const [cardOpen, setCardOpen] = useState(false);
+    const [alertType, setAlertType] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
 
 
     /**
@@ -71,7 +75,11 @@ function Dictionary (){
         })
     },[])
 
-
+    const showAlert = (type, title, message) =>{
+        setAlertType(type);
+        setAlertTitle(title);
+        setAlertMessage(message)
+    }
 
     const slideLeft = () => {
         if (index - 1 >= 0) {
@@ -167,12 +175,13 @@ function Dictionary (){
         axios
             .delete("http://localhost:3000/deleteDictionaryEntry", {data: entry})
             .then(data => { if(data.status == 200){
-                alert("Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.")
+                //alert("Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.")
+                showAlert("success", "Success", "Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.");
                 sendLog("Deleted Word from dictionary", clickedVocab[index].term, clickedVocab[index].translation, localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
                 };
 
             })
-            .catch(error => alert("Something went wrong. Please reload the page and try again."))
+            .catch(error => showAlert("success", "Success", "Something went wrong. Please reload the page and try again."))
    
     }
 
@@ -342,6 +351,7 @@ function Dictionary (){
             </div>
             <div>
             <div><hr class="solidHR"></hr></div>
+            {alertType!== '' ? <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle}></Alerts>: <div></div>}
             {words}
             <div><hr class="solidHR"></hr></div>
             <div className="pageDisplay">
