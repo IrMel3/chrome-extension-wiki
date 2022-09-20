@@ -66,6 +66,10 @@ function Dictionary (){
     })
 
     useEffect(() =>{
+        updateValue();
+    },[])
+
+    const updateValue = () =>{
         axios.get(`http://localhost:3000/getDictionaryEntries?user=${user}`)
             .then(res => {
                // console.log(res.data)
@@ -74,7 +78,7 @@ function Dictionary (){
             }).catch((error) => {
             error.toString();
         })
-    },[])
+    }
 
     const showAlert = (type, title, message) =>{
         setAlertOpen(true);
@@ -185,6 +189,7 @@ function Dictionary (){
                 showAlert("success", "Success", "Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.");
                 sendLog("Deleted Word from dictionary", clickedVocab[index].term, clickedVocab[index].translation, localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
                 };
+                updateValue();
 
             })
             .catch(error => showAlert("success", "Success", "Something went wrong. Please reload the page and try again."))
@@ -327,8 +332,6 @@ function Dictionary (){
 
     return(
         <div>
-            {(value?.length>0) ?  
-        <div>
             <div className="favsearchcontainer"><input
              type="search"
              id="searchbox"
@@ -353,8 +356,9 @@ function Dictionary (){
             color="#B2BFC7"
              />
              </Tooltip>
-             {value?.length==0 && searched ? <div>Sorry, no search results found.</div>:<div></div>}
-            </div>
+             </div>
+             {value?.length==0 && fixedDictLength>0 ? <div><div><hr class="solidHR"></hr></div><div>Sorry, no search results found for "{searchField}"</div></div>:<div></div>} 
+            {(value?.length>0) ?  <div>
             <div>
             <div><hr class="solidHR"></hr></div>
             <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle} isOpen={alertOpen} handleClose={handleAlertClose}></Alerts>
@@ -380,10 +384,10 @@ function Dictionary (){
              /></Tooltip>
              </div></div></div>
             
-            : <div>{(fixedDictLength==0) ?<div>No words saved in your favourites yet.
+            : <div>{(fixedDictLength==0) ? <div><div><hr class="solidHR"></hr></div><div>No words saved in your favourites yet.
                 Click <FontAwesomeIcon title="Add to favourites" icon={faCirclePlus} size="1x" color="#B2BFC7" className="plus"/>
                 next to the vocabulary to add your first one!
-                </div>: <div></div>}</div>
+                </div></div>: <div></div>}</div>
                 
             }
 
