@@ -10,13 +10,13 @@ import {
 import {Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function Alerts({type, message, title}) {
-    const [show, setShow] = useState(true);
+export default function Alerts({type, message, title, isOpen, handleClose}) {
+   /* const [show, setShow] = useState(true);
 
-  /* useEffect(() =>{
+   useEffect(() =>{
      // setShow(!show)
       console.log(show)
-    },[])*/
+    },[])
 
 
     const handleShow = () =>{
@@ -26,16 +26,16 @@ export default function Alerts({type, message, title}) {
            console.log(show);
 
     }
-   /* useEffect(() =>{
+    useEffect(() =>{
       handleShow2();
-    },[]);*/
+    },[]);
     // here we added [isToggled, setIsToggled] as a second parameter
     const handleShow2 = useCallback(() => {
       setShow(!show);
       console.log(show)})
 
    //types: error, warning, info, success
-    /* useEffect(() => {
+     useEffect(() => {
     const timeId = setTimeout(() => {
       // After 5 seconds set the show value to false
       setShow(false)
@@ -49,15 +49,14 @@ export default function Alerts({type, message, title}) {
 
   return (
       <div>
-    <div>
+      {isOpen ? 
+    <div className="alert">
     <Stack sx={{ width: '100%' }} spacing={2}>
-    <Collapse in={show}>
-      <Alert severity={type} onClose={() => {setShow(false)}}>
+      <Alert severity={type} onClose={handleClose}>
         <AlertTitle>{title}</AlertTitle>
         {message}
       </Alert>
-      </Collapse>
     </Stack>
-    </div></div>
+    </div> : <div></div>}</div>
   );
 }

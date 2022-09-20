@@ -45,7 +45,7 @@ const Search = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [pageContent, setPageContent] = useState('N/A');
     const [currURL, setCurrURL] = useState('');
-    const [callAlert, setCallAlert] = useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
@@ -484,14 +484,17 @@ useEffect(() =>{
     }, [firstResultTitle, targetLanguage])
 
     const showAlert = (type, title, message) =>{
-        setPrevMsg(alertMessage);
-        setCallAlert(true);
+        setAlertOpen(true);
         setAlertType(type);
         setAlertTitle(title);
         setAlertMessage(message)
         console.log(type,title,message)
     }
 
+    const handleAlertClose = () => {
+        setAlertOpen(false)
+    }
+ 
     //for Cards
 
     const slideLeft = () => {
@@ -646,8 +649,7 @@ useEffect(() =>{
       <div>
           <div className="ui-form">
               <div className="field">
-              {alertMessage !== prevMsg ? (<Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle}></Alerts>): <div></div>
-            }
+              <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle} isOpen={alertOpen} handleClose={handleAlertClose}></Alerts>
               <Card className="translationBox" sx={{backgroundColor: "#e7f4fd",borderRadius: "15px"}}>
               <div>
               <div className="langDropdowns">

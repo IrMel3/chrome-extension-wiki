@@ -12,15 +12,21 @@ function Login(){
     const {user, setUser} = useContext(UserContext);
     const [newUser, setNewUser] = useState(null);
     const {isAuth, setIsAuth} = useContext(AuthContext);
+    const [alertOpen, setAlertOpen] = useState(false);
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
 
     const showAlert = (type, title, message) =>{
+      setAlertOpen(true);
       setAlertType(type);
       setAlertTitle(title);
       setAlertMessage(message)
     }
+
+    const handleAlertClose = () => {
+      setAlertOpen(false)
+  }
 
     const checkIfUserExists = () =>{
         //check if user is in database 
@@ -102,8 +108,8 @@ function Login(){
 
     return(
       <Card  className="loginContainer" style={{backgroundColor: "#d4e6f1", borderRadius: "15px"}} >
-        {alertType!== '' ? <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle}></Alerts>: <div></div>}
-        <div><div><label className="loginText">Please log in with your user name:</label>  
+         <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle} isOpen={alertOpen} handleClose={handleAlertClose}></Alerts>
+         <div><div><label className="loginText">Please log in with your user name:</label>  
                   <input className="input"
                   id="userfield"
                   value={user}

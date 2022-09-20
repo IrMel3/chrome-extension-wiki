@@ -43,7 +43,8 @@ function Dictionary (){
     const [activePage, setActivePage] = useState(1);
     const [beginning, setBeginning]= useState(0);
     const [end, setEnd] = useState(3);
-    const [cardOpen, setCardOpen] = useState(false);
+    const [cardOpen, setCardOpen] = useState(false);    
+    const [alertOpen, setAlertOpen] = useState(false);
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
@@ -76,9 +77,14 @@ function Dictionary (){
     },[])
 
     const showAlert = (type, title, message) =>{
+        setAlertOpen(true);
         setAlertType(type);
         setAlertTitle(title);
         setAlertMessage(message)
+    }
+
+    const handleAlertClose = () => {
+        setAlertOpen(false)
     }
 
     const slideLeft = () => {
@@ -351,7 +357,7 @@ function Dictionary (){
             </div>
             <div>
             <div><hr class="solidHR"></hr></div>
-            {alertType!== '' ? <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle}></Alerts>: <div></div>}
+            <Alerts className="alert" type={alertType} message={alertMessage} title={alertTitle} isOpen={alertOpen} handleClose={handleAlertClose}></Alerts>
             {words}
             <div><hr class="solidHR"></hr></div>
             <div className="pageDisplay">

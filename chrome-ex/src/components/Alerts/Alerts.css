@@ -1,3 +1,7 @@
 .closeAlert {
   cursor: pointer;
 }
+
+.alert {
+  margin-bottom: 5px;
+}
