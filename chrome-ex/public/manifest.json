@@ -3,7 +3,7 @@
   "name": "Vocab",
   "author": "Iris",
   "version": "1.0.0",
-  "description": "Replace new tab screen with English words",
+  "description": "Vocabulary learning with Wikipedia - The app allows the user to search for Vocabulary and suggests fitting Wikipedia articles.",
   "action": {}, 
   "background": { "service_worker": "background.js" },
   "content_scripts": [
@@ -16,12 +16,7 @@
         "/static/js/content.js"
       ]
     }
-  ],
-  "icons": {
-    "16": "icon16.ico",
-    "48": "icon48.ico",
-    "128": "icon128.ico"
-  }, 
+  ], 
 "permissions": [
     "storage",
     "activeTab",
