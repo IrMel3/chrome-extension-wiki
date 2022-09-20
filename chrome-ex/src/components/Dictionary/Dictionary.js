@@ -19,14 +19,18 @@ import { UserContext } from '../Contexts/UserContext'
 import axios from 'axios'
 import './Dictionary.css';
 
+/**
+ * The favourites tab, that shows the saved vocabulary
+ * Also allows the user to delete and show saved Wikipedia articles again
+ */
 
 function Dictionary (){
 
     const [fullDictionary, setFullDictionary] = useState([])
     const msg = useContext(DictionaryContext);
-    const {value, setValue} = useContext(DictionaryContext);
+    const {value, setValue} = useContext(DictionaryContext); //holds the dictionary content for the user
     const {user, setUser} = useContext(UserContext);
-    const [searchField, setSearchField] = useState("")
+    const [searchField, setSearchField] = useState("") 
     const [searched, setSearched] = useState(false);
     const [result, setResult] = useState([])
     const [dictionaryLength, setDictionaryLength] = useState(0);
@@ -41,15 +45,17 @@ function Dictionary (){
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
 
-
+    //update dictionary length
     useEffect(() =>{ 
         setDictionaryLength(value.length);
     })
 
+    //update Dictionary
     useEffect(() =>{
         updateValue();
     },[])
 
+    //fetch dictionary entries from Database and set the value to current dictionary
     const updateValue = () =>{
         axios.get(`http://localhost:3000/getDictionaryEntries?user=${user}`)
             .then(res => {
@@ -60,6 +66,7 @@ function Dictionary (){
         })
     }
 
+    //show alert (warning, success, info, error)
     const showAlert = (type, title, message) =>{
         setAlertOpen(true);
         setAlertType(type);
@@ -71,10 +78,12 @@ function Dictionary (){
         setAlertOpen(false)
     }
 
+    //update value in search field
     const handleSearchChange = (e) =>{
         setSearchField(e.target.value);
     }
 
+    //update dictionary value when user searches, so only searched items are displayed
     function searchList(){
         console.log(filteredVoc)
         setFullDictionary(value);
@@ -85,6 +94,7 @@ function Dictionary (){
         sendLog("Searched in Favorites for: " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
     }
 
+    //clear the search field and set dictionary back to full dictionary
     function clearSearch(){
         setSearchField("")
         setValue(fullDictionary);
@@ -92,6 +102,7 @@ function Dictionary (){
 
     }
 
+    //handles click on eye to display wiki article of saved vocab item
     const handlechange = (index) => {
         const clickedVoc = [...value];
         console.log(clickedVoc[index])
@@ -123,6 +134,7 @@ function Dictionary (){
           
     }else{setCardOpen(false)}}
 
+    //handles deletion of dictionary entry
     const deleteEntry = (index) =>{
         const clickedVocab = [...value];
         console.log(clickedVocab[index])
@@ -145,7 +157,7 @@ function Dictionary (){
    
     }
 
-
+    //sends logs to the database
     const sendLog = (action, term, translatedTerm, motherTounge, targetLanguage) =>{
         let timestamp = new Date();
             let dictionaryData = {
@@ -164,6 +176,7 @@ function Dictionary (){
         
     }
 
+    //handles click on next page arrow
     const showNextPage = () =>{
         if(value?.length > end){
             setBeginning(beginning+3);
@@ -174,7 +187,8 @@ function Dictionary (){
       
         }
     }
-
+     
+    //handles click on previous page arrow
     const showPreviousPage = () =>{
         if(beginning > 0){
             setBeginning(beginning-3);
@@ -186,8 +200,7 @@ function Dictionary (){
         }
     }
             
-        
-    //map dictionary entries
+    //map dictionary entries to display 3 on each page
     const words =     
     value && value.slice(beginning, end).map((value,index) =>{
         return(
@@ -237,7 +250,7 @@ function Dictionary (){
         )
     })
 
-
+    //check dictionary for search term
     const filteredVoc = value && value.filter(
         value =>{
             return(

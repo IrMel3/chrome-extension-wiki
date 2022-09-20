@@ -18,7 +18,7 @@ import {
 import { UserContext } from '../Contexts/UserContext';
 var parse = require('html-react-parser');
 
-//needs to be put outside of component
+//needs to be put outside of component - prevents nav from opening new tab, and opens every other link in new tab
 $(document).on('click', 'a', function(e){ 
     e.preventDefault(); 
     var url = $(this).attr('href'); 
@@ -27,6 +27,11 @@ $(document).on('click', 'a', function(e){
 }
 });
 
+/**
+ * Home page of the app with translator, save vocab to favourites,
+ * suggested Wiki- articles and other Wiki links
+ * 
+ */
 
 const Search = () => { 
   
@@ -83,6 +88,9 @@ const Search = () => {
         }
     },[])
 
+    /**
+     * saves dictionary entry to db when "add to favourites" is clicked
+     */
     const addDictionaryEntryToDB =() =>{
         let timestamp = new Date();
         let newEntry = {
@@ -150,7 +158,7 @@ const Search = () => {
     },[term, targetLanguage])
 
     /**
-     * request to deepl API
+     * request to translate with deepl API
      */
    /* useEffect(() =>{
         let data = {
@@ -172,7 +180,7 @@ const Search = () => {
     },[term, targetLanguage])*/
 
     /**
-     * fetches h1 from chrome storage 
+     * fetches current h1 from chrome storage 
      */
     useEffect(() =>{
         chrome.storage.sync.get("visitedPages",function (changes) {
@@ -186,10 +194,13 @@ const Search = () => {
         )
     },[])
 
+    /**
+     * checks when URL has changed and sends log to DB
+     */
     useEffect(() =>{
         chrome.storage.sync.get("currentURL",function (changes) {
             if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
-            setCurrURL(changes.currentURL.location)
+            //setCurrURL(changes.currentURL.location)
             sendLog('URL changed', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
@@ -242,7 +253,7 @@ const Search = () => {
     });
     });
 
-    //search terms and descriptions
+    //fetch terms and descriptions from wikipedia api
     useEffect(() => {
         //search Wikipedia API
         const search = async () => {
@@ -285,8 +296,7 @@ const Search = () => {
 
 
 /**
- * 
- * @returns fetches sections of the wikipedia article
+ ** @returns fetches sections of the first found wikipedia article
  */
     const searchSA = async () => {
         return await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
@@ -301,7 +311,7 @@ const Search = () => {
         
 /**
  * 
- * @returns fetches see Also section of the wikipedia article
+ * @returns fetches see Also section of the first found wikipedia article
  */
     const searchSA2 = async () => {
         return await axios.get(`https://${targetLanguage}.wikipedia.org/w/api.php`, {
@@ -314,6 +324,9 @@ const Search = () => {
             },
         })}
 
+    /**
+     * if links are internal chrome extension links, make them wikipedia links
+     */
     useEffect(() =>{
     var anchors = document.getElementsByTagName("a");
 
@@ -324,9 +337,9 @@ const Search = () => {
         
     }})
 
-    
-
-
+    /**
+     * fetch sections of the first article 
+     */
     //search "see also" e.g. https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&prop=sections
     // and then https://en.wikipedia.org/w/api.php?action=parse&page=Pune&format=json&section=42
     useEffect(() => {
@@ -347,6 +360,9 @@ const Search = () => {
     }
 }, [firstResultTitle])  
 
+/**
+ * check if fetched sections have a "see also" section
+ */
 const searchSectionsForSeeAlso = () =>{
     if(sections.length !== null){
     for(var i=0; i < sections.length; i++){
@@ -363,6 +379,9 @@ useEffect(() =>{
     searchSectionsForSeeAlso()
 },[sections])
 
+/**
+ * extract the see also section, if there is one
+ */
 useEffect(() =>{
     searchSA2()
     .then(data=>{
@@ -379,7 +398,10 @@ useEffect(() =>{
 },[sectionNum])
 
    
-
+   /**
+    * attempt to shuffle all links in the wiki article and to show 10 random ones
+    * not working
+    */
    const shuffleData = (data) =>{
     let randomGroupSortKey = {}
     data.forEach(d => randomGroupSortKey[d.title] = Math.random())
@@ -400,8 +422,9 @@ useEffect(() =>{
    }
             
    
-
-    //search links
+   /**
+    * fetch first 10 links from wiki article
+    */
     useEffect(() => {
         //search Wikipedia API
         const searchLinks = async () => {
@@ -442,6 +465,12 @@ useEffect(() =>{
 }
     }, [firstResultTitle, targetLanguage])
 
+    /**
+     * shows alert
+     * @param {*} type 
+     * @param {*} title 
+     * @param {*} message 
+     */
     const showAlert = (type, title, message) =>{
         setAlertOpen(true);
         setAlertType(type);
@@ -454,8 +483,9 @@ useEffect(() =>{
         setAlertOpen(false)
     }
  
-    //for Cards
-
+    /**
+     * handles Wiki cards click on left arrow
+     */
     const slideLeft = () => {
         if (index - 1 >= 0) {
           setIndex(index - 1);
@@ -463,13 +493,16 @@ useEffect(() =>{
      
         }
       };
-    
-      const slideRight = () => {
-        if (index < 2) {
-          setIndex(index + 1);
-          sendLog("Click Wiki Card Right - Title now: " + results[index+1].title, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
-        }
-      };
+
+      /**
+     * handles Wiki cards click on right arrow
+     */
+    const slideRight = () => {
+    if (index < 2) {
+        setIndex(index + 1);
+        sendLog("Click Wiki Card Right - Title now: " + results[index+1].title, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
+    }
+    };
 
     
     const handleclick = (index) =>{
@@ -484,12 +517,17 @@ useEffect(() =>{
         sendLog("clicked on See Also Link" , localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
     }
 
+    /**
+     * check for click on see also to send log (not possible to grab the single link items in that section)
+     */
     const div = document.getElementById("seeAlso")
-
     div?.addEventListener('click' , () => {
         handleSAClick();
     })
 
+    /**
+     * display Wiki Cards
+     */
     const searchResultsMapped2 =    
     (results!=null) && results.slice(0,3).map((result,n) =>{
         let position = n > index ? "nextCard" : n === index ? "activeWikiCard" : "prevCard";
@@ -503,8 +541,11 @@ useEffect(() =>{
     }
     ) 
 
+    /**
+     * display links
+     */
     const linksInArticle = 
-    
+
     links && links.map((link,index) =>{
         return (
             <li onClick={() => {handleLinkClick(index);}} key={index}>
@@ -513,19 +554,34 @@ useEffect(() =>{
         )
     })
 
+    /**
+     * handle change of target language
+     * @param {} event 
+     */
     const handleTargetLanguage = (event) => {
         setTargetLanguage(event.target.value);
         sendLog('changed target Language to ' + event.target.value, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         localStorage.setItem("Language", event.target.value)
     };
 
+    /**
+     * handle change of mother tounge
+     * @param {} event 
+     */
     const handleMotherTounge = (event) => {
         setMotherTounge(event.target.value);
         sendLog('changed Mother Tounge to ' + event.target.value, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         localStorage.setItem("Mothertounge", event.target.value)
     };
 
-
+    /**
+     * sends logs
+     * @param {*} action 
+     * @param {*} term 
+     * @param {*} translatedTerm 
+     * @param {*} motherTounge 
+     * @param {*} targetLanguage 
+     */
     const sendLog = (action, term, translatedTerm, motherTounge, targetLanguage) =>{
         let timestamp = new Date();
             let dictionaryData = {
@@ -544,7 +600,9 @@ useEffect(() =>{
         
     }
 
-
+    /**
+     * gives user time to put term into search field before log is sent
+     */
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
           console.log(searchTerm)

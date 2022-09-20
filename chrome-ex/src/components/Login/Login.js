@@ -6,6 +6,11 @@ import { AuthContext } from '../Contexts/AuthContext';
 import { UserContext } from '../Contexts/UserContext';
 import {Card} from '@mui/material';
 
+/**
+ * the login component where users can register and login
+ * @returns 
+ */
+
 function Login(){
 
     const {user, setUser} = useContext(UserContext);
@@ -27,6 +32,9 @@ function Login(){
       setAlertOpen(false)
   }
 
+  /**
+   * check in DB if user exists and log in if yes
+   */
     const checkIfUserExists = () =>{
         //check if user is in database 
         //if exists, add to localstorage
@@ -55,7 +63,10 @@ function Login(){
                       
                       )
       }
-    
+
+      /**
+       * add new user to database if it does not exist yet
+       */    
       const registerNewUser = () =>{
         //add new user to the database
         //set newUser to User
@@ -84,6 +95,11 @@ function Login(){
     
       }
 
+      /**
+       * send log
+       * @param {} action 
+       * @param {*} user 
+       */
       const sendLog = (action, user) =>{
         let timestamp = new Date();
             let loggingData = {

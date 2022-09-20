@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faHouse,
     faHeart,
-    faCompress,
   } from "@fortawesome/free-solid-svg-icons";
 import Login from "./components/Login/Login"
 import { AuthContext } from './components/Contexts/AuthContext';
@@ -19,7 +18,7 @@ function Tabs(){
 
   const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
-  const [value, setValue] = useState([]) //localStorage.getItem("Vocabulary") || [] - change this to prevent comma overload
+  const [value, setValue] = useState([]) //localStorage.getItem("Vocabulary") || [] 
   const [user, setUser] = useState(null);
   const [newUser, setNewUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);

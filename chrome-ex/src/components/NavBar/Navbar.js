@@ -5,6 +5,8 @@ import "./NavBar.css"
 import Search from './Search/Search'
 import Dictionary from './Dictionary/Dictionary'
 
+
+
 function Navbar(){
 
     const navRef = useRef();
