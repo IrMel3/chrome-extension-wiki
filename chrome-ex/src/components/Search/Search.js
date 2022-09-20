@@ -96,6 +96,7 @@ const Search = () => {
         let newEntry = {
             user: user,
             timestamp: timestamp,
+            app: "search",
             term: term,
             translation: translatedTerm,
             mothertounge: motherTounge,
@@ -140,7 +141,7 @@ const Search = () => {
     /**
      * translates the fetched term and saves it to state
      */
-    useEffect(() =>{
+   /* useEffect(() =>{
             if(motherTounge==""){setMotherTounge('de')}
             if(targetLanguage==""){setTargetLanguage('en')}
             let data = {
@@ -155,12 +156,12 @@ const Search = () => {
                 localStorage.setItem("Translation", response.data.translatedText);
             }) 
     
-    },[term, targetLanguage])
+    },[term, targetLanguage, motherTounge])*/
 
     /**
      * request to translate with deepl API
      */
-   /* useEffect(() =>{
+    useEffect(() =>{
         let data = {
             text : term,
             target_lang: targetLanguage,
@@ -177,7 +178,7 @@ const Search = () => {
         })
         .catch(err=> console.log(err)) 
         
-    },[term, targetLanguage])*/
+    },[term, targetLanguage, motherTounge])
 
     /**
      * fetches current h1 from chrome storage 
@@ -477,6 +478,13 @@ useEffect(() =>{
         setAlertTitle(title);
         setAlertMessage(message)
         console.log(type,title,message)
+
+        const timeId = setTimeout(() => {
+            // After 5 seconds set the show value to false
+            setAlertOpen(false)
+          }, 5000)
+      
+          return () => {clearTimeout(timeId)}
     }
 
     const handleAlertClose = () => {
@@ -588,6 +596,7 @@ useEffect(() =>{
                 user: user,
                 timestamp: timestamp,
                 action: action,
+                app: "search",
                 word: term,
                 translation: translatedTerm,
                 mothertounge: motherTounge,

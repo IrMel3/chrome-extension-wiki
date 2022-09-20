@@ -164,6 +164,7 @@ function Dictionary (){
                 user: user,
                 timestamp: timestamp,
                 action: action,
+                app: "search",
                 word: term,
                 translation: translatedTerm,
                 mothertounge: motherTounge,
