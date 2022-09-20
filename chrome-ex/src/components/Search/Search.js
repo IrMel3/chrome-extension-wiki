@@ -642,11 +642,8 @@ useEffect(() =>{
                 </Select>
               </FormControl>
                   <div id="search">    
-                  <input className="input"
-                  id="searchfield"
-                  value={term}
-                  onChange={function(e){setTerm(e.target.value); setSearchTerm(e.target.value);}}
-                  />
+                  <div className="input"
+                  id="searchfield">{term}</div>
                   </div>                 
                   </div>    
                   <div className="divider">

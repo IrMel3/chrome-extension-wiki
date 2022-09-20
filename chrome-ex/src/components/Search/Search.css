@@ -13,6 +13,7 @@
 #searchfield {
   padding: 10px;
   max-width: 150px;
+  font-size: 10pt;
 }
 
 #input {
@@ -22,7 +23,7 @@
 .langDropdowns {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: left;
   margin-top: 10px;
 }
 
