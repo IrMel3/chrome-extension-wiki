@@ -64,14 +64,14 @@ const Search = () => {
     /**
      * looks if the language was already set and fetches it from local storage
      */
-   /* useEffect(() =>{
+    useEffect(() =>{
         if(localStorage.getItem("Language") != 'en'){
             setTargetLanguage(localStorage.getItem("Language"))
         }
         if(localStorage.getItem("Mothertounge") != 'de'){
             setMotherTounge(localStorage.getItem("Mothertounge"))
         }
-    },[])*/
+    },[])
 
     /**
      * set languages to local storage
