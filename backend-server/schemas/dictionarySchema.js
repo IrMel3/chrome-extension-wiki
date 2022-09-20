@@ -10,6 +10,10 @@ let dictionaryEntry = new schema({
         type: String,
         required: true
     },
+    app: {
+        type: String,
+        required: false
+    },
     term: {
         type: String,
         required: false

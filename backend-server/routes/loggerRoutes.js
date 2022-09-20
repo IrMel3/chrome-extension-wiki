@@ -15,6 +15,7 @@ app.post('/addLog', (req, res) =>{
         user: req.body.user,
         timestamp: req.body.timestamp,
         action: req.body.action,
+        app: req.body.app,
         word: req.body.word,
         translation: req.body.translation,
         mothertounge: req.body.mothertounge,

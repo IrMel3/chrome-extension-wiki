@@ -14,6 +14,10 @@ let log = new schema({
         type: String,
         required: true
     },
+    app:{
+        type: String,
+        required: false
+    },
     word: {
         type: String,
         required: false

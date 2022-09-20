@@ -19,6 +19,7 @@ app.post("/addToDictionary", cors(), (req, res) => {
     let dictionary = new Dictionary({
         user: req.body.user,
         timestamp: req.body.timestamp,
+        app: req.body.app,
         term: req.body.term,
         translation: req.body.translation,
         mothertounge: req.body.mothertounge,

@@ -64,14 +64,14 @@ const Search = () => {
     /**
      * looks if the language was already set and fetches it from local storage
      */
-   /* useEffect(() =>{
+    useEffect(() =>{
         if(localStorage.getItem("Language") != 'en'){
             setTargetLanguage(localStorage.getItem("Language"))
         }
         if(localStorage.getItem("Mothertounge") != 'de'){
             setMotherTounge(localStorage.getItem("Mothertounge"))
         }
-    },[])*/
+    },[])
 
     /**
      * set languages to local storage
@@ -96,6 +96,7 @@ const Search = () => {
         let newEntry = {
             user: user,
             timestamp: timestamp,
+            app: "fetch",
             term: term,
             translation: translatedTerm,
             mothertounge: motherTounge,
@@ -127,8 +128,7 @@ const Search = () => {
             setValue([obj])
             localStorage.setItem("Vocabulary", JSON.stringify(obj));
             sendLog('Add first Word to Dictionary',localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
-            console.log("First item in dictionary: " + JSON.stringify(obj))
-    
+            
         }else{
             setValue(oldArr => [...oldArr,obj])
             localStorage.setItem("Vocabulary", JSON.stringify(value));
@@ -138,9 +138,9 @@ const Search = () => {
     }}
 
     /**
-     * translates the fetched term and saves it to state
+     * translates the fetched term and saves it to state (libretranslate)
      */
-    useEffect(() =>{
+   /* useEffect(() =>{
             if(motherTounge==""){setMotherTounge('de')}
             if(targetLanguage==""){setTargetLanguage('en')}
             let data = {
@@ -150,25 +150,26 @@ const Search = () => {
             }
             axios.post(`https://libretranslate.de/translate`, data)
             .then((response) => {
-               // console.log("libretranslate: " + response.data.translatedText)
                 setTranslatedTerm(response.data.translatedText);
                 localStorage.setItem("Translation", response.data.translatedText);
             }) 
     
-    },[term, targetLanguage])
+    },[term, targetLanguage, motherTounge])*/
 
     /**
      * request to translate with deepl API
      */
-   /* useEffect(() =>{
+    useEffect(() =>{
         let data = {
             text : term,
             target_lang: targetLanguage,
             auth_key: '',
         }
+        const key = '687d7f51-03a2-53b7-5085-6260d3029ed4:fx';
         
-        const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${process.env.REACT_APP_DEEPL_KEY}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
-
+        //const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${process.env.REACT_APP_DEEPL_KEY}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
+        const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${key}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
+       
         axios.get(deeplUrl)
         .then((response) => {
             console.log("deepL: " + response.data.translations[0].text)
@@ -177,7 +178,7 @@ const Search = () => {
         })
         .catch(err=> console.log(err)) 
         
-    },[term, targetLanguage])*/
+    },[term, targetLanguage, motherTounge])
 
     /**
      * fetches current h1 from chrome storage 
@@ -188,7 +189,6 @@ const Search = () => {
                 setPageContent(changes.visitedPages.pageText)
                 setTerm(changes.visitedPages.pageText)
                 localStorage.setItem("Term", changes.visitedPages.pageText);
-                console.log("New Term:",changes.visitedPages.pageText);
                 sendLog('New Term fetched from H1', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
@@ -227,7 +227,6 @@ const Search = () => {
                 sendLog('New Term fetched from Youtube Search', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
                 
             }
-            console.log(ytSearchTerm);
         }}
         )
     },[])
@@ -266,14 +265,12 @@ const Search = () => {
                     srsearch: translatedTerm,
                 },
             })
-            console.log(data.query.search)
             if(data.query.search.length != 0){
             setResults(data.query.search)
             let arr = data.query.search;
             let title = data.query?.search[0]?.title
             setFirstResult(arr[0]);
             setFirstResultTitle(title)
-            console.log(title);
             }else{
                 setResults([]);
             }
@@ -349,7 +346,6 @@ const Search = () => {
                 .then(data=>{
                 try{
                 if(!data.data.error){
-                console.log(data.data);
                 setSections(data.data.parse.sections);
                 //Check if there is a See Also section
                 }else{
@@ -367,9 +363,7 @@ const searchSectionsForSeeAlso = () =>{
     if(sections.length !== null){
     for(var i=0; i < sections.length; i++){
         if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3] || sections[i].line == seeAlsoText[4]){
-            console.log(sections[i].index);
             var secNum = sections[i].index;
-            console.log("This is var secNum:" + secNum);
             setSectionNum(secNum);
         }
     }}
@@ -385,9 +379,7 @@ useEffect(() =>{
 useEffect(() =>{
     searchSA2()
     .then(data=>{
-        console.log("Sec num now " + sectionNum)
         if(!data.data.error && sectionNum!=0){
-        console.log("See Also: " + data.data.parse);
         setSeeAlso(parse(`<div className="seeAlso nodeco" id="seeAlso" onClick=${handleSAClick}>${data.data.parse.text["*"]}</div>`));
         }
         else{
@@ -405,7 +397,6 @@ useEffect(() =>{
    const shuffleData = (data) =>{
     let randomGroupSortKey = {}
     data.forEach(d => randomGroupSortKey[d.title] = Math.random())
-    console.log("Group sort keys:", randomGroupSortKey)
     
     //add the sortKey property to the individual array entries
     let dataSortable = data.map(x => {
@@ -416,10 +407,7 @@ useEffect(() =>{
     })
     
     dataSortable.sort((a, b) => a.sortKey - b.sortKey) //sort the groups!
-    
-    console.log("Result:", dataSortable)
-    console.log("Result without sortKey:", dataSortable.map(({ sortKey, ...x }) => x))
-   }
+    }
             
    
    /**
@@ -442,7 +430,6 @@ useEffect(() =>{
             const keys = Object.keys(data.query.pages)
             if(data != null){
             setLinks(data.query.pages[keys[0]].links)
-            console.log(links);
             //shuffleData(links);
             localStorage.setItem("Term", term);
             }}else{
@@ -476,7 +463,16 @@ useEffect(() =>{
         setAlertType(type);
         setAlertTitle(title);
         setAlertMessage(message)
-        console.log(type,title,message)
+
+        const timeId = setTimeout(() => {
+            // After 5 seconds set the show value to false
+            setAlertOpen(false)
+          }, 5000)
+      
+          return () => {
+            clearTimeout(timeId)
+            
+        }
     }
 
     const handleAlertClose = () => {
@@ -588,6 +584,7 @@ useEffect(() =>{
                 user: user,
                 timestamp: timestamp,
                 action: action,
+                app: "fetch",
                 word: term,
                 translation: translatedTerm,
                 mothertounge: motherTounge,
@@ -605,7 +602,6 @@ useEffect(() =>{
      */
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-          console.log(searchTerm)
           if(searchTerm !== ''){
           sendLog("Input to search field: " + searchTerm, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))}
         }, 3000)
@@ -631,14 +627,20 @@ useEffect(() =>{
                     defaultValue="de"
                     label="Mother tounge"
                     onChange={handleMotherTounge}
-                    sx={{left: "5px"}}
-                >
+                    sx={{left: "5px"}}>
+
+                    {/* <MenuItem value="EN">EN</MenuItem>
+                    <MenuItem value="DE">DE</MenuItem>
+                    <MenuItem value="FR">FR</MenuItem>
+                    <MenuItem value="IT">IT</MenuItem>
+                     <MenuItem value="ES">ES</MenuItem> */}  
+                
                     
-                    <MenuItem key="en" value="en">EN</MenuItem>
+                   <MenuItem key="en" value="en">EN</MenuItem>
                     <MenuItem key="de" value="de">DE</MenuItem>
                     <MenuItem key="fr" value="fr">FR</MenuItem>
                     <MenuItem key="it" value="it">IT</MenuItem>
-                <MenuItem key="es" value="es">ES</MenuItem>               
+                    <MenuItem key="es" value="es">ES</MenuItem>             
                 </Select>
               </FormControl>
                   <div id="search">    
@@ -662,12 +664,12 @@ useEffect(() =>{
                     sx={{left: "5px"}}
                 >
                     
-                    <MenuItem key="en" value="en">EN</MenuItem>
+                      <MenuItem key="en" value="en">EN</MenuItem>
                     <MenuItem key="de" value="de">DE</MenuItem>
                     <MenuItem key="fr" value="fr">FR</MenuItem>
                     <MenuItem key="it" value="it">IT</MenuItem>
                     <MenuItem key="es" value="es">ES</MenuItem>
-                 { /*  <MenuItem value="EN" selected>EN</MenuItem>
+                    { /* <MenuItem value="EN">EN</MenuItem>
                     <MenuItem value="DE">DE</MenuItem>
                     <MenuItem value="FR">FR</MenuItem>
                     <MenuItem value="IT">IT</MenuItem>
