@@ -85,11 +85,9 @@ function Dictionary (){
 
     //update dictionary value when user searches, so only searched items are displayed
     function searchList(){
-        console.log(filteredVoc)
         setFullDictionary(value);
         setValue(filteredVoc)
         setSearched(true);
-        console.log(value);
         if(filteredVoc){
         sendLog("Searched in Favorites for: " + searchField, filteredVoc[0].term, filteredVoc[0].translation, filteredVoc[0].motherTounge, filteredVoc[0].targetlanguage)}
     }
@@ -105,7 +103,6 @@ function Dictionary (){
     //handles click on eye to display wiki article of saved vocab item
     const handlechange = (index) => {
         const clickedVoc = [...value];
-        console.log(clickedVoc[index])
         setClickedVoc(clickedVoc[index])
         if(!cardOpen){
         sendLog("Showed Wiki Card of Favourites Term " +clickedVoc[index].term, clickedVoc[index].term, clickedVoc[index].translation, clickedVoc[index].motherTounge, clickedVoc[index].targetlanguage)
@@ -126,7 +123,6 @@ function Dictionary (){
             if(data.query.search != []){
                 let arr = data.query.search;
                 setResult(arr[0]);
-                console.log(result)
       };}
       if(clickedVoc[index] && !cardOpen){
           search();
@@ -137,13 +133,11 @@ function Dictionary (){
     //handles deletion of dictionary entry
     const deleteEntry = (index) =>{
         const clickedVocab = [...value];
-        console.log(clickedVocab[index])
         let entry = {
             user: user,
             term: clickedVocab[index].term,
             translation: clickedVocab[index].translation,
         }
-        console.log(entry)
         axios
             .delete("https://pwp.um.ifi.lmu.de/g20/deleteDictionaryEntry", {data: entry})
             .then(data => { if(data.status == 200){

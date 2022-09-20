@@ -128,7 +128,6 @@ const Search = () => {
             setValue([obj])
             localStorage.setItem("Vocabulary", JSON.stringify(obj));
             sendLog('Add first Word to Dictionary',localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
-            console.log("First item in dictionary: " + JSON.stringify(obj))
     
         }else{
             setValue(oldArr => [...oldArr,obj])
@@ -175,7 +174,6 @@ const Search = () => {
 
         axios.get(deeplUrl)
         .then((response) => {
-            console.log("deepL: " + response.data.translations[0].text)
             setTranslatedTerm(response.data.translations[0].text);
             localStorage.setItem("Translation", response.data.translations[0].text);
         })
@@ -270,14 +268,12 @@ const Search = () => {
                     srsearch: translatedTerm,
                 },
             })
-            console.log(data.query.search)
             if(data.query.search.length != 0){
             setResults(data.query.search)
             let arr = data.query.search;
             let title = data.query?.search[0]?.title
             setFirstResult(arr[0]);
             setFirstResultTitle(title)
-            console.log(title);
             }else{
                 setResults([]);
             }
@@ -353,7 +349,6 @@ const Search = () => {
                 .then(data=>{
                 try{
                 if(!data.data.error){
-                console.log(data.data);
                 setSections(data.data.parse.sections);
                 //Check if there is a See Also section
                 }else{
@@ -371,9 +366,7 @@ const searchSectionsForSeeAlso = () =>{
     if(sections.length !== null){
     for(var i=0; i < sections.length; i++){
         if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3] || sections[i].line == seeAlsoText[4]){
-            console.log(sections[i].index);
             var secNum = sections[i].index;
-            console.log("This is var secNum:" + secNum);
             setSectionNum(secNum);
         }
     }}
@@ -389,9 +382,7 @@ useEffect(() =>{
 useEffect(() =>{
     searchSA2()
     .then(data=>{
-        console.log("Sec num now " + sectionNum)
         if(!data.data.error && sectionNum!=0){
-        console.log("See Also: " + data.data.parse);
         setSeeAlso(parse(`<div className="seeAlso nodeco" id="seeAlso" onClick=${handleSAClick}>${data.data.parse.text["*"]}</div>`));
         }
         else{
@@ -409,7 +400,6 @@ useEffect(() =>{
    const shuffleData = (data) =>{
     let randomGroupSortKey = {}
     data.forEach(d => randomGroupSortKey[d.title] = Math.random())
-    console.log("Group sort keys:", randomGroupSortKey)
     
     //add the sortKey property to the individual array entries
     let dataSortable = data.map(x => {
@@ -419,10 +409,8 @@ useEffect(() =>{
       }
     })
     
-    dataSortable.sort((a, b) => a.sortKey - b.sortKey) //sort the groups!
+    dataSortable.sort((a, b) => a.sortKey - b.sortKey) //sort the groups
     
-    console.log("Result:", dataSortable)
-    console.log("Result without sortKey:", dataSortable.map(({ sortKey, ...x }) => x))
    }
             
    
@@ -446,7 +434,6 @@ useEffect(() =>{
             const keys = Object.keys(data.query.pages)
             if(data != null){
             setLinks(data.query.pages[keys[0]].links)
-            console.log(links);
             //shuffleData(links);
             localStorage.setItem("Term", term);
             }}else{
@@ -480,7 +467,6 @@ useEffect(() =>{
         setAlertType(type);
         setAlertTitle(title);
         setAlertMessage(message)
-        console.log(type,title,message)
 
         const timeId = setTimeout(() => {
             // After 5 seconds set the show value to false
@@ -617,7 +603,6 @@ useEffect(() =>{
      */
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-          console.log(searchTerm)
           if(searchTerm !== ''){
           sendLog("Input to search field: " + searchTerm, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))}
         }, 3000)

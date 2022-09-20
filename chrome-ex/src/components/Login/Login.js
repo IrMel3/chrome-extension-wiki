@@ -45,7 +45,6 @@ function Login(){
                 axios
                     .post("https://pwp.um.ifi.lmu.de/g20/loginUser", userData) //https://pwp.um.ifi.lmu.de/g20/loginUser
                     .then(res => {
-                      console.log(res.data)
                       if(res.data.message === "User exists!"){
                       localStorage.setItem("User", user);
                       setIsAuth(true);
@@ -58,7 +57,6 @@ function Login(){
                     })
                     .catch(error => {
                       showAlert("error", "Error", error.message);
-                      console.log(error.message);
                       sendLog("Failed Login", userData);}
                       
                       )
@@ -76,7 +74,6 @@ function Login(){
       axios
           .post("https://pwp.um.ifi.lmu.de/g20/registerUser", userData) //http://localhost:3000/  https://pwp.um.ifi.lmu.de/g20/registerUser
           .then(res => {
-            console.log(res.data)
             if(res.data.message === "Saved new user!"){
             localStorage.setItem("User", newUser);
             showAlert("success", "Success", "You successfully registered");
