@@ -103,7 +103,7 @@ const Search = () => {
             link: firstResultTitle
         }
         axios
-            .post("http://localhost:3000/addToDictionary", newEntry)
+            .post("https://pwp.um.ifi.lmu.de/g20/addToDictionary", newEntry)
             .then(data => {if(data.status == 200){
               showAlert("success", "Success", "Successfully saved "+ term +"-"+ translatedTerm +" to favourites.");
                }
@@ -594,7 +594,7 @@ useEffect(() =>{
                 targetlanguage: targetLanguage,
             }
             axios
-                .post("http://localhost:3000/addLog", dictionaryData)
+                .post("https://pwp.um.ifi.lmu.de/g20/addLog", dictionaryData)
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         

@@ -57,7 +57,7 @@ function Dictionary (){
 
     //fetch dictionary entries from Database and set the value to current dictionary
     const updateValue = () =>{
-        axios.get(`http://localhost:3000/getDictionaryEntries?user=${user}`)
+        axios.get(`https://pwp.um.ifi.lmu.de/g20/getDictionaryEntries?user=${user}`)
             .then(res => {
                 setValue(res.data)
                 setFixedDictLength(res.data?.length)
@@ -145,7 +145,7 @@ function Dictionary (){
         }
         console.log(entry)
         axios
-            .delete("http://localhost:3000/deleteDictionaryEntry", {data: entry})
+            .delete("https://pwp.um.ifi.lmu.de/g20/deleteDictionaryEntry", {data: entry})
             .then(data => { if(data.status == 200){
                 showAlert("success", "Success", "Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.");
                 sendLog("Deleted Word from dictionary", clickedVocab[index].term, clickedVocab[index].translation, localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
@@ -170,7 +170,7 @@ function Dictionary (){
                 targetlanguage: targetLanguage,
             }
             axios
-                .post("http://localhost:3000/addLog", dictionaryData)
+                .post("https://pwp.um.ifi.lmu.de/g20/addLog", dictionaryData)
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         

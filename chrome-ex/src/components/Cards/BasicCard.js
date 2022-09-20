@@ -22,7 +22,7 @@ export default function BasicCard({ title, snippet, targetLanguage, pageid, card
             action: action,
         }
         axios
-            .post("http://localhost:3000/addLog", dictionaryData)
+            .post("https://pwp.um.ifi.lmu.de/g20/addLog", dictionaryData)
             .then(data => console.log(data))
             .catch(error => console.log(error))
     
