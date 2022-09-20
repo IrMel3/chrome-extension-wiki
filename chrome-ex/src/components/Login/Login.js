@@ -43,7 +43,7 @@ function Login(){
                     user: user,
                 }
                 axios
-                    .post("http://localhost:3000/loginUser", userData) //https://pwp.um.ifi.lmu.de/g20/loginUser
+                    .post("https://pwp.um.ifi.lmu.de/g20/loginUser", userData) //https://pwp.um.ifi.lmu.de/g20/loginUser
                     .then(res => {
                       console.log(res.data)
                       if(res.data.message === "User exists!"){
@@ -74,7 +74,7 @@ function Login(){
           user: newUser,
       }
       axios
-          .post("http://localhost:3000/registerUser", userData) //http://localhost:3000/  https://pwp.um.ifi.lmu.de/g20/registerUser
+          .post("https://pwp.um.ifi.lmu.de/g20/registerUser", userData) //http://localhost:3000/  https://pwp.um.ifi.lmu.de/g20/registerUser
           .then(res => {
             console.log(res.data)
             if(res.data.message === "Saved new user!"){
@@ -108,7 +108,7 @@ function Login(){
                 action: action,
             }
             axios
-                .post("http://localhost:3000/addLog", loggingData)
+                .post("https://pwp.um.ifi.lmu.de/g20/addLog", loggingData)
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         
