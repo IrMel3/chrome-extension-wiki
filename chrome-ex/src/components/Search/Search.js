@@ -167,8 +167,11 @@ const Search = () => {
             target_lang: targetLanguage,
             auth_key: '',
         }
+
+        const key = '687d7f51-03a2-53b7-5085-6260d3029ed4:fx';
         
-        const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${process.env.REACT_APP_DEEPL_KEY}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
+        //const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${process.env.REACT_APP_DEEPL_KEY}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
+        const deeplUrl = `https://api-free.deepl.com/v2/translate?auth_key=${key}&text=${term}&source_lang=${motherTounge}&target_lang=${targetLanguage}`
 
         axios.get(deeplUrl)
         .then((response) => {
