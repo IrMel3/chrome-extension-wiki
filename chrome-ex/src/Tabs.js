@@ -1,19 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import { Routes, Route, Router, NavLink} from 'react-router-dom'
-import Test1 from "./components/Test1"
-import Search from "./components/Search"
-import Test2 from "./components/Test2"
-import Dictionary from "./components/Dictionary"
-import { DictionaryContext } from './components/DictionaryContext';
-import { UserContext } from './components/UserContext';
+import Search from "./components/Search/Search"
+import Dictionary from "./components/Dictionary/Dictionary"
+import { DictionaryContext } from './components/Contexts/DictionaryContext';
+import { UserContext } from './components/Contexts/UserContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faHouse,
     faHeart,
     faCompress,
   } from "@fortawesome/free-solid-svg-icons";
-import Login from "./components/Login"
-import { AuthContext } from './components/AuthContext';
+import Login from "./components/Login/Login"
+import { AuthContext } from './components/Contexts/AuthContext';
 import { matchPath } from "react-router";
 import './tabs.css'
 

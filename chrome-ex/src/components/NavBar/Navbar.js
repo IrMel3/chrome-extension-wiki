@@ -1,40 +1,18 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {FaBars, FaTimes} from "react-icons/fa";
 import "./NavBar.css"
-import {useNavigate} from 'react-router-dom';
 
-
-import Search from './Search'
-import Dictionary from './Dictionary'
-
-
-
-
+import Search from './Search/Search'
+import Dictionary from './Dictionary/Dictionary'
 
 function Navbar(){
 
-   // const history = useNavigate();
-    
-
-    const [page, setPage] = useState()
     const navRef = useRef();
 
     const showNavBar = () =>{
         navRef.current.classList.toggle("responsive_nav");
     }
 
-  /*  const renderComponent = (page) =>{
-        let currPage = null
-        switch (page) {
-        case 'home':
-            page = <Search/>
-            break
-        case 'dictionary':
-            page = <Dictionary />
-            break
-        }
-        return currPage;
-    }*/
     return(
         <header>
             <nav ref={navRef}>

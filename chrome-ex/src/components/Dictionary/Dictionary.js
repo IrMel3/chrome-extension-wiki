@@ -1,7 +1,7 @@
 /* global chrome */
 import React, {useState, useContext, useEffect} from 'react';
-import Alerts from './Alerts/Alerts'
-import BasicWikiCard from '../BasicWikiCard';
+import Alerts from '../Alerts/Alerts'
+import BasicWikiCard from '../Cards/BasicWikiCard';
 import {Card, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircleFlag} from 'react-circle-flags';
@@ -14,8 +14,8 @@ import {
     faTrash,
     faEye
   } from "@fortawesome/free-solid-svg-icons";
-import { DictionaryContext } from './DictionaryContext';
-import { UserContext } from './UserContext'
+import { DictionaryContext } from '../Contexts/DictionaryContext';
+import { UserContext } from '../Contexts/UserContext'
 import axios from 'axios'
 import './Dictionary.css';
 

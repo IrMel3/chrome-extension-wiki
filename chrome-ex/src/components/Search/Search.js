@@ -1,13 +1,12 @@
 /* global chrome */
 
-import React, {useState, useEffect, useContext, useRef} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import './Search.css';
 import axios from 'axios';
 import $ from 'jquery';
-import BasicCard from './BasicCard'
-import Alerts from './Alerts/Alerts'
-import Chip from "@mui/material/Chip";
-import { DictionaryContext } from './DictionaryContext';
+import BasicCard from '../Cards/BasicCard'
+import Alerts from '../Alerts/Alerts'
+import { DictionaryContext } from '../Contexts/DictionaryContext';
 import Card from '@mui/material/Card';
 import { FormControl, InputLabel, Select, MenuItem, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +15,7 @@ import {
     faCaretRight,
     faCirclePlus,
   } from "@fortawesome/free-solid-svg-icons";
-import { UserContext } from './UserContext';
+import { UserContext } from '../Contexts/UserContext';
 var parse = require('html-react-parser');
 
 //needs to be put outside of component

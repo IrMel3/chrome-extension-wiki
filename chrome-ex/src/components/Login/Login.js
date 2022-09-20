@@ -1,9 +1,9 @@
 import React, {useState, useContext} from 'react'
 import axios from 'axios';
 import "./Login.css"
-import Alerts from './Alerts/Alerts'
-import { AuthContext } from './AuthContext';
-import { UserContext } from './UserContext';
+import Alerts from '../Alerts/Alerts'
+import { AuthContext } from '../Contexts/AuthContext';
+import { UserContext } from '../Contexts/UserContext';
 import {Card} from '@mui/material';
 
 function Login(){
