@@ -1,6 +1,5 @@
 /* global chrome */
-import React, {useState, useContext, useEffect, useRef} from 'react';
-import IndexCard from "./IndexCard";
+import React, {useState, useContext, useEffect} from 'react';
 import Alerts from './Alerts/Alerts'
 import BasicWikiCard from '../BasicWikiCard';
 import {Card, Tooltip} from '@mui/material';
@@ -9,16 +8,13 @@ import { CircleFlag} from 'react-circle-flags';
 import {
     faCaretLeft,
     faCaretRight,
-    faClipboard,
     faCirclePlus,
-    faList,
     faXmark,
     faMagnifyingGlass,
     faTrash,
     faEye
   } from "@fortawesome/free-solid-svg-icons";
 import { DictionaryContext } from './DictionaryContext';
-import WikiCard from "./WikiCard";
 import { UserContext } from './UserContext'
 import axios from 'axios'
 import './Dictionary.css';
@@ -26,19 +22,15 @@ import './Dictionary.css';
 
 function Dictionary (){
 
-    const [newWord, setNewWord] = useState([]);
     const [fullDictionary, setFullDictionary] = useState([])
     const msg = useContext(DictionaryContext);
     const {value, setValue} = useContext(DictionaryContext);
-   // const [fullDictionary, setFullDictionary] = useContext([])
     const {user, setUser} = useContext(UserContext);
     const [searchField, setSearchField] = useState("")
     const [searched, setSearched] = useState(false);
     const [result, setResult] = useState([])
     const [dictionaryLength, setDictionaryLength] = useState(0);
     const [fixedDictLength, setFixedDictLength] = useState(0)
-    const [showList, setShowList] = useState(false);
-    const [index, setIndex] = useState(0)
     const [clickedVoc, setClickedVoc] = useState([])
     const [activePage, setActivePage] = useState(1);
     const [beginning, setBeginning]= useState(0);
@@ -48,17 +40,6 @@ function Dictionary (){
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
-
-
-    /**
-     * fetch new word from local storage
-     */
-    useEffect(() => {
-        if(localStorage.getItem("putIntoDictionary") !== null && localStorage.getItem("putTranslationIntoDictionary") !== null) {
-            setNewWord(oldArr =>[...oldArr,localStorage.getItem("putIntoDictionary")]);
-            setNewWord(oldArr =>[...oldArr,localStorage.getItem("putTranslationIntoDictionary")]);
-        }
-    },[])
 
 
     useEffect(() =>{ 
@@ -72,7 +53,6 @@ function Dictionary (){
     const updateValue = () =>{
         axios.get(`http://localhost:3000/getDictionaryEntries?user=${user}`)
             .then(res => {
-               // console.log(res.data)
                 setValue(res.data)
                 setFixedDictLength(res.data?.length)
             }).catch((error) => {
@@ -89,31 +69,6 @@ function Dictionary (){
 
     const handleAlertClose = () => {
         setAlertOpen(false)
-    }
-
-    const slideLeft = () => {
-        if (index - 1 >= 0) {
-          setIndex(index - 1);
-          sendLog("Click Card Left", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
-        }
-      };
-    
-      const slideRight = () => {
-        if (index + 1 <= value.length - 1) {
-          setIndex(index + 1);
-          sendLog("Click Card Right", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
-        }
-      };
-
-    const changeList = () => {
-        if(showList == false){
-        setShowList(true)
-        sendLog("Clicked on showList", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
-        }
-        else{
-            setShowList(false);
-            sendLog("Clicked on showCards", localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
-        }
     }
 
     const handleSearchChange = (e) =>{
@@ -168,14 +123,9 @@ function Dictionary (){
           
     }else{setCardOpen(false)}}
 
-    const closeEntry = (index) =>{
-        setCardOpen(false);
-    }
-
     const deleteEntry = (index) =>{
         const clickedVocab = [...value];
         console.log(clickedVocab[index])
-        let timestamp = new Date();
         let entry = {
             user: user,
             term: clickedVocab[index].term,
@@ -185,7 +135,6 @@ function Dictionary (){
         axios
             .delete("http://localhost:3000/deleteDictionaryEntry", {data: entry})
             .then(data => { if(data.status == 200){
-                //alert("Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.")
                 showAlert("success", "Success", "Successfully deleted " + clickedVocab[index].term + " - " + clickedVocab[index].translation + " from dictionary.");
                 sendLog("Deleted Word from dictionary", clickedVocab[index].term, clickedVocab[index].translation, localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
                 };
@@ -236,22 +185,9 @@ function Dictionary (){
       
         }
     }
-
-
-    const wikicard = ()=>{
-    if(clickedVoc.targetlanguage!==undefined){
-    return(
-    <div className="container">
-        <BasicWikiCard {...result[0]} targetLanguage={clickedVoc.targetlanguage} />
-    </div>
-    )}
-    else{
-        return(<div></div>)
-    }
-}
             
         
-    //map dictionary entries, use slice (1,3) for page 1, 
+    //map dictionary entries
     const words =     
     value && value.slice(beginning, end).map((value,index) =>{
         return(
@@ -288,14 +224,6 @@ function Dictionary (){
                 {cardOpen && (clickedVoc.targetlanguage!==undefined) && (value.translation == clickedVoc.translation) ?
                     <div>
                     <div><hr class="solidHR"></hr></div>
-                    {/*<Tooltip title="Close">
-                    <FontAwesomeIcon
-                    onClick={() => closeEntry(beginning+index)}
-                    className="closeBtn"
-                    icon={faXmark}
-                    size="2x"
-                    color="#B2BFC7"
-                    /></Tooltip> */}
                     <BasicWikiCard {...result} targetLanguage={clickedVoc.targetlanguage} />
                     </div>: <div></div>
                 }
@@ -309,16 +237,6 @@ function Dictionary (){
         )
     })
 
-
-    const words2 = 
-        value && value.map((value, n) =>{
-        let position = n > index ? "nextCard" : n === index ? "activeDictCard" : "prevCard";
-        return(
-        <div onClick={() => {handlechange(n);}} className="container" key={n}>
-            <IndexCard {...value} cardStyle={position}></IndexCard>
-        </div>
-    )
-    })
 
     const filteredVoc = value && value.filter(
         value =>{

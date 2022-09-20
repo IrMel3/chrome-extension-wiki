@@ -1,8 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const User = require("../schemas/userSchema");
-const path = require('path');
-const router = express.Router();
 
 module.exports = app => {
 

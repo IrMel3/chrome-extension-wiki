@@ -1,14 +1,13 @@
-import React, {useEffect, useState,useContext} from 'react'
+import React, {useState, useContext} from 'react'
 import axios from 'axios';
 import "./Login.css"
 import Alerts from './Alerts/Alerts'
 import { AuthContext } from './AuthContext';
 import { UserContext } from './UserContext';
-import {Card, Button} from '@mui/material';
+import {Card} from '@mui/material';
 
 function Login(){
 
-   // const [user, setUser] = useState(null);
     const {user, setUser} = useContext(UserContext);
     const [newUser, setNewUser] = useState(null);
     const {isAuth, setIsAuth} = useContext(AuthContext);
@@ -42,17 +41,14 @@ function Login(){
                       if(res.data.message === "User exists!"){
                       localStorage.setItem("User", user);
                       setIsAuth(true);
-                      //alert("You are now logged in.")
                       showAlert("info", "Info", "You are now logged in.");
                       sendLog("Successful login", user);
                       }
                       if(res.data.message === "User does not exist. Please register first."){
                         showAlert("warning", "Warning", "This User ID does not exist. Please register first.");
-                        //alert("This User ID does not exist. Please register first.");
                       }
                     })
                     .catch(error => {
-                      //alert(error.message)
                       showAlert("error", "Error", error.message);
                       console.log(error.message);
                       sendLog("Failed Login", userData);}
@@ -72,18 +68,15 @@ function Login(){
             console.log(res.data)
             if(res.data.message === "Saved new user!"){
             localStorage.setItem("User", newUser);
-            //alert("You successfully registered.")
             showAlert("success", "Success", "You successfully registered");
             sendLog("Successful registration", newUser);
             }
             if(res.data.message === "User already exists! Choose another name."){
-              //alert("This Name already exists - please chose another name or log in if you already created an ID.")
               showAlert("warning", "Warning", "This Name already exists - please chose another name or log in if you already created an ID.");
                
             }
           })
           .catch(error => {console.log(error)
-            //alert(error.message)
             showAlert("error", "Error", error.message);
             sendLog("Error in registration" + error.message, userData);
           }
@@ -115,7 +108,6 @@ function Login(){
                   value={user}
                   onChange={e => setUser(e.target.value)}
                   /></div>
-                  {/*<Button variant="text" onClick={checkIfUserExists} className="loginBtn">Login</Button>*/}
                   <button onClick={checkIfUserExists} className="loginBtn">Login</button>
                   <div><hr className="loginSeperator"></hr></div>
                   <div><label className="registerText">Or register a new user name: </label>  
@@ -124,8 +116,6 @@ function Login(){
                   value={newUser}
                   onChange={e => setNewUser(e.target.value)}
                   /></div>
-
-                  {/*<Button variant="text" onClick={registerNewUser} className="registerBtn">Register</Button>*/}
                   <button onClick={registerNewUser} className="registerBtn">Register</button>
                   </div>
                   </Card>

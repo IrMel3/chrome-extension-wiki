@@ -9,10 +9,6 @@
   display: inline;
   margin-top: 10px;
 }
-/*
-#search {
-  padding: 10px;
-}*/
 
 #searchfield {
   padding: 10px;
@@ -89,14 +85,11 @@ hr.solid {
 ul {
   list-style-type: none;
   padding: 5px;
-  /*background-color: #d4e6f1;*/
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
   margin-bottom: -20px;
-  /*padding: 0;
-  margin: 0;*/
 }
 li {
   padding: 5px;
@@ -215,10 +208,6 @@ a:hover {
 .mw-parser-output .side-box {
   display: none !important;
 }
-
-/*img {
-  display: none !important;
-}*/
 
 .ui-form {
   position: relative;

@@ -4,14 +4,12 @@ import React, {useState, useEffect, useContext, useRef} from 'react';
 import './Search.css';
 import axios from 'axios';
 import $ from 'jquery';
-import WikiCard from "./WikiCard";
 import BasicCard from './BasicCard'
 import Alerts from './Alerts/Alerts'
-import { AlertContainer, alert } from 'react-custom-alert';
 import Chip from "@mui/material/Chip";
 import { DictionaryContext } from './DictionaryContext';
 import Card from '@mui/material/Card';
-import { FormControl, InputLabel, Select, MenuItem, Alert, TextField, Tooltip,Typography} from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Tooltip} from '@mui/material';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretLeft,
@@ -49,7 +47,6 @@ const Search = () => {
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
-    const [prevMsg, setPrevMsg] = useState('');
     //const [motherTounge, setMotherTounge] = useState('DE')
     //const [targetLanguage, setTargetLanguage] = useState('EN');
     const [motherTounge, setMotherTounge] = useState("de")
@@ -101,16 +98,12 @@ const Search = () => {
         axios
             .post("http://localhost:3000/addToDictionary", newEntry)
             .then(data => {if(data.status == 200){
-                //alert({message: "Successfully saved ",type: 'success'})
-              // alert( "Successfully saved " + term +"-"+ translatedTerm +" to favourites.")
-               showAlert("success", "Success", "Successfully saved "+ term +"-"+ translatedTerm +" to favourites.");
-                  //  {<Alerts type="success" title="Success" message="Successfully saved"></Alerts>}
-                }
+              showAlert("success", "Success", "Successfully saved "+ term +"-"+ translatedTerm +" to favourites.");
+               }
                 
             })
             .catch(error => {console.log(error)
-               // alert("Something went wrong. Please reload the page and try again.")}
-                showAlert("error", "Error", "Something went wrong. Please reload the page and try again."); }
+               showAlert("error", "Error", "Something went wrong. Please reload the page and try again."); }
                
             )
     }
@@ -119,7 +112,6 @@ const Search = () => {
     /**
      * fetches the current dictionary from localstorage
      */
-   // useEffect(() =>{
     const pushToDictionary = () =>{
         if(term !== null && results !== null){
         const obj = {Term: term, Translation: translatedTerm,Targetlanguage: targetLanguage, Link: firstResultTitle}
@@ -137,7 +129,6 @@ const Search = () => {
             
         }
     }}
-  //  }, [dictCount])
 
     /**
      * translates the fetched term and saves it to state
@@ -246,19 +237,11 @@ const Search = () => {
                     tabs[0].id,
                     {from: 'app', subject: 'getText'},
                     (resp) =>{
-                        //console.log(resp.data);
                         setTextInfo(resp.data)
                     });
         });
     });
     });
-
-  /*  useEffect(() =>{
-        if(results !== null){
-            setFirstResult(results[0].title)
-        }
-    },[results])*/
-
 
     //search terms and descriptions
     useEffect(() => {
@@ -327,23 +310,10 @@ const Search = () => {
                 action: "parse",
                 prop: "text",
                 format: "json",
-                //origin: "*",
                 page: firstResultTitle,
                 section: sectionNum
             },
         })}
-
-  /*  var arr = [], l = document.links;
-    for(var i=0; i<l.length; i++) {
-        arr.push(l[i].href);
-        if(arr[i].startsWith('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea')){
-            arr[i].replace('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea', 'https://en.wikipedia.org')
-        }
-
-        console.log(arr);
-    }*/
-    
-    //oh mein Gott es funktioniert -put in useEffekt
 
     useEffect(() =>{
     var anchors = document.getElementsByTagName("a");
@@ -351,7 +321,6 @@ const Search = () => {
     for (var i = 0; i < anchors.length; i++) {
        if(anchors[i].href.startsWith('chrome')){
             anchors[i].href= `https://${targetLanguage}.wikipedia.org` + anchors[i].href.replace('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea','')
-           // console.log(anchors[i].href)
         }
         
     }})
@@ -369,9 +338,7 @@ const Search = () => {
                 try{
                 if(!data.data.error){
                 console.log(data.data);
-               // console.log('See also state:' + seeAlso);
                 setSections(data.data.parse.sections);
-               // console.log("sections of article "+ data.data.parse.sections)
                 //Check if there is a See Also section
                 }else{
                     setSections([])
@@ -386,8 +353,6 @@ const searchSectionsForSeeAlso = () =>{
     for(var i=0; i < sections.length; i++){
         if(sections[i].line == seeAlsoText[0] || sections[i].line == seeAlsoText[1] || sections[i].line == seeAlsoText[2] || sections[i].line == seeAlsoText[3] || sections[i].line == seeAlsoText[4]){
             console.log(sections[i].index);
-            //console.log(i);
-            //section = i;
             var secNum = sections[i].index;
             console.log("This is var secNum:" + secNum);
             setSectionNum(secNum);
@@ -403,10 +368,8 @@ useEffect(() =>{
     searchSA2()
     .then(data=>{
         console.log("Sec num now " + sectionNum)
-        //console.log(data.data.error.code)
         if(!data.data.error && sectionNum!=0){
         console.log("See Also: " + data.data.parse);
-        //console.log("See Also parsed " +data.data.parse.text["*"]);
         setSeeAlso(parse(`<div className="seeAlso nodeco" id="seeAlso" onClick=${handleSAClick}>${data.data.parse.text["*"]}</div>`));
         }
         else{
@@ -453,15 +416,12 @@ useEffect(() =>{
                     pllimit: "10", 
                 },
             })
-            //console.log(data);
             if(data?.query?.pages){  //!=undefined
             const keys = Object.keys(data.query.pages)
-            //console.log(data.query.pages[keys[0]].links)
             if(data != null){
             setLinks(data.query.pages[keys[0]].links)
             console.log(links);
             //shuffleData(links);
-            //console.log(shuffled);
             localStorage.setItem("Term", term);
             }}else{
                 setLinks([])
@@ -513,25 +473,6 @@ useEffect(() =>{
       };
 
     
-    
-    
-    const searchResultsMapped = 
-    
-    results && results.slice(1,3).map(result =>{
-        return(
-            
-            <div className="item" key={result.pageid}>
-                <div className="content">
-                    <h3 className="header">{result.title}</h3>
-                    <span className='link'><a target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${result.title}`}>{`https://${targetLanguage}.wikipedia.org/wiki/${result.title}`}</a></span><br/>
-                    <span dangerouslySetInnerHTML={{__html:result.snippet}}></span>
-
-                </div>
-            </div>
-            
-        )
-    }
-    )
     const handleclick = (index) =>{
         sendLog("clicked on Wikicard " + results[index].title, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
     }
@@ -549,21 +490,6 @@ useEffect(() =>{
     div?.addEventListener('click' , () => {
         handleSAClick();
     })
-
-    //get if seeAlso Link was clicked
-   /* var lis = document.getElementsByTagName('li');
-    for (var i = 0; i < lis.length; i++) {
-    lis[i].addEventListener('click', seeAlsoClickHandler)
-    }
-
-    function seeAlsoClickHandler(event) {
-        event = event || window.event;
-        var target = event.target || event.srcElement;
-        console.log(target.getAttribute("href"));
-        
-        sendLog("See Also Link clicked: " + target.getAttribute('href'))
-
-      }*/
 
     const searchResultsMapped2 =    
     (results!=null) && results.slice(0,3).map((result,n) =>{
@@ -585,16 +511,6 @@ useEffect(() =>{
             <li onClick={() => {handleLinkClick(index);}} key={index}>
             <span className='link'><a className="nodeco"target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`}>{link.title}</a></span><br/>   
             </li>
-        )
-    })
-
-    const linksInArticle2 = 
-    
-    links && links.map((link,index) =>{
-        return (
-            <div onClick={() => {handleLinkClick(index);}} key={index}>
-            <Chip label={link.title} component="a" target="_blank" href={`https://${targetLanguage}.wikipedia.org/wiki/${link.title}`} clickable />
-            </div>
         )
     })
 
@@ -628,10 +544,6 @@ useEffect(() =>{
                 .catch(error => console.log(error))
         
     }
-
-  /*  const pushToDictionary = () =>{
-        setDictCount(dictCount + 1);
-    }*/
 
 
     useEffect(() => {
@@ -669,7 +581,8 @@ useEffect(() =>{
                     <MenuItem key="de" value="de">DE</MenuItem>
                     <MenuItem key="fr" value="fr">FR</MenuItem>
                     <MenuItem key="it" value="it">IT</MenuItem>
-                <MenuItem key="es" value="es">ES</MenuItem>               </Select>
+                <MenuItem key="es" value="es">ES</MenuItem>               
+                </Select>
               </FormControl>
                   <div id="search">    
                   <input className="input"
