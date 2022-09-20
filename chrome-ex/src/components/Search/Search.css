@@ -177,6 +177,13 @@ a:hover {
 .getInspired {
   background-color: #e7f4fd;
   border-radius: 20px;
+  margin-top: 10px;
+}
+
+.cardtitle {
+  font-size: 20px;
+  padding: 5px;
+  font-weight: 500;
 }
 
 .translationBox {
@@ -224,4 +231,13 @@ alert {
 
 alert {
   z-index: 10;
+}
+
+.inspired {
+  padding: 10px;
+  font-size: 15px;
+}
+
+#SA {
+  margin-left: -15px;
 }

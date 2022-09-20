@@ -654,6 +654,8 @@ useEffect(() =>{
           </div>
           {(links?.length>0) ?(
           <div className="getInspired">
+          <div className="inspired">Get inspired to learn more...</div>
+          <div className="divider"><hr class="solid"></hr></div>
           <div id="SA">{seeAlso}</div>
           <div className="linksWrap"><ul>{linksInArticle}</ul></div></div>):<div>Sorry, no  suggestions for "{translatedTerm}"</div>}
           </div>

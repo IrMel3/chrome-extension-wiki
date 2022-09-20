@@ -33,9 +33,7 @@ export default function BasicCard({ title, snippet, targetLanguage, pageid, card
   return (
     <Card className={cardStyle} key={pageid} sx={{backgroundColor: "#d4e6f1", borderRadius: "15px"}}>
       <CardContent>
-        <Typography variant="h6" component="div">
-          {title}
-        </Typography>
+        <div className="cardtitle">{title}</div>
         <Typography variant="body3">
         <span dangerouslySetInnerHTML={{__html:snippet}}></span><br/>
         </Typography>
