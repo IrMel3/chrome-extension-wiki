@@ -17,6 +17,11 @@
       ]
     }
   ], 
+  "icons": {
+    "16": "icon16.ico",
+    "48": "icon48.ico",
+    "128": "icon128.ico"
+  }, 
 "permissions": [
     "storage",
     "activeTab",

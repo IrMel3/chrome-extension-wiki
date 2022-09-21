@@ -22,7 +22,7 @@ var parse = require('html-react-parser');
 $(document).on('click', 'a', function(e){ 
     e.preventDefault(); 
     var url = $(this).attr('href'); 
-    if((url !== "https://en.wikipedia.org/index.html#/") && (url !== "https://en.wikipedia.org/index.html#/dictionary")){
+    if(!(url.includes("index.html#/")) && (!(url.includes("/index.html#/dictionary")))){
     window.open(url, '_blank');    
 }
 });
