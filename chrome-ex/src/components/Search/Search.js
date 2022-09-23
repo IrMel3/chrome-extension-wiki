@@ -235,7 +235,7 @@ const Search = () => {
     },[])*/
     
 
-    useEffect(() => {
+  /*  useEffect(() => {
         const setTextInfo = info =>{
             document.getElementById('crawled').textContent = info.data;
         }
@@ -253,7 +253,7 @@ const Search = () => {
                     });
         });
     });
-    });
+    }); */
 
     //fetch terms and descriptions from wikipedia api
     useEffect(() => {
@@ -594,7 +594,7 @@ useEffect(() =>{
             }
             axios
                 .post("https://pwp.um.ifi.lmu.de/g20/addLog", dictionaryData)
-                .then(data => console.log(data))
+               // .then(data => console.log(data))
                 .catch(error => console.log(error))
         
     }

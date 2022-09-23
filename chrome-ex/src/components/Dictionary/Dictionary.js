@@ -166,7 +166,7 @@ function Dictionary (){
             }
             axios
                 .post("https://pwp.um.ifi.lmu.de/g20/addLog", dictionaryData)
-                .then(data => console.log(data))
+                //.then(data => console.log(data))
                 .catch(error => console.log(error))
         
     }

@@ -25,12 +25,7 @@
 "permissions": [
     "storage",
     "activeTab",
-    "scripting",
-    "tabs",
-    "contextMenus",
-    "storage",
-    "identity",
-    "notifications"
+    "tabs"
 ],
 "web_accessible_resources": [{
   "resources": ["index.html", "/static/js/content.js" ],
