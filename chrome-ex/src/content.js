@@ -10,6 +10,7 @@ const Main = () => {
  * functions to get Text & HTMl of the current tab
  */
 
+
 function getText(){
     if(document.body?.innerText){
     return document.body.innerText
@@ -35,7 +36,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
                 data: document.body.innerText
             };
             //response({data: document.body.innerText, method: "getText"});
-            console.log("msg sent")
+            //console.log("msg sent")
             response(text);
         }
     }
@@ -72,11 +73,11 @@ chrome.storage.sync.set({'visitedPages':
 
 chrome.storage.sync.set({'currentURL':
 {location: document.location.href}},)
-
+/*
 chrome.storage.sync.set({'searchParams':
 {params: document.location.search}}, )
 
-
+*/
 
 
 const app = document.createElement('iframe');

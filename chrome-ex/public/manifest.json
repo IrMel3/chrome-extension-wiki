@@ -23,9 +23,8 @@
     "128": "icon128.ico"
   }, 
 "permissions": [
-    "storage",
-    "activeTab",
-    "tabs"
+    "tabs",
+    "storage"
 ],
 "web_accessible_resources": [{
   "resources": ["index.html", "/static/js/content.js" ],

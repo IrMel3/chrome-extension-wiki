@@ -184,29 +184,29 @@ const Search = () => {
     /**
      * fetches current h1 from chrome storage 
      */
-  /*  useEffect(() =>{
+    useEffect(() =>{
         chrome.storage.sync.get("visitedPages",function (changes) {
             if((pageContent !== changes.visitedPages.pageText) && (changes.visitedPages !== null)) {
-                setPageContent(changes.visitedPages.pageText)
-                setTerm(changes.visitedPages.pageText)
-                localStorage.setItem("Term", changes.visitedPages.pageText);
-                console.log("New Term:",changes.visitedPages.pageText);
+               // setPageContent(changes.visitedPages.pageText)
+               // setTerm(changes.visitedPages.pageText)
+               // localStorage.setItem("Term", changes.visitedPages.pageText);
+               // console.log("New Term:",changes.visitedPages.pageText);
                 sendLog('New Term fetched from H1', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
-    },[])*/
+    },[])
 
     /**
      * checks when URL has changed and sends log to DB
      */
-   /* useEffect(() =>{
+    useEffect(() =>{
         chrome.storage.sync.get("currentURL",function (changes) {
             if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
             //setCurrURL(changes.currentURL.location)
             sendLog('URL changed', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
-    },[])*/
+    },[])
 
     /**
      * fetches the search terms from youtube and google 

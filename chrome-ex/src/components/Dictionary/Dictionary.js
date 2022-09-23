@@ -85,6 +85,9 @@ function Dictionary (){
 
     //update dictionary value when user searches, so only searched items are displayed
     function searchList(){
+        setBeginning(0);
+        setEnd(3);
+        setActivePage(1);
         setFullDictionary(value);
         setValue(filteredVoc)
         setSearched(true);
@@ -95,6 +98,7 @@ function Dictionary (){
     //clear the search field and set dictionary back to full dictionary
     function clearSearch(){
         setSearchField("")
+        setActivePage(1);
         setValue(fullDictionary);
         sendLog("Clear Search ", localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
 
@@ -189,7 +193,7 @@ function Dictionary (){
             setBeginning(beginning-3);
             setEnd(end-3);
             setActivePage(activePage-1);
-            let page = activePage+1;
+            let page = activePage-1;
             sendLog("Show previous page in Favourites: Now Page " + page, localStorage.getItem("Term"), localStorage.getItem("Translation"),localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
       
         }
