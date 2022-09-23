@@ -172,7 +172,7 @@ const Search = () => {
        
         axios.get(deeplUrl)
         .then((response) => {
-            console.log("deepL: " + response.data.translations[0].text)
+            //console.log("deepL: " + response.data.translations[0].text)
             setTranslatedTerm(response.data.translations[0].text);
             localStorage.setItem("Translation", response.data.translations[0].text);
         })
@@ -326,10 +326,11 @@ const Search = () => {
      */
     useEffect(() =>{
     var anchors = document.getElementsByTagName("a");
+    var currID = chrome.runtime.id
 
     for (var i = 0; i < anchors.length; i++) {
        if(anchors[i].href.startsWith('chrome')){
-            anchors[i].href= `https://${targetLanguage}.wikipedia.org` + anchors[i].href.replace('chrome-extension://kbjambaljfpmbadpgmclckcfolhpliea','')
+            anchors[i].href= `https://${targetLanguage}.wikipedia.org` + anchors[i].href.replace(`chrome-extension://${currID}`,'')
         }
         
     }})

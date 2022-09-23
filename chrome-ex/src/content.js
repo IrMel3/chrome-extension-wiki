@@ -11,30 +11,15 @@ const Main = () => {
  */
 
 function getText(){
+  if(document.body?.innerText){
     return document.body.innerText
+  }
 }
-function getHTML(){
-    return document.body.outerHTML
-}
-function getFirstH1(){
-    return document.querySelector('h1').innerText;
-}
-
+if(document.body?.innerText){
 chrome.runtime.sendMessage({
     page_text: document.body.innerText
 })
-
-
-var visited = window.location.href;
-var time = +new Date();
-var text = +document.body.innerHTML;
-var textpure = getText();
-
-
-
-//console.log(getText());             
-//console.log(getHTML());             
-//console.log(getFirstH1());
+}
 
 // Inform the background page that 
 // this tab should have a page-action.
@@ -45,7 +30,7 @@ chrome.runtime.sendMessage({
 
 //listen for messages from Search.js
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-        if((msg.from === 'app') && (msg.subject === 'getText')){
+        if((msg.from === 'app') && (msg.subject === 'getText') && (document.body?.innerText)){
             var text = {
                 data: document.body.innerText
             };
@@ -75,20 +60,19 @@ return (
 }
 
 function getFirstH1(){
+    if(document.querySelector('h1')?.innerText){
     return document.querySelector('h1').innerText;
-}
+}}
 
 chrome.storage.sync.set({'visitedPages':
 {pageText: getFirstH1()}},
-    function () {
-    console.log("Just visited", getFirstH1())
-});
+    function () {});
 
 chrome.storage.sync.set({'currentURL':
-{location: document.location.href}}, console.log("current URL",document.location.href))
+{location: document.location.href}},)
 
 chrome.storage.sync.set({'searchParams':
-{params: document.location.search}}, console.log("search Parameters",document.location.search))
+{params: document.location.search}}, )
 
 
 
