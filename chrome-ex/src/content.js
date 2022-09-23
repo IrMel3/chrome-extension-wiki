@@ -68,14 +68,13 @@ function getFirstH1(){
 chrome.storage.sync.set({'visitedPages':
 {pageText: getFirstH1()}},
     function () {
-    console.log("Just visited", getFirstH1())
 });
 
 chrome.storage.sync.set({'currentURL':
-{location: document.location.href}}, console.log("current URL",document.location.href))
+{location: document.location.href}},)
 
 chrome.storage.sync.set({'searchParams':
-{params: document.location.search}}, console.log("search Parameters",document.location.search))
+{params: document.location.search}}, )
 
 
 
