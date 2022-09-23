@@ -90,7 +90,6 @@ ul {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  margin-bottom: -20px;
 }
 li {
   padding: 5px;
