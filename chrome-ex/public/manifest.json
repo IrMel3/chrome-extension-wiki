@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Vocab",
+  "name": "Fetch Vocab",
   "author": "Iris",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Vocabulary learning with Wikipedia - The app fetches Headlines and Google Searches and suggests fitting Wikipedia articles.",
   "action": {}, 
   "background": { "service_worker": "background.js" },
