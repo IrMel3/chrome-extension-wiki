@@ -232,26 +232,6 @@ const Search = () => {
     },[])
     
 
-   /* useEffect(() => {
-        const setTextInfo = info =>{
-            document.getElementById('crawled').textContent = info.data;
-        }
-
-        window.addEventListener('DOMContentLoaded', () =>{
-            chrome.tabs.query({
-                active: true, 
-                currentWindow:true
-            },tabs => {
-                chrome.tabs.sendMessage(
-                    tabs[0].id,
-                    {from: 'app', subject: 'getText'},
-                    (resp) =>{
-                        setTextInfo(resp.data)
-                    });
-        });
-    });
-    });*/
-
     //fetch terms and descriptions from wikipedia api
     useEffect(() => {
         //search Wikipedia API

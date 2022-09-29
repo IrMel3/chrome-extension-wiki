@@ -16,6 +16,10 @@
   font-size: 10pt;
 }
 
+.mw-parser-output img {
+  display: none;
+}
+
 #input {
   padding: 10px;
 }
