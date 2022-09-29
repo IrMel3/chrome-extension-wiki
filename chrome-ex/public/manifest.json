@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Vocab",
+  "name": "Search Vocab",
   "author": "Iris",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Vocabulary learning with Wikipedia - The app allows the user to search for Vocabulary and suggests fitting Wikipedia articles.",
   "action": {}, 
   "background": { "service_worker": "background.js" },
@@ -23,7 +23,6 @@
     "128": "icon128.ico"
   }, 
 "permissions": [
-    "tabs",
     "storage"
 ],
 "web_accessible_resources": [{
