@@ -19,6 +19,10 @@
   padding: 10px;
 }
 
+.mw-parser-output img {
+  display: none;
+}
+
 .langDropdowns {
   display: flex;
   flex-direction: row;
