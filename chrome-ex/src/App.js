@@ -1,7 +1,6 @@
 /* global chrome */
 
 import './App.css';
-import {Vocab} from './vocabList'
 import React, {useState, useEffect} from 'react';
 import Search from "./components/Search/Search"
 import { Routes, Route} from 'react-router-dom';
@@ -17,8 +16,7 @@ import Login from "./components/Login/Login"
  */
 
 
-const App =() => {
-  const randomNum = Math.floor(Math.random() * Math.floor(Vocab.length))  
+const App =() => { 
   
   const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
