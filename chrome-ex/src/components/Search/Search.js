@@ -51,8 +51,6 @@ const Search = () => {
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
-    //const [motherTounge, setMotherTounge] = useState('DE')
-    //const [targetLanguage, setTargetLanguage] = useState('EN');
     const [motherTounge, setMotherTounge] = useState("de")
     const [targetLanguage, setTargetLanguage] = useState("en");
     const [sectionNum, setSectionNum] = useState(0);
@@ -182,7 +180,7 @@ const Search = () => {
     },[term, targetLanguage, motherTounge])
 
     /**
-     * fetches current h1 from chrome storage 
+     * fetches current h1 from chrome storage - not necessary for search
      */
     useEffect(() =>{
         chrome.storage.sync.get("visitedPages",function (changes) {
@@ -209,7 +207,7 @@ const Search = () => {
     },[])
 
     /**
-     * fetches the search terms from youtube and google 
+     * fetches the search terms from youtube and google - not necessary for search
      */
   /*  useEffect(() =>{
         chrome.storage.sync.get("searchParams",function (changes) {

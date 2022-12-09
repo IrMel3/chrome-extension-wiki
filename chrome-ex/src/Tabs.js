@@ -15,9 +15,12 @@ import { matchPath } from "react-router";
 import './tabs.css'
 
 /**
- * npm run build to build the chrome extension and load build folder into chrome
- * node index to start the server on port 3000
- * @returns 
+ * This is the main navigation component of the extension
+ * The Home Component is Search.js and the Favourites Component is Dictionary.js
+ * 
+ * 
+ * "npm run build" to build the chrome extension and load build folder into chrome
+ * "node index" to start the server on port 3000 after paths were changed back to localhost paths
  */
 
 function Tabs(){
@@ -35,11 +38,6 @@ function Tabs(){
       setIsAuth(true)
     }
   },[user])
-
-  /*const resize = () =>{
-      let iframe = document.getElementsByTagName("iFrame")
-      iframe.height = "300px";  
-  }*/
 
 
     return(

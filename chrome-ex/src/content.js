@@ -54,21 +54,24 @@ return (
    </Frame>
     )    
 }
-
+// get h1 of current page
 function getFirstH1(){
     if(document.querySelector('h1')){
     return document.querySelector('h1').innerText;
     }
 }
 
+// save current h1 to chrome storage
 chrome.storage.sync.set({'visitedPages':
 {pageText: getFirstH1()}},
     function () {
 });
 
+// save current url to chrome storage
 chrome.storage.sync.set({'currentURL':
 {location: document.location.href}},)
 
+//create the iframe for the extension
 
 const app = document.createElement('iframe');
 app.style.border = "none"

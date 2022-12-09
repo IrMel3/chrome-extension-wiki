@@ -10,7 +10,11 @@ import { DictionaryContext } from './components/Contexts/DictionaryContext';
 import { UserContext } from './components/Contexts/UserContext';
 import Login from "./components/Login/Login"
 
-
+/**
+ * App.js is not in use anymore for this project.
+ * All components are initially loaded from index.js and tabs.js
+ * the previous accordion logic was loaded from here
+ */
 
 
 const App =() => {
@@ -18,10 +22,11 @@ const App =() => {
   
   const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
-  const [value, setValue] = useState([]) //localStorage.getItem("Vocabulary") || [] - change this to prevent comma overload
+  const [value, setValue] = useState([]) 
   const [user, setUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
-  
+
+  // get current user from local storage if there is one
   useEffect(() =>{
     if(localStorage.getItem("User") !== null){
       setUser(localStorage.getItem("User"))
