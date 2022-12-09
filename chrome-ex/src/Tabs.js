@@ -16,9 +16,10 @@ import './tabs.css'
 
 /**
  * This is the main navigation component of the extension
+ * The Home Component is Search.js and the Favourites Component is Dictionary.js
  * 
- * npm run build to build the chrome extension and load build folder into chrome
- * node index to start the server on port 3000 after paths were changed back to localhost paths
+ * "npm run build" to build the chrome extension and load build folder into chrome
+ * "node index" to start the server on port 3000 after paths were changed back to localhost paths
  */
 
 function Tabs(){
@@ -30,6 +31,7 @@ function Tabs(){
   const [newUser, setNewUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
 
+  // get current user from local storage if there is one
   useEffect(() =>{
     if(localStorage.getItem("User") !== null){
       setUser(localStorage.getItem("User"))

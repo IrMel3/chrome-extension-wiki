@@ -3,6 +3,12 @@ import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 import './Alerts.css'
 
+/**
+ * Alert component
+ * @param {*} param0 
+ * @returns 
+ */
+
 export default function Alerts({type, message, title, isOpen, handleClose}) {
   return (
       <div>

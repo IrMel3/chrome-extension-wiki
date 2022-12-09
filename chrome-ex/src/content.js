@@ -53,18 +53,22 @@ return (
     )    
 }
 
+//retrieve H1 from current website
 function getFirstH1(){
     if(document.querySelector('h1')?.innerText){
     return document.querySelector('h1').innerText;
 }}
 
+//save h1 to chrome storage
 chrome.storage.sync.set({'visitedPages':
 {pageText: getFirstH1()}},
     function () {});
 
+//save current URL to chrome storage
 chrome.storage.sync.set({'currentURL':
 {location: document.location.href}},)
 
+//save search Parameters to chrome storage
 chrome.storage.sync.set({'searchParams':
 {params: document.location.search}}, )
 
