@@ -11,11 +11,6 @@ const Main = () => {
  */
 
 
-function getText(){
-    if(document.body?.innerText){
-    return document.body.innerText
-    }
-}
 if(document.body?.innerText){
 chrome.runtime.sendMessage({  
     page_text: document.body.innerText
@@ -73,15 +68,9 @@ chrome.storage.sync.set({'visitedPages':
 
 chrome.storage.sync.set({'currentURL':
 {location: document.location.href}},)
-/*
-chrome.storage.sync.set({'searchParams':
-{params: document.location.search}}, )
-
-*/
 
 
 const app = document.createElement('iframe');
-//const yt = document.getElementsByClassName('style-scope ytd-channel-name');
 app.style.border = "none"
 app.id = 'chromeapp';
 app.style.width = "300px";

@@ -11,11 +11,6 @@ import { UserContext } from './components/Contexts/UserContext';
 import Login from "./components/Login/Login"
 
 
-/**
- * npm run build to build the chrome extension and load build folder into chrome
- * node index to start the server on port 3000
- * @returns 
- */
 
 
 const App =() => {

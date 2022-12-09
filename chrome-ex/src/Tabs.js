@@ -14,6 +14,12 @@ import { AuthContext } from './components/Contexts/AuthContext';
 import { matchPath } from "react-router";
 import './tabs.css'
 
+/**
+ * npm run build to build the chrome extension and load build folder into chrome
+ * node index to start the server on port 3000
+ * @returns 
+ */
+
 function Tabs(){
 
   const [isActive, setIsActive] = useState(true)
