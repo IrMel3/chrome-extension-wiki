@@ -10,6 +10,9 @@ app.get('/', function(req, res){
         console.log("Hi!")
       });
 
+/**
+ * adds a log to the database
+ */
 app.post('/addLog', (req, res) =>{
     let log = new Log({
         user: req.body.user,

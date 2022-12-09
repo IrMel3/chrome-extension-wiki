@@ -4,7 +4,16 @@ const Dictionary = require("../schemas/dictionarySchema");
 const path = require('path');
 const router = express.Router();
 
+/**
+ * routes for all the dictionary actions  * 
+ * @param {*} app 
+ */
+
 module.exports = app => {
+
+/**
+ * gets all the dictionary entries for a user from the database
+ */
 
 app.get("/getDictionaryEntries", cors(), (req, res) => {
     let user = {user: req.query.user}
@@ -14,6 +23,9 @@ app.get("/getDictionaryEntries", cors(), (req, res) => {
     }, err => console.error(err))
 })
 
+/**
+ * adds a vocabulary entry to the database for the specific user
+ */
 
 app.post("/addToDictionary", cors(), (req, res) => {
     let dictionary = new Dictionary({
@@ -31,12 +43,12 @@ app.post("/addToDictionary", cors(), (req, res) => {
     console.log(req.body);
 })
 
+/**
+ * deletes a dictionary entry from the database
+ */
 app.delete("/deleteDictionaryEntry", cors(), (req, res) => {
     console.log(req.body);
     let dbFilter = {user: req.body.user, term: req.body.term, translation: req.body.translation}
-  /*  if (req.body.term) dbFilter.term = req.body.term
-    if (req.body.translation) dbFilter.translation = req.body.translation
-    if (req.body.user) dbFilter.user = req.body.user*/
     console.log(dbFilter);
     Dictionary.findOneAndDelete(dbFilter)
               .then(result => {
