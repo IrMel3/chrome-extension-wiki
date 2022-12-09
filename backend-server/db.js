@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
 
+/**
+ * connection to mongoDB
+ */
+
 const dbMyURI = 'mongodb+srv://Iris:Iris123@loggingcluster.jhhec.mongodb.net/?retryWrites=true&w=majority'
 
 const connectToDB = () => {

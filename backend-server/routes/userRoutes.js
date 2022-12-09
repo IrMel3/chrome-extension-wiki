@@ -4,6 +4,10 @@ const User = require("../schemas/userSchema");
 
 module.exports = app => {
 
+/**
+ * checks if a user is in the database and allows them to log in if that is the case
+ */
+
 app.post("/loginUser", cors(), (req, res) => {
     let user = req.body.user
     User.findOne({"user": user}, function(err, foundUser){
@@ -16,6 +20,10 @@ app.post("/loginUser", cors(), (req, res) => {
         }
     })
 })
+
+/**
+ * saves a new user to the database
+ */
 
 app.post("/registerUser", cors(), (req, res) => {
     const user = req.body.user;
