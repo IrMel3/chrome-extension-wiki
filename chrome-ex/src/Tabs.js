@@ -14,11 +14,18 @@ import { AuthContext } from './components/Contexts/AuthContext';
 import { matchPath } from "react-router";
 import './tabs.css'
 
+/**
+ * This is the main navigation component of the extension
+ * 
+ * npm run build to build the chrome extension and load build folder into chrome
+ * node index to start the server on port 3000 after paths were changed back to localhost paths
+ */
+
 function Tabs(){
 
   const [isActive, setIsActive] = useState(true)
   const [isDictionaryActive, setIsDictionaryActive] = useState(false)
-  const [value, setValue] = useState([]) //localStorage.getItem("Vocabulary") || [] 
+  const [value, setValue] = useState([]) 
   const [user, setUser] = useState(null);
   const [newUser, setNewUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
@@ -29,11 +36,6 @@ function Tabs(){
       setIsAuth(true)
     }
   },[user])
-
-  /*const resize = () =>{
-      let iframe = document.getElementsByTagName("iFrame")
-      iframe.height = "300px";  
-  }*/
 
 
     return(

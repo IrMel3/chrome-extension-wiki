@@ -51,8 +51,6 @@ const Search = () => {
     const [alertType, setAlertType] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
-    //const [motherTounge, setMotherTounge] = useState('DE')
-    //const [targetLanguage, setTargetLanguage] = useState('EN');
     const [motherTounge, setMotherTounge] = useState("de")
     const [targetLanguage, setTargetLanguage] = useState("en");
     const [sectionNum, setSectionNum] = useState(0);
@@ -200,7 +198,6 @@ const Search = () => {
     useEffect(() =>{
         chrome.storage.sync.get("currentURL",function (changes) {
             if((currURL !== changes.currentURL.location) && (changes.currentURL.location !== null)){
-            //setCurrURL(changes.currentURL.location)
             sendLog('URL changed', localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"));
         }}
         )
@@ -481,7 +478,10 @@ useEffect(() =>{
     }
     };
 
-    
+    /**
+     * handle sending interaction logs
+     * @param {} index 
+     */    
     const handleclick = (index) =>{
         sendLog("clicked on Wikicard " + results[index].title, localStorage.getItem("Term"), localStorage.getItem("Translation"), localStorage.getItem("Mothertounge"), localStorage.getItem("Language"))
     }
@@ -609,13 +609,7 @@ useEffect(() =>{
                     label="Mother tounge"
                     onChange={handleMotherTounge}
                     sx={{left: "5px"}}>
-
-                    {/* <MenuItem value="EN">EN</MenuItem>
-                    <MenuItem value="DE">DE</MenuItem>
-                    <MenuItem value="FR">FR</MenuItem>
-                    <MenuItem value="IT">IT</MenuItem>
-                     <MenuItem value="ES">ES</MenuItem> */}  
-                
+               
                     
                    <MenuItem key="en" value="en">EN</MenuItem>
                     <MenuItem key="de" value="de">DE</MenuItem>
@@ -650,11 +644,6 @@ useEffect(() =>{
                     <MenuItem key="fr" value="fr">FR</MenuItem>
                     <MenuItem key="it" value="it">IT</MenuItem>
                     <MenuItem key="es" value="es">ES</MenuItem>
-                    { /* <MenuItem value="EN">EN</MenuItem>
-                    <MenuItem value="DE">DE</MenuItem>
-                    <MenuItem value="FR">FR</MenuItem>
-                    <MenuItem value="IT">IT</MenuItem>
-                     <MenuItem value="ES">ES</MenuItem> */}
                 </Select>
               </FormControl>
                  <div className="translation">{translatedTerm}</div>

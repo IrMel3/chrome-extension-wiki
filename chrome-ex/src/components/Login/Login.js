@@ -8,7 +8,6 @@ import {Card} from '@mui/material';
 
 /**
  * the login component where users can register and login
- * @returns 
  */
 
 function Login(){
