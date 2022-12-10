@@ -3,7 +3,7 @@
 This Chrome Extension lets you translate vocabulary into your target language.
 The translated word fetches Wikipedia articles that might be interesting to you.
 
-To build the extension run:
+To build the extension navigate to chrome-ex and run:
 ```
 npm run build
 ```
