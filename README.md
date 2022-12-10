@@ -4,7 +4,7 @@ This Chrome Extension fetches words from your Google searches and Headlines from
 visiting and suggests them to you as vocabulary.
 The translated word fetches Wikipedia articles that might be interesting to you.
 
-To build the extension run:
+To build the extension, navigate to chrome-ex and run:
 
 ```
 npm run build
