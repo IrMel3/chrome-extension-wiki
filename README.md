@@ -30,7 +30,7 @@ Fetch Vocab passively collects keywords from Google searches and website headlin
   - DeepL API
 
 > Note:  
-> Each extension branch (`search-vocab` and `fetch-vocab`) includes its **own backend implementation** for independent development and testing. Although both use the same tech stack, they are maintained separately.
+> Each extension branch (`app-search-only` and `app-fetch-only`) includes its **own backend implementation** for independent development and testing. Although both use the same tech stack, they are maintained separately.
 
 ##  Installation & Setup
 
