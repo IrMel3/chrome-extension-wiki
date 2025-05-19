@@ -41,15 +41,15 @@ Fetch Vocab passively collects keywords from Google searches and website headlin
 
 2. Switch to the desired branch:
     ```bash
-    git checkout search-vocab   # or fetch-vocab
+    git checkout app-search-only   # or app-fetch-only
 
 3. Follow the installation instructions in the corresponding README of that branch.
 
 ## 📂 Folder Structure
 
     ```bash
-    |-- fetch-vocab/       # Fetch Vocab extension + backend
-    |-- search-vocab/      # Search Vocab extension + backend
+    |-- app-fetch-only/       # Fetch Vocab extension + backend
+    |-- app-search-only/      # Search Vocab extension + backend
 
 ## 📄 License
 
