@@ -39,3 +39,10 @@ Fetch Vocab passively collects keywords from Google searches and website headlin
    git clone https://github.com/IrMel3/chrome-extension-wiki.git
    cd chrome-extension-wiki
 
+2. Switch to the desired branch:
+    ```bash
+    git checkout search-vocab   # or fetch-vocab
+
+3. Follow the installation instructions in the corresponding README of that branch.
+
+
