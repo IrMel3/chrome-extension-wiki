@@ -32,7 +32,7 @@ Fetch Vocab passively collects keywords from Google searches and website headlin
 > Note:  
 > Each extension branch (`search-vocab` and `fetch-vocab`) includes its **own backend implementation** for independent development and testing. Although both use the same tech stack, they are maintained separately.
 
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 1. Clone the repository:
    ```bash
@@ -44,5 +44,23 @@ Fetch Vocab passively collects keywords from Google searches and website headlin
     git checkout search-vocab   # or fetch-vocab
 
 3. Follow the installation instructions in the corresponding README of that branch.
+
+## 📂 Folder Structure
+
+    ```bash
+    |-- fetch-vocab/       # Fetch Vocab extension + backend
+    |-- search-vocab/      # Search Vocab extension + backend
+
+## 📄 License
+
+MIT License
+
+## 👤 Author
+
+IrMel3
+
+## 🙏 Acknowledgments
+
+Thanks to Fiona as well as everyone who took part in my study & focus group.
 
 
