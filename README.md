@@ -39,18 +39,19 @@ You should now see the extension box in your installed extensions.
    git clone -b app-fetch-only https://github.com/IrMel3/chrome-extension-wiki.git
    cd chrome-extension-wiki/app-fetch-only/chrome-ex
 2. Install dependencies and build the frontend:
+   ```bash
    npm install
    npm run build
 
-3. Load the extension in Chrome:
+4. Load the extension in Chrome:
 - Open chrome://extensions/
 - Enable Developer Mode
-- Click Load unpacked
+- Click "Load unpacked"
 - Select the /build folder
 
 ## ⚙️ Backend Setup
 
-This branch contains an independent backend built with Node.js and Express.js.
+This branch contains an independent backend built with Node.js and Express.js. that regulates the communication with MongoDB.
 Steps:
 
 1. Navigate to the backend directory (if applicable):
