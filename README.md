@@ -1,4 +1,4 @@
-# Fetch Vocab
+# Fetch Vocab - Quick Start
 
 This Chrome Extension fetches words from your Google searches and Headlines from the websites you are
 visiting and suggests them to you as vocabulary.
@@ -15,7 +15,7 @@ After that go to "load unpacked" and pick the build folder that was created from
 You should now see the extension box in your installed extensions.
 
 
-# Fetch Vocab – Passive Vocabulary Chrome Extension
+# Fetch Vocab – Passive Vocabulary Chrome Extension - More detailed info
 
 **Fetch Vocab** is a Chrome Extension that supports language learning by passively collecting vocabulary from your browsing activity and Headlines from visited Websites and suggesting them to you as vocabulary enhancing it with translated definitions and related Wikipedia content.
 
@@ -35,14 +35,18 @@ You should now see the extension box in your installed extensions.
 ## 🚀 Installation
 
 1. Clone the `app-fetch-only` branch:
-       ```bash
-       git clone -b app-fetch-only https://github.com/IrMel3/chrome-extension-wiki.git
-       cd chrome-extension-wiki/app-fetch-only
-2. Open chrome://extensions/ in Chrome.
+   ```bash
+   git clone -b app-fetch-only https://github.com/IrMel3/chrome-extension-wiki.git
+   cd chrome-extension-wiki/app-fetch-only/chrome-ex
+2. Install dependencies and build the frontend:
+   npm install
+   npm run build
 
-3. Enable Developer Mode.
-
-4. Click Load unpacked and select the app-fetch-only folder.
+3. Load the extension in Chrome:
+- Open chrome://extensions/
+- Enable Developer Mode
+- Click Load unpacked
+- Select the /build folder
 
 ## ⚙️ Backend Setup
 
@@ -52,9 +56,7 @@ Steps:
 1. Navigate to the backend directory (if applicable):
     cd backend-server
     npm install
-2. Create a .env file:
-   DEEPL_API_KEY=your_deepl_key_here
-3. Start the backend:
+2. Start the backend:
    node index.js
 
 Make sure the extension points to the correct backend endpoint locally.
